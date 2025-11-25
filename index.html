@@ -3,27 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Coolie Links SA – Universities • TVET • Bursaries • Jobs</title>
+    <title>Coolie Links SA – Smart Education & Career Portal</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body {font-family:'Inter',sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh;padding-top:80px;}
-        .navbar {background:rgba(15,23,42,0.98)!important;backdrop-filter:blur(12px);position:fixed;top:0;width:100%;z-index:1000;border-bottom:1px solid #334155;}
-        .navbar-brand {font-weight:800;font-size:2rem;background:linear-gradient(90deg,#facc15,#f97316);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
-        .hero {background:linear-gradient(rgba(0,0,0,0.7),rgba(0,0,0,0.7)),url('https://images.unsplash.com/photo-1523050858588-6e8c0d307a2e?auto=format&fit=crop&q=80') center/cover;padding:120px 20px;text-align:center;border-radius:20px;margin:30px 0;}
-        .tab-btn {background:#1e293b;border:none;color:#e2e8f0;padding:12px 24px;border-radius:12px;transition:0.3s;}
-        .tab-btn.active {background:#f97316;color:white;box-shadow:0 4px 15px rgba(249,115,22,0.4);}
-        .card-item {background:#1e293b;border-radius:16px;transition:all 0.3s;height:100%;border:1px solid transparent;}
-        .card-item:hover {transform:translateY(-10px);border-color:#f97316;box-shadow:0 20px 40px rgba(249,115,22,0.2);}
-        .flag {width:38px;height:26px;border-radius:6px;object-fit:cover;box-shadow:0 2px 8px rgba(0,0,0,0.5);}
-        .province-badge {font-size:0.75rem;}
-        footer {background:#0f172a;border-top:1px solid #334155;padding:50px 0;}
+        :root {--primary:#f97316;--accent:#facc15;}
+        body {background:linear-gradient(135deg,#1e3c72,#2a5298);color:white;font-family:'Segoe UI',sans-serif;padding-top:90px;}
+        .navbar {position:fixed;top:0;width:100%;z-index:1000;background:rgba(0,0,0,0.95)!important;backdrop-filter:blur(12px);}
+        .navbar-brand {font-weight:800;font-size:2rem;background:linear-gradient(45deg,#ff6b6b,#feca57);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+        .hero {text-align:center;padding:100px 20px;background:linear-gradient(rgba(0,0,0,0.7),rgba(0,0,0,0.7)),url('https://images.unsplash.com/photo-1581092580490-5d421a3d73e9?auto=format&fit=crop&q=80') center/cover;border-radius:20px;margin:20px;}
+        .tab-btn {background:#1e293b;color:#e2e8f0;border:none;padding:12px 24px;border-radius:50px;margin:5px;transition:0.3s;}
+        .tab-btn.active,.tab-btn:hover {background:var(--accent);color:black;font-weight:600;}
+        .card-item {background:rgba(255,255,255,0.1);backdrop-filter:blur(12px);border-radius:16px;transition:0.3s;height:100%;border:1px solid transparent;}
+        .card-item:hover {transform:translateY(-12px);border-color:var(--accent);box-shadow:0 20px 40px rgba(249,115,22,0.3);}
+        .fav-btn {cursor:pointer;transition:0.3s;}
+        .fav-btn.active {color:#f97316 !important;}
+        #resultsInfo {font-size:1.1rem;margin:20px 0;}
+        footer {background:rgba(0,0,0,0.8);padding:50px 0;margin-top:100px;}
     </style>
 </head>
 <body>
 
-<!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="#">Coolie Links SA</a>
@@ -31,23 +31,23 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="nav">
-            <ul class="navbar-nav ms-auto align-items-center gap-3">
-                <li><button class="tab-btn active" data-tab="all">All</button></li>
-                <li><button class="tab-btn" data-tab="universities">Universities</button></li>
-                <li><button class="tab-btn" data-tab="tvet">TVET Colleges</button></li>
-                <li><button class="tab-btn" data-tab="bursaries">Bursaries</button></li>
-                <li><button class="tab-btn" data-tab="jobs">Jobs</button></li>
+            <ul class="navbar-nav ms-auto gap-2">
+                <button class="tab-btn active" data-tab="all">All</button>
+                <button class="tab-btn" data-tab="universities">Universities</button>
+                <button class="tab-btn" data-tab="tvet">TVET</button>
+                <button class="tab-btn" data-tab="bursaries">Bursaries</button>
+                <button class="tab-btn" data-tab="jobs">Jobs</button>
+                <button class="btn btn-outline-warning btn-sm" id="showFavorites">Favorites (<span id="favCount">0</span>)</button>
             </ul>
         </div>
     </div>
 </nav>
 
-<!-- Hero -->
-<div class="container"><div class="hero">
-    <h1 class="display-4 fw-bold mb-4">Your Future in South Africa Starts Here</h1>
-    <p class="lead mb-4">Choose what you're looking for — we make it easy!</p>
-    <div class="row justify-content-center g-3">
-        <div class="col-md-4">
+<div class="hero">
+    <h1 class="display-4 fw-bold mb-4">Your Future in Mzansi Starts Here</h1>
+    <p class="lead">Choose your path — we make it simple</p>
+    <div class="row justify-content-center g-3 mt-3">
+        <div class="col-md-5">
             <input type="text" id="searchInput" class="form-control form-control-lg" placeholder="Search anything...">
         </div>
         <div class="col-md-3">
@@ -59,138 +59,118 @@
             </select>
         </div>
     </div>
-</div></div>
+</div>
 
 <div class="container">
-    <div id="resultsCount" class="text-center mb-4 fw-bold fs-5"></div>
+    <div id="resultsInfo" class="text-center"></div>
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4" id="resultsGrid"></div>
 </div>
 
-<footer class="text-center mt-5">
-    <p>Coolie Links SA • Made for Mzansi Youth • 2025</p>
+<footer class="text-center">
+    <p>Coolie Links SA • 2025 • Empowering South African Youth</p>
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
 <script>
-// Full Data (Universities + TVET + Bursaries + Jobs)
-const data = {
-    universities: [
-        {name:"University of Cape Town",province:"Western Cape",website:"https://www.uct.ac.za",type:"university"},
-        {name:"University of the Witwatersrand",province:"Gauteng",website:"https://www.wits.ac.za",type:"university"},
-        {name:"Stellenbosch University",province:"Western Cape",website:"https://www.sun.ac.za",type:"university"},
-        {name:"University of Pretoria",province:"Gauteng",website:"https://www.up.ac.za",type:"university"},
-        {name:"University of Johannesburg",province:"Gauteng",website:"https://www.uj.ac.za",type:"university"},
-        {name:"University of KwaZulu-Natal",province:"KwaZulu-Natal",website:"https://www.ukzn.ac.za",type:"university"},
-        {name:"Nelson Mandela University",province:"Eastern Cape",website:"https://www.mandela.ac.za",type:"university"},
-        {name:"Rhodes University",province:"Eastern Cape",website:"https://www.ru.ac.za",type:"university"},
-        {name:"North-West University",province:"North West",website:"https://www.nwu.ac.za",type:"university"},
-        {name:"University of the Free State",province:"Free State",website:"https://www.ufs.ac.za",type:"university"}
-        // ... all 26 included in full version
-    ],
-    tvet: [
-        {name:"Buffalo City TVET College",province:"Eastern Cape",website:"https://www.bccollege.co.za",type:"tvet"},
-        {name:"Eastcape Midlands TVET College",province:"Eastern Cape",website:"https://www.emcol.co.za",type:"tvet"},
-        {name:"Central Johannesburg TVET College",province:"Gauteng",website:"https://www.cjc.edu.za",type:"tvet"},
-        {name:"Ekurhuleni West TVET College",province:"Gauteng",website:"https://www.ewc.edu.za",type:"tvet"},
-        {name:"Coastal KZN TVET College",province:"KwaZulu-Natal",website:"https://www.coastalkzn.co.za",type:"tvet"},
-        {name:"Elangeni TVET College",province:"KwaZulu-Natal",website:"https://www.elangeni.edu.za",type:"tvet"},
-        {name:"Motheo TVET College",province:"Free State",website:"https://www.motheotvet.co.za",type:"tvet"},
-        {name:"College of Cape Town",province:"Western Cape",website:"https://www.cct.edu.za",type:"tvet"},
-        {name:"False Bay TVET College",province:"Western Cape",website:"https://www.falsebaycollege.co.za",type:"tvet"},
-        {name:"Ehlanzeni TVET College",province:"Mpumalanga",website:"https://www.ehlanzenicollege.co.za",type:"tvet"}
-        // ... all 50 TVET colleges included
-    ],
-    bursaries: [
-        {name:"NSFAS",province:"National",website:"https://www.nsfas.org.za",desc:"Full funding for university & TVET",type:"bursary"},
-        {name:"Funza Lushaka",province:"National",website:"https://www.funzalushaka.doe.gov.za",desc:"Teaching bursary",type:"bursary"},
-        {name:"Sasol Bursary",province:"National",website:"https://www.sasolbursaries.com",desc:"Engineering & Science",type:"bursary"},
-        {name:"StudyTrust",province:"National",website:"https://studytrust.org.za",desc:"Multiple corporate bursaries",type:"bursary"}
-    ],
-    jobs: [
-        {name:"PNet",province:"National",website:"https://www.pnet.co.za",desc:"South Africa's #1 job site",type:"job"},
-        {name:"Careers24",province:"National",website:"https://www.careers24.com",desc:"Graduate & entry-level jobs",type:"job"},
-        {name:"GradConnection",province:"National",website:"https://za.gradconnection.com",desc:"Internships & graduate programmes",type:"job"}
-    ]
-};
+// Full dataset with type & province
+const allData = [
+    ...universities.map(u => ({...u, type:"university", province: getProvinceFromCity(u.city)})),
+    ...tvetColleges.map(t => ({...t, type:"tvet"})),
+    ...bursaries.map(b => ({...b, type:"bursary", province:"National"})),
+    ...jobPortals.map(j => ({...j, type:"job", province:"National", website: j.url}))
+];
 
-// Combine all
-let allItems = [...data.universities, ...data.tvet, ...data.bursaries, ...data.jobs];
+let favorites = JSON.parse(localStorage.getItem("coolieFavs") || "[]");
 let currentTab = "all";
+let showFavsOnly = false;
 
-function renderResults() {
+function getProvinceFromCity(city) {
+    const map = {
+        "Cape Town":"Western Cape","Stellenbosch":"Western Cape","Bellville":"Western Cape",
+        "Johannesburg":"Gauteng","Pretoria":"Gauteng","Vanderbijlpark":"Gauteng",
+        "Durban":"KwaZulu-Natal","Pietermaritzburg":"KwaZulu-Natal",
+        "Bloemfontein":"Free State","Kimberley":"Northern Cape",
+        "Gqeberha":"Eastern Cape","Makhanda":"Eastern Cape","Alice":"Eastern Cape",
+        "Polokwane":"Limpopo","Thohoyandou":"Limpopo",
+        "Mbombela":"Mpumalanga","Potchefstroom":"North West","Mahikeng":"North West"
+    };
+    return Object.keys(map).find(key => city.includes(key)) ? map[Object.keys(map).find(key => city.includes(key))] : "Multiple";
+}
+
+function render() {
     const search = document.getElementById("searchInput").value.toLowerCase();
     const province = document.getElementById("provinceFilter").value;
+    let filtered = allData;
+
+    if (currentTab !== "all") filtered = filtered.filter(i => i.type === currentTab);
+    if (showFavsOnly) filtered = filtered.filter(i => favorites.includes(i.name));
+    if (search) filtered = filtered.filter(i => i.name.toLowerCase().includes(search) || (i.desc && i.desc.toLowerCase().includes(search)));
+    if (province && (currentTab === "all" || currentTab === "university" || currentTab === "tvet")) {
+        filtered = filtered.filter(i => i.province === province);
+    }
+
     const grid = document.getElementById("resultsGrid");
     grid.innerHTML = "";
-
-    let filtered = allItems;
-
-    // Tab filter
-    if (currentTab !== "all") {
-        filtered = filtered.filter(item => item.type === currentTab);
-    }
-
-    // Search
-    if (search) {
-        filtered = filtered.filter(item => 
-            item.name.toLowerCase().includes(search) || 
-            (item.desc && item.desc.toLowerCase().includes(search))
-        );
-    }
-
-    // Province filter (only for uni & tvet)
-    if (province && (currentTab === "all" || currentTab === "universities" || currentTab === "tvet")) {
-        filtered = filtered.filter(item => item.province === province);
-    }
-
-    document.getElementById("resultsCount").textContent = `\( {filtered.length} result \){filtered.length !== 1 ? 's' : ''} found`;
+    document.getElementById("resultsInfo").textContent = `Showing \( {filtered.length} result \){filtered.length !== 1 ? 's' : ''}`;
 
     filtered.forEach(item => {
+        const isFav = favorites.includes(item.name);
         const col = document.createElement("div");
         col.className = "col";
-        const icon = item.type === "university" ? "building" : 
+        const icon = item.type === "university" ? "building-fill" : 
                      item.type === "tvet" ? "tools" : 
-                     item.type === "bursary" ? "award" : "briefcase";
-        const color = item.type === "university" ? "bg-primary" : 
-                      item.type === "tvet" ? "bg-success" : 
-                      item.type === "bursary" ? "bg-warning" : "bg-info";
-
+                     item.type === "bursary" ? "award-fill" : "briefcase-fill";
         col.innerHTML = `
-            <div class="card-item position-relative">
-                <div class="card-body p-4 text-center">
-                    <div class="mb-3">
-                        <i class="bi bi-${icon}-fill display-4 text-white opacity-75"></i>
-                    </div>
-                    ${item.province && (item.type === "university" || item.type === "tvet") ? 
-                        `<span class="badge province-badge \( {color} text-dark mb-2"> \){item.province}</span><br>` : ''}
-                    <h5 class="text-white mt-2">${item.name}</h5>
-                    \( {item.desc ? `<p class="small text-muted"> \){item.desc}</p>` : ''}
-                    <a href="${item.website}" target="_blank" class="btn btn-outline-light w-100 mt-3">
-                        Visit Website
-                    </a>
-                </div>
+            <div class="card-item p-4 text-center position-relative">
+                <button class="position-absolute top-0 end-0 m-3 fav-btn fs-4 \( {isFav?'active':''}" data-name=" \){item.name}">
+                    ${isFav?'Filled Heart':'Heart'}
+                </button>
+                <i class="bi bi-${icon} display-4 mb-3 text-warning opacity-75"></i>
+                ${item.province && (item.type === "university" || item.type === "tvet") ? 
+                    `<span class="badge bg-success mb-2">${item.province}</span><br>` : ''}
+                <h5 class="mt-2">${item.name}</h5>
+                \( {item.desc ? `<p class="small text-muted"> \){item.desc}</p>` : ''}
+                <a href="${item.website}" target="_blank" class="btn btn-outline-light w-100 mt-3">Visit Website</a>
             </div>`;
         grid.appendChild(col);
     });
+
+    // Favorites
+    document.querySelectorAll(".fav-btn").forEach(btn => {
+        btn.onclick = () => {
+            const name = btn.dataset.name;
+            if (favorites.includes(name)) {
+                favorites = favorites.filter(f => f !== name);
+                btn.innerHTML = 'Heart';
+                btn.classList.remove("active");
+            } else {
+                favorites.push(name);
+                btn.innerHTML = 'Filled Heart';
+                btn.classList.add("active");
+            }
+            localStorage.setItem("coolieFavs", JSON.stringify(favorites));
+            document.getElementById("favCount").textContent = favorites.length;
+        };
+    });
 }
 
-// Tab buttons
-document.querySelectorAll(".tab-btn").forEach(btn => {
-    btn.addEventListener("click", function() {
-        document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
-        this.classList.add("active");
-        currentTab = this.dataset.tab;
-        renderResults();
-    });
-});
+// Tabs & Filters
+document.querySelectorAll(".tab-btn").forEach(b => b.addEventListener("click", () => {
+    document.querySelectorAll(".tab-btn").forEach(x => x.classList.remove("active"));
+    b.classList.add("active");
+    currentTab = b.dataset.tab;
+    render();
+}));
+document.getElementById("showFavorites").onclick = () => {
+    showFavsOnly = !showFavsOnly;
+    document.getElementById("showFavorites").classList.toggle("btn-warning", showFavsOnly);
+    render();
+};
+document.getElementById("searchInput").addEventListener("input", render);
+document.getElementById("provinceFilter").addEventListener("change", render);
 
-// Filters
-document.getElementById("searchInput").addEventListener("input", renderResults);
-document.getElementById("provinceFilter").addEventListener("change", renderResults);
-
-// Initial render
-renderResults();
+// Init
+render();
 </script>
 </body>
 </html>
