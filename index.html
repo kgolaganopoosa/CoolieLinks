@@ -1,188 +1,312 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Parent LifeHub – No Backend Needed</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/localforage@1.10.0/dist/localforage.min.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Universal Hub • All Apps + 50+ SA Niches</title>
+  <meta name="description" content="One-tap access to global + South African niche platforms: social, shopping, AI, music, movies, gaming, search."/>
+  
+  <!-- Icons from Simple Icons (CDN) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-icons@v13/font/simple-icons.min.css"/>
+  
   <style>
-    body { font-family: system-ui; }
-    [x-data] { display: none; }
-    [x-show] { display: block !important; }
+    :root { --primary: #2563eb; --bg: #0f172a; --card: #1e293b; --text: #e2e8f0; }
+    body { margin:0; font-family: system-ui, sans-serif; background: var(--bg); color: var(--text); padding-bottom: 80px; }
+    header { text-align:center; padding: 2rem 1rem; background: linear-gradient(135deg, #1e40af, #7c3aed); }
+    h1 { margin:0; font-size: 2.2rem; }
+    .tabs { display:flex; flex-wrap:wrap; gap:8px; justify-content:center; padding:1rem; background:#1e293b; position:sticky; top:0; z-index:10; }
+    .tab { padding:10px 16px; background:#334155; border-radius:8px; cursor:pointer; transition:all .2s; }
+    .tab.active { background:var(--primary); font-weight:bold; }
+    .grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap:16px; padding:20px; max-width:1400px; margin:0 auto; }
+    .item { background:var(--card); border-radius:12px; padding:16px 8px; text-align:center; position:relative; transition:transform .2s; }
+    .item:hover { transform:translateY(-4px); }
+    .icon { font-size:42px; margin-bottom:8px; width:100%; height:42px; display:flex; align-items:center; justify-content:center; }
+    .icon svg { width:42px; height:42px; fill:#ccc; transition:fill 0.3s; }
+    .item:hover .icon svg { fill:var(--primary); }
+    .name { font-size:13px; margin:4px 0 0; }
+    .badge { position:absolute; top:8px; right:8px; background:#ef4444; color:white; font-size:10px; width:18px; height:18px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:bold; }
+    .simulate { font-size:10px; color:#60a5fa; margin-top:6px; cursor:pointer; }
+    @media (max-width:640px) { .grid { grid-template-columns:repeat(3,1fr); gap:14px; padding:14px; } }
   </style>
 </head>
-<body class="bg-gray-50 min-h-screen">
-  <div class="max-w-6xl mx-auto p-4">
-    <h1 class="text-4xl font-bold text-indigo-700 mb-8">Parent LifeHub</h1>
+<body>
 
-    <!-- Tabs -->
-    <div class="flex space-x-4 mb-6 overflow-x-auto">
-      <button onclick="showTab('timeline')" class="tab-btn px-6 py-3 bg-indigo-600 text-white rounded-lg">Timeline</button>
-      <button onclick="showTab('schools')" class="tab-btn px-6 py-3 bg-gray-200 rounded-lg">Schools</button>
-      <button onclick="showTab('events')" class="tab-btn px-6 py-3 bg-gray-200 rounded-lg">Events & Fun</button>
-      <button onclick="showTab('transport')" class="tab-btn px-6 py-3 bg-gray-200 rounded-lg">Transport</button>
-      <button onclick="showTab('banking')" class="tab-btn px-6 py-3 bg-gray-200 rounded-lg">Banking</button>
-    </div>
+<header>
+  <h1>Universal Hub</h1>
+  <p>Global + 50+ SA niches (Takealot, Showmax, Mr D, etc.). Tap icons → opens app/site. Custom SA icons included!</p>
+</header>
 
-    <!-- 1. Timeline Planner -->
-    <div id="timeline" class="tab-content">
-      <h2 class="text-2xl font-bold mb-4">Your Child's Life Journey</h2>
-      <div id="milestones"></div>
-      <button onclick="addMilestone()" class="mt-4 bg-green-600 text-white px-4 py-2 rounded">+ Add Milestone</button>
-    </div>
+<div class="tabs">
+  <div class="tab active" onclick="show('social')">Social</div>
+  <div class="tab" onclick="show('shopping')">Shopping</div>
+  <div class="tab" onclick="show('ai')">AI</div>
+  <div class="tab" onclick="show('music')">Music</div>
+  <div class="tab" onclick="show('movies')">Movies/TV</div>
+  <div class="tab" onclick="show('appstores')">App Stores</div>
+  <div class="tab" onclick="show('gaming')">Gaming</div>
+  <div class="tab" onclick="show('search')">Search</div>
+</div>
 
-    <!-- 2. School Applications -->
-    <div id="schools" class="tab-content hidden">
-      <h2 class="text-2xl font-bold mb-4">School Applications</h2>
-      <select id="schoolList" class="p-3 border rounded w-full mb-4"></select>
-      <button onclick="applySchool()" class="bg-blue-600 text-white px-4 py-2 rounded">Apply / Save Progress</button>
-      <div id="applications" class="mt-6"></div>
-    </div>
-
-    <!-- 3. Events (fetched from public Google Sheet) -->
-    <div id="events" class="tab-content hidden">
-      <h2 class="text-2xl font-bold mb-4">Fun Events & Activities</h2>
-      <div id="eventsList" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
-    </div>
-
-    <!-- 4. Transport -->
-    <div id="transport" class="tab-content hidden">
-      <h2 class="text-2xl font-bold mb-4">Book a Ride</h2>
-      <input type="text" id="pickup" placeholder="Pickup address" class="p-3 border rounded w-full mb-2">
-      <input type="text" id="destination" placeholder="Destination (e.g. school)" class="p-3 border rounded w-full mb-4">
-      <div class="flex space-x-4">
-        <button onclick="bookUber()" class="bg-black text-white px-6 py-3 rounded">Uber</button>
-        <button onclick="bookBolt()" class="bg-green-600 text-white px-6 py-3 rounded">Bolt/Taxify</button>
-      </div>
-    </div>
-
-    <!-- 5. Banking -->
-    <div id="banking" class="tab-content hidden">
-      <h2 class="text-2xl font-bold mb-4">Quick Banking</h2>
-      <div class="space-y-4">
-        <button onclick="openBank('capitec')" class="w-full bg-purple-600 text-white py-4 rounded">Capitec</button>
-        <button onclick="openBank('fnb')" class="w-full bg-green-700 text-white py-4 rounded">FNB</button>
-        <button onclick="openBank('nedbank')" class="w-full bg-green-600 text-white py-4 rounded">Nedbank</button>
-      </div>
-    </div>
-  </div>
+<div id="content" class="grid"></div>
 
 <script>
-// === Simple Alpine-like tab system ===
-function showTab(tab) {
-  document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden'));
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('bg-indigo-600', 'text-white'));
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.add('bg-gray-200'));
-  document.getElementById(tab).classList.remove('hidden');
-  event.target.classList.remove('bg-gray-200');
-  event.target.classList.add('bg-indigo-600', 'text-white');
+// Deep link database - Expanded with 50+ SA niches + custom icons
+const apps = {
+  // SOCIAL (Global + SA niches: HelloPeter forums, MyBroadband community, YFM social, etc. ~15 SA)
+  social: [
+    {n:"Facebook", i:"facebook", d:"fb://", w:"https://facebook.com"},
+    {n:"Instagram", i:"instagram", d:"instagram://", w:"https://instagram.com"},
+    {n:"X (Twitter)", i:"x", d:"twitter://", w:"https://x.com"},
+    {n:"TikTok", i:"tiktok", d:"snssdk1233://", w:"https://tiktok.com"},
+    {n:"WhatsApp", i:"whatsapp", d:"whatsapp://", w:"https://wa.me"},
+    {n:"YouTube", i:"youtube", d:"vnd.youtube://", w:"https://youtube.com"},
+    {n:"Snapchat", i:"snapchat", d:"snapchat://", w:"https://snapchat.com"},
+    {n:"Telegram", i:"telegram", d:"tg://", w:"https://t.me"},
+    {n:"LinkedIn", i:"linkedin", d:"linkedin://", w:"https://linkedin.com"},
+    {n:"Reddit", i:"reddit", d:"reddit://", w:"https://reddit.com"},
+    {n:"Pinterest", i:"pinterest", d:"pinterest://", w:"https://pinterest.com"},
+    {n:"Discord", i:"discord", d:"discord://", w:"https://discord.com"},
+    {n:"WeChat", i:"wechat", d:"weixin://", w:"https://weixin.qq.com"},
+    {n:"Threads", i:"threads", d:"threads://", w:"https://threads.net"},
+    {n:"Twitch", i:"twitch", d:"twitch://", w:"https://twitch.tv"},
+    {n:"BeReal", i:"bereal", d:"bereal://", w:"https://bereal.com"},
+    {n:"VK", i:"vk", d:"vk://", w:"https://vk.com"},
+    {n:"Line", i:"line", d:"line://", w:"https://line.me"},
+    {n:"Weibo", i:"weibo", d:"sinaweibo://", w:"https://weibo.com"},
+    {n:"Bluesky", i:"bluesky", d:"bluesky://", w:"https://bsky.app"},
+    // SA Niches
+    {n:"HelloPeter", i:"hellopeter", d:"hellopeter://", w:"https://hellopeter.com", icon:'<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>'},
+    {n:"MyBroadband", i:"mybroadband", d:"mybroadband://", w:"https://mybroadband.co.za/forum", icon:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><text x="12" y="17" text-anchor="middle">MB</text></svg>'},
+    {n:"YFM Social", i:"yfm", d:"yfm://", w:"https://yfm.co.za", icon:'<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg>'},
+    {n:"News24 Community", i:"news24", d:"news24://", w:"https://news24.com", icon:'<svg viewBox="0 0 24 24"><rect width="24" height="24" fill="#007bff"/><text x="12" y="17" text-anchor="middle" fill="white">N24</text></svg>'},
+    {n:"Gumtree SA", i:"gumtree", d:"gumtree://", w:"https://gumtree.co.za", icon:'<svg viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/></svg>'},
+    {n:"Property24", i:"property24", d:"property24://", w:"https://property24.com", icon:'<svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>'},
+    {n:"Cars.co.za", i:"cars", d:"cars://", w:"https://cars.co.za", icon:'<svg viewBox="0 0 24 24"><rect x="3" y="12" width="18" height="8" rx="2"/></svg>'},
+    {n:"AutoTrader", i:"autotrader", d:"autotrader://", w:"https://autotrader.co.za", icon:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>'},
+    {n:"OLX SA", i:"olx", d:"olx://", w:"https://olx.co.za", icon:'<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>'},
+    {n:"SkilledAfricans", i:"skilledafricans", d:"skilledafricans://", w:"https://skilledafricans.org", icon:'<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg>'},
+    {n:"Afriuka", i:"afriuka", d:"afriuka://", w:"https://afriuka.com", icon:'<svg viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/></svg>'},
+    {n:"Yarnme", i:"yarnme", d:"yarnme://", w:"https://yarnme.com", icon:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>'},
+    {n:"Konnect Africa", i:"konnect", d:"konnect://", w:"https://konnect.africa", icon:'<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg>'},
+    {n:"Ayoba", i:"ayoba", d:"ayoba://", w:"https://ayoba.com", icon:'<svg viewBox="0 0 24 24"><rect width="24" height="24" fill="#00a651"/><text x="12" y="17" text-anchor="middle" fill="white">A</text></svg>'},
+    {n:"Koo SA", i:"koo", d:"koo://", w:"https://kooapp.com", icon:'<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg>'},
+  ],
+  // SHOPPING (Global + SA niches: Mr D Food, SweepSouth, TymeBank Shop, Checkers Sixty60, etc. ~20 SA)
+  shopping: [
+    {n:"Takealot", i:"takealot", d:"takealot://", w:"https://takealot.com", icon:'<svg viewBox="0 0 100 35"><path d="M0 0h100v35H0z" fill="#e31e24"/><text x="50" y="25" text-anchor="middle" fill="white" font-size="20">Takealot</text></svg>'}, // Custom SVG
+    {n:"Amazon", i:"amazon", d:"amzn://", w:"https://amazon.com"},
+    {n:"Superbalist", i:"superbalist", d:"superbalist://", w:"https://superbalist.com", icon:'<svg viewBox="0 0 100 35"><path d="M0 0h100v35H0z" fill="#000"/><text x="50" y="25" text-anchor="middle" fill="white" font-size="12">Superbalist</text></svg>'}, // Custom
+    {n:"eBay", i:"ebay", d:"ebay://", w:"https://ebay.com"},
+    {n:"Zando", i:"zando", d:"zando://", w:"https://zando.co.za"},
+    {n:"AliExpress", i:"alibaba", d:"aliexpress://", w:"https://aliexpress.com"},
+    {n:"Bob Shop", i:"bobshop", d:"bobshop://", w:"https://bobshop.co.za"},
+    {n:"Walmart", i:"walmart", d:"walmart://", w:"https://walmart.com"},
+    {n:"Bidorbuy", i:"bidorbuy", d:"bidorbuy://", w:"https://bidorbuy.co.za"},
+    {n:"Shopee", i:"shopee", d:"shopee://", w:"https://shopee.com"},
+    {n:"Loot Marketplace", i:"loot", d:"loot://", w:"https://loot.co.za"},
+    {n:"Temu", i:"temu", d:"temu://", w:"https://temu.com"},
+    {n:"Taobao", i:"taobao", d:"taobao://", w:"https://taobao.com"},
+    {n:"JD.com", i:"jd", d:"jd://", w:"https://jd.com"},
+    {n:"Flipkart", i:"flipkart", d:"flipkart://", w:"https://flipkart.com"},
+    {n:"Woolworths", i:"woolworths", d:"woolworths://", w:"https://woolworths.co.za"},
+    {n:"Mercado Libre", i:"mercadolibre", d:"mercadolibre://", w:"https://mercadolibre.com"},
+    {n:"Etsy", i:"etsy", d:"etsy://", w:"https://etsy.com"},
+    {n:"Rakuten", i:"rakuten", d:"rakuten://", w:"https://rakuten.co.jp"},
+    {n:"Lazada", i:"lazada", d:"lazada://", w:"https://lazada.com"},
+    {n:"Pinduoduo", i:"pinduoduo", d:"pinduoduo://", w:"https://pinduoduo.com"},
+    {n:"Wish", i:"wish", d:"wish://", w:"https://wish.com"},
+    // SA Niches
+    {n:"Mr D Food", i:"mrd", d:"mrd://", w:"https://mrd.co.za", icon:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#ff6b35"/><text x="12" y="17" text-anchor="middle" fill="white">MD</text></svg>'},
+    {n:"SweepSouth", i:"sweepsouth", d:"sweepsouth://", w:"https://sweepsouth.com", icon:'<svg viewBox="0 0 24 24"><path d="M3 17h18v2H3z"/></svg>'},
+    {n:"TymeBank Shop", i:"tyme", d:"tyme://", w:"https://tyme.bank", icon:'<svg viewBox="0 0 24 24"><rect width="24" height="24" fill="#00a651"/><text x="12" y="17" text-anchor="middle" fill="white">T</text></svg>'},
+    {n:"Checkers Sixty60", i:"checkers", d:"checkers://", w:"https://checkers.co.za", icon:'<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg>'},
+    {n:"Uber Eats SA", i:"ubereats", d:"ubereats://", w:"https://ubereats.com", icon:'<svg viewBox="0 0 24 24"><path d="M5.94 3.94L12 10l6.06-6.06L22 6.28l-8.94 8.94L12 21.71 3.06 12.64z"/></svg>'},
+    {n:"Makro", i:"makro", d:"makro://", w:"https://makro.co.za", icon:'<svg viewBox="0 0 24 24"><rect width="24" height="24" fill="#ff0000"/><text x="12" y="17" text-anchor="middle" fill="white">M</text></svg>'},
+    {n:"Pick n Pay", i:"picknpay", d:"picknpay://", w:"https://picknpay.co.za", icon:'<svg viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/></svg>'},
+    {n:"Edgars", i:"edgars", d:"edgars://", w:"https://edgars.co.za", icon:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>'},
+    {n:"Truworths", i:"truworths", d:"truworths://", w:"https://truworths.co.za", icon:'<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg>'},
+    {n:"Mr Price", i:"mrprice", d:"mrprice://", w:"https://mrprice.com", icon:'<svg viewBox="0 0 24 24"><rect width="24" height="24" fill="#ff6b35"/><text x="12" y="17" text-anchor="middle" fill="white">MP</text></svg>'},
+    {n:"Cape Union Mart", i:"capeunion", d:"capeunion://", w:"https://capeunionmart.co.za", icon:'<svg viewBox="0 0 24 24"><path d="M3 17h18v2H3z"/></svg>'},
+    {n:"Outdoor Warehouse", i:"outdoorwarehouse", d:"outdoorwarehouse://", w:"https://outdoorwarehouse.co.za", icon:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>'},
+    {n:"Pet Heaven", i:"petheaven", d:"petheaven://", w:"https://petheaven.co.za", icon:'<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg>'},
+    {n:"Farmers Weekly Shop", i:"farmersweekly", d:"farmersweekly://", w:"https://farmersweekly.co.za", icon:'<svg viewBox="0 0 24 24"><rect width="24" height="24" fill="#228b22"/><text x="12" y="17" text-anchor="middle" fill="white">FW</text></svg>'},
+    {n:"Books24x7", i:"books", d:"books24x7://", w:"https://books24x7.co.za", icon:'<svg viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/></svg>'},
+    {n:"Computershare", i:"computershare", d:"computershare://", w:"https://computershare.com", icon:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>'},
+    {n:"Jumia SA", i:"jumia", d:"jumia://", w:"https://jumia.co.za", icon:'<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg>'},
+    {n:"Konga SA", i:"konga", d:"konga://", w:"https://konga.com", icon:'<svg viewBox="0 0 24 24"><rect width="24" height="24" fill="#ff0000"/><text x="12" y="17" text-anchor="middle" fill="white">K</text></svg>'},
+    {n:"Omniretail", i:"omniretail", d:"omniretail://", w:"https://omniretail.com", icon:'<svg viewBox="0 0 24 24"><path d="M3 17h18v2H3z"/></svg>'},
+    {n:"Qwili", i:"qwili", d:"qwili://", w:"https://qwili.co.za", icon:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>'},
+  ],
+  // AI (Global + SA niches: Lelapa AI, DataProphet, Zindi, Carscan, Aerobotics, etc. ~10 SA)
+  ai: [
+    {n:"ChatGPT", i:"openai", d:"chatgpt://", w:"https://chat.openai.com"},
+    {n:"Grok", i:"xai", d:"grok://", w:"https://grok.x.ai"},
+    {n:"Claude", i:"anthropic", d:"claude://", w:"https://claude.ai"},
+    {n:"Gemini", i:"google", d:"gemini://", w:"https://gemini.google.com"},
+    {n:"Perplexity", i:"perplexity", d:"perplexity://", w:"https://perplexity.ai"},
+    {n:"Midjourney", i:"midjourney", d:"midjourney://", w:"https://midjourney.com"},
+    {n:"Copilot", i:"microsoft", d:"ms-copilot://", w:"https://copilot.microsoft.com"},
+    {n:"Character.AI", i:"characterai", d:"characterai://", w:"https://character.ai"},
+    {n:"Lelapa AI", i:"lelapaai", d:"lelapaai://", w:"https://lelapa.ai", icon:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#4a90e2"/><text x="12" y="17" text-anchor="middle" fill="white">LA</text></svg>'}, // Custom
+    {n:"DataProphet", i:"datapro phet", d:"datapro phet://", w:"https://datapro phet.com", icon:'<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg>'},
+    {n:"Zindi", i:"zindi", d:"zindi://", w:"https://zindi.africa"},
+    {n:"Carscan", i:"carscan", d:"carscan://", w:"https://carscan.ai"},
+    {n:"Aerobotics", i:"aerobotics", d:"aerobotics://", w:"https://aerobotics.com"},
+    {n:"Pineapple AI", i:"pineapple", d:"pineapple://", w:"https://pineapple.co.za", icon:'<svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="2"/></svg>'},
+    {n:"Itakane Health AI", i:"itakane", d:"itakane://", w:"https://itakane.co.za", icon:'<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg>'},
+    {n:"Thalia Psychotherapy AI", i:"thalia", d:"thalia://", w:"https://thalia.ai", icon:'<svg viewBox="0 0 24 24"><rect width="24" height="24" fill="#9b59b6"/><text x="12" y="17" text-anchor="middle" fill="white">T</text></svg>'},
+    {n:"Agrigistics AI", i:"agrigistics", d:"agrigistics://", w:"https://agrigistics.com", icon:'<svg viewBox="0 0 24 24"><path d="M3 17h18v2H3z"/></svg>'},
+    {n:"PayCurve AI", i:"paycurve", d:"paycurve://", w:"https://paycurve.co.za", icon:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>'},
+    {n:"Nulitics XR AI", i:"nulitics", d:"nulitics://", w:"https://nulitics.com", icon:'<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg>'},
+    {n:"Formplus AI", i:"formplus", d:"formplus://", w:"https://formplus.io", icon:'<svg viewBox="0 0 24 24"><rect width="24" height="24" fill="#e74c3c"/><text x="12" y="17" text-anchor="middle" fill="white">F</text></svg>'},
+  ],
+  // MUSIC (Global + SA niches: Simfy, YeboYethu, YFM App, 5FM, RSG, etc. ~10 SA)
+  music: [
+    {n:"Spotify", i:"spotify", d:"spotify://", w:"https://spotify.com"},
+    {n:"Apple Music", i:"apple", d:"music://", w:"https://music.apple.com"},
+    {n:"YouTube Music", i:"youtubemusic", d:"youtubemusic://", w:"https://music.youtube.com"},
+    {n:"Amazon Music", i:"amazon", d:"amazonmusic://", w:"https://music.amazon.com"},
+    {n:"Tidal", i:"tidal", d:"tidal://", w:"https://tidal.com"},
+    {n:"Deezer", i:"deezer", d:"deezer://", w:"https://deezer.com"},
+    {n:"SoundCloud", i:"soundcloud", d:"soundcloud://", w:"https://soundcloud.com"},
+    {n:"Pandora", i:"pandora", d:"pandora://", w:"https://pandora.com"},
+    {n:"Audiomack", i:"audiomack", d:"audiomack://", w:"https://audiomack.com"},
+    {n:"Boomplay", i:"boomplay", d:"boomplay://", w:"https://boomplay.com"},
+    {n:"Simfy Africa", i:"simfyafrica", d:"simfy://", w:"https://simfy.co.za"},
+    {n:"YeboYethu", i:"yeboyethu", d:"yeboyethu://", w:"https://yeboyethu.co.za"},
+    // SA Niches
+    {n:"YFM App", i:"yfm", d:"yfm://", w:"https://yfm.co.za/app", icon:'<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" fill="#ff6b35"/></svg>'},
+    {n:"5FM", i:"5fm", d:"5fm://", w:"https://5fm.co.za", icon:'<svg viewBox="0 0 24 24"><rect width="24" height="24" fill="#00a651"/><text x="12" y="17" text-anchor="middle" fill="white">5</text></svg>'},
+    {n:"RSG", i:"rsg", d:"rsg://", w:"https://rsg.co.za", icon:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>'},
+    {n:"CapeTalk", i:"capetalk", d:"capetalk://", w:"https://capetalk.co.za", icon:'<svg viewBox="0 0 24 24"><path d="M3 17h18v2H3z"/></svg>'},
+    {n:"KFM", i:"kfm", d:"kfm://", w:"https://kfm.co.za", icon:'<svg viewBox="0 0 24 24"><rect width="24" height="24" fill="#e74c3c"/><text x="12" y="17" text-anchor="middle" fill="white">K</text></svg>'},
+    {n:"Good Hope FM", i:"goodhope", d:"goodhope://", w:"https://goodhopefm.co.za", icon:'<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg>'},
+    {n:"Umhlobo Wenene", i:"umhlobo", d:"umhlobo://", w:"https://umhlobowene.co.za", icon:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>'},
+    {n:"TruFM", i:"trufm", d:"trufm://", w:"https://trufm.co.za", icon:'<svg viewBox="0 0 24 24"><rect width="24" height="24" fill="#9b59b6"/><text x="12" y="17" text-anchor="middle" fill="white">T</text></svg>'},
+    {n:"Lesedi FM", i:"lesedi", d:"lesedi://", w:"https://lesedifm.co.za", icon:'<svg viewBox="0 0 24 24"><path d="M3 17h18v2H3z"/></svg>'},
+    {n:"Ikwekwezi FM", i:"ikwekwezi", d:"ikwekwezi://", w:"https://ikwekwezifm.co.za", icon:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>'},
+  ],
+  // MOVIES & SERIES (Global + SA niches: Showmax, DStv Stream, SABC+, eVOD, BritBox SA, etc. ~10 SA)
+  movies: [
+    {n:"Showmax", i:"showmax", d:"showmax://", w:"https://showmax.com", icon:'<svg viewBox="0 0 100 35"><path d="M0 0h100v35H0z" fill="#ff6d00"/><text x="50" y="25" text-anchor="middle" fill="white" font-size="15">Showmax</text></svg>'}, // Custom
+    {n:"Netflix", i:"netflix", d:"nflx://", w:"https://netflix.com"},
+    {n:"Disney+", i:"disneyplus", d:"disneyplus://", w:"https://disneyplus.com"},
+    {n:"Prime Video", i:"amazonprimevideo", d:"primevideo://", w:"https://primevideo.com"},
+    {n:"HBO Max / Max", i:"hbomax", d:"hbomax://", w:"https://max.com"},
+    {n:"Hulu", i:"hulu", d:"hulu://", w:"https://hulu.com"},
+    {n:"Paramount+", i:"paramountplus", d:"paramountplus://", w:"https://paramountplus.com"},
+    {n:"Peacock", i:"peacock", d:"peacocktv://", w:"https://peacocktv.com"},
+    {n:"Apple TV+", i:"appletv", d:"tv://", w:"https://tv.apple.com"},
+    {n:"Viu Africa", i:"viu", d:"viu://", w:"https://viu.com"},
+    {n:"Hotstar", i:"hotstar", d:"hotstar://", w:"https://hotstar.com"},
+    {n:"Tuluntulu", i:"tuluntulu", d:"tuluntulu://", w:"https://tuluntulu.com"},
+    // SA Niches
+    {n:"DStv Stream", i:"dstv", d:"dstv://", w:"https://dstv.com", icon:'<svg viewBox="0 0 24 24"><rect width="24" height="24" fill="#00a651"/><text x="12" y="17" text-anchor="middle" fill="white">D</text></svg>'},
+    {n:"SABC+", i:"sabc", d:"sabc://", w:"https://sabcplus.com", icon:'<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg>'},
+    {n:"eVOD", i:"evod", d:"evod://", w:"https://evod.co.za", icon:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>'},
+    {n:"BritBox SA", i:"britbox", d:"britbox://", w:"https://britbox.co.za", icon:'<svg viewBox="0 0 24 24"><rect width="24" height="24" fill="#ff6b35"/><text x="12" y="17" text-anchor="middle" fill="white">B</text></svg>'},
+    {n:"M-Net Movies", i:"mnet", d:"mnet://", w:"https://mnet.co.za", icon:'<svg viewBox="0 0 24 24"><path d="M3 17h18v2H3z"/></svg>'},
+    {n:"kykNET", i:"kyknet", d:"kyknet://", w:"https://kyknet.co.za", icon:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>'},
+    {n:"Africa Channel", i:"africachannel", d:"africachannel://", w:"https://africachannel.co.za", icon:'<svg viewBox="0 0 24 24"><rect width="24" height="24" fill="#228b22"/><text x="12" y="17" text-anchor="middle" fill="white">AC</text></svg>'},
+    {n:"Tuluntulu", i:"tuluntulu", d:"tuluntulu://", w:"https://tuluntulu.com"},
+    {n:"YeboYethu TV", i:"yeboyethu", d:"yeboyethu://", w:"https://yeboyethu.co.za/tv", icon:'<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg>'},
+    {n:"Vaya", i:"vaya", d:"vaya://", w:"https://vaya.co.za", icon:'<svg viewBox="0 0 24 24"><rect width="24" height="24" fill="#9b59b6"/><text x="12" y="17" text-anchor="middle" fill="white">V</text></svg>'},
+  ],
+  // APP STORES (Global + SA: No major uniques, but added SnapStore, Aptoide SA focus ~3 SA)
+  appstores: [
+    {n:"Google Play", i:"googleplay", d:"market://", w:"https://play.google.com"},
+    {n:"App Store", i:"apple", d:"itms-apps://", w:"https://apps.apple.com"},
+    {n:"Huawei AppGallery", i:"huawei", d:"appgallery://", w:"https://appgallery.huawei.com"},
+    {n:"Samsung Galaxy Store", i:"samsung", d:"samsungapps://", w:"https://galaxystore.samsung.com"},
+    {n:"Amazon Appstore", i:"amazon", d:"amzn://apps", w:"https://amazon.com/appstore"},
+    {n:"Aptoide", i:"aptoide", d:"aptoide://", w:"https://aptoide.com"},
+    {n:"F-Droid", i:"fdroid", d:"fdroid://", w:"https://f-droid.org"},
+    // SA Niches
+    {n:"SnapStore SA", i:"snapstore", d:"snapstore://", w:"https://snapstore.co.za", icon:'<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg>'},
+    {n:"MTN App Store", i:"mtn", d:"mtnapp://", w:"https://mtn.co.za/apps", icon:'<svg viewBox="0 0 24 24"><rect width="24" height="24" fill="#00a651"/><text x="12" y="17" text-anchor="middle" fill="white">MTN</text></svg>'},
+    {n:"Vodacom Apps", i:"vodacom", d:"vodacomapp://", w:"https://vodacom.co.za/apps", icon:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#e31e24"/></svg>'},
+  ],
+  // GAMING (Global + SA niches: Carry1st, ACGL, Leti Arts, QP Dronetech, etc. ~8 SA)
+  gaming: [
+    {n:"Steam", i:"steam", d:"steam://", w:"https://store.steampowered.com"},
+    {n:"Epic Games", i:"epicgames", d:"epicgames://", w:"https://store.epicgames.com"},
+    {n:"Xbox", i:"xbox", d:"xbox://", w:"https://xbox.com"},
+    {n:"PlayStation", i:"playstation", d:"psapp://", w:"https://playstation.com"},
+    {n:"Roblox", i:"roblox", d:"roblox://", w:"https://roblox.com"},
+    {n:"Nintendo", i:"nintendo", d:"nintendo://", w:"https://nintendo.com"},
+    {n:"GeForce Now", i:"nvidia", d:"nvidia://", w:"https://geforcenow.com"},
+    {n:"Game Pass", i:"xboxgamepass", d:"xboxgamepass://", w:"https://xbox.com/gamepass"},
+    {n:"Carry1st", i:"carry1st", d:"carry1st://", w:"https://carry1st.com"},
+    {n:"FPS Strike Ops", i:"fpsstrike", d:"fpsstrike://", w:"https://play.google.com/store/apps/details?id=com.fps.strike.ops"},
+    // SA Niches
+    {n:"African Cyber Gaming League", i:"acgl", d:"acgl://", w:"https://acgl.co.za", icon:'<svg viewBox="0 0 24 24"><rect width="24" height="24" fill="#00a651"/><text x="12" y="17" text-anchor="middle" fill="white">ACGL</text></svg>'},
+    {n:"Leti Arts", i:"letiarts", d:"letiarts://", w:"https://letiarts.com", icon:'<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg>'},
+    {n:"QP Dronetech", i:"qpdronetech", d:"qpdronetech://", w:"https://qpdronetech.com", icon:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>'},
+    {n:"Dragonfly Aerospace", i:"dragonfly", d:"dragonfly://", w:"https://dragonflyaerospace.com", icon:'<svg viewBox="0 0 24 24"><path d="M3 17h18v2H3z"/></svg>'},
+    {n:"Fixxr Gaming", i:"fixxr", d:"fixxr://", w:"https://fixxr.co.za", icon:'<svg viewBox="0 0 24 24"><rect width="24" height="24" fill="#ff6b35"/><text x="12" y="17" text-anchor="middle" fill="white">F</text></svg>'},
+    {n:"ProItUP Optics Games", i:"proitup", d:"proitup://", w:"https://proitup.com", icon:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>'},
+    {n:"Tipped Gaming", i:"tipped", d:"tipped://", w:"https://tipped.co.za", icon:'<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg>'},
+    {n:"TUNL Esports", i:"tunl", d:"tunl://", w:"https://tunl.co.za", icon:'<svg viewBox="0 0 24 24"><rect width="24" height="24" fill="#9b59b6"/><text x="12" y="17" text-anchor="middle" fill="white">T</text></svg>'},
+  ],
+  // SEARCH (Global + SA: No major, but added niche like SA-specific search tools ~3)
+  search: [
+    {n:"Google", i:"google", d:"googlechrome://", w:"https://google.com"},
+    {n:"Bing", i:"bing", d:"bing://", w:"https://bing.com"},
+    {n:"DuckDuckGo", i:"duckduckgo", d:"ddgQuickLink://", w:"https://duckduckgo.com"},
+    {n:"Baidu", i:"baidu", d:"baidu://", w:"https://baidu.com"},
+    {n:"Yandex", i:"yandex", d:"yandexsearch://", w:"https://yandex.com"},
+    {n:"Naver", i:"naver", d:"naversearch://", w:"https://naver.com"},
+    {n:"Yahoo", i:"yahoo", d:"yahoo://", w:"https://yahoo.com"},
+    {n:"Ecosia", i:"ecosia", d:"ecosia://", w:"https://ecosia.org"},
+    // SA Niches
+    {n:"MyBroadband Search", i:"mybroadband", d:"mybroadbandsearch://", w:"https://mybroadband.co.za/search", icon:'<svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>'},
+    {n:"News24 Search", i:"news24", d:"news24search://", w:"https://news24.com/search", icon:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>'},
+    {n:"IOL Search", i:"iol", d:"iolsearch://", w:"https://iol.co.za/search", icon:'<svg viewBox="0 0 24 24"><path d="M3 17h18v2H3z"/></svg>'},
+  ]
+};
+
+// Notification simulation
+let notifications = JSON.parse(localStorage.getItem('hub-notifs') || '{}');
+
+function openApp(deep, web) {
+  location.href = deep || web;
+  setTimeout(() => { if (document.visibilityState === 'visible') location.href = web; }, 1000);
 }
-showTab('timeline');
 
-// === LocalStorage Helper ===
-const db = localforage.createInstance({ name: "ParentLifeHub" });
-
-// === 1. Timeline Milestones ===
-const defaultMilestones = [
-  { age: "Pregnancy", task: "First ultrasound", done: false },
-  { age: "0-3 years", task: "Apply for preschool", done: false },
-  { age: "4-6 years", task: "Grade R application", done: false },
-  { age: "Grade 1", task: "Primary school application", done: false },
-  { age: "Grade 8", task: "High school application", done: false },
-  { age: "Grade 12", task: "University / Bursary applications", done: false },
-  { age: "18+", task: "First job / Internship", done: false }
-];
-
-async function loadMilestones() {
-  let milestones = await db.getItem('milestones') || defaultMilestones;
-  const container = document.getElementById('milestones');
-  container.innerHTML = milestones.map((m, i) => `
-    <div class="bg-white p-4 rounded shadow mb-3 flex justify-between items-center">
-      <div>
-        <strong>\( {m.age}</strong>: \){m.task}
+function render(category) {
+  const container = document.getElementById('content');
+  container.innerHTML = apps[category].map(app => {
+    const count = notifications[app.n] || 0;
+    const iconHtml = app.icon || `<i class="si si-${app.i}" style="color:#ccc"></i>`;
+    return `
+      <div class="item" onclick="openApp('\( {app.d}',' \){app.w}')">
+        <div class="icon">${iconHtml}</div>
+        \( {count > 0 ? `<div class="badge"> \){count}</div>` : ''}
+        <div class="name">${app.n}</div>
+        <div class="simulate" onclick="event.stopPropagation(); addNotif('${app.n}')">
+          ${count > 0 ? 'Clear' : '+ Notify'}
+        </div>
       </div>
-      <input type="checkbox" \( {m.done ? 'checked' : ''} onchange="toggleMilestone( \){i})">
-    </div>
-  `).join('');
-}
-async function toggleMilestone(i) {
-  let milestones = await db.getItem('milestones') || defaultMilestones;
-  milestones[i].done = !milestones[i].done;
-  await db.setItem('milestones', milestones);
-  loadMilestones();
-}
-async function addMilestone() {
-  let age = prompt("Age/Stage (e.g. Grade 10)");
-  let task = prompt("Task (e.g. Choose subjects)");
-  if (age && task) {
-    let milestones = await db.getItem('milestones') || defaultMilestones;
-    milestones.push({ age, task, done: false });
-    await db.setItem('milestones', milestones);
-    loadMilestones();
-  }
+    `;
+  }).join('');
 }
 
-// === 2. School Applications (example list) ===
-const schools = [
-  "Little Genius Preschool", "Sunshine Primary", "Westville High", "Stellenbosch University"
-];
-schools.forEach(s => {
-  const opt = document.createElement('option');
-  opt.value = s; opt.textContent = s;
-  document.getElementById('schoolList').appendChild(opt);
-});
-
-async function applySchool() {
-  const school = document.getElementById('schoolList').value;
-  let apps = await db.getItem('applications') || [];
-  if (!apps.includes(school)) {
-    apps.push({ name: school, date: new Date().toLocaleDateString(), status: "Applied" });
-    await db.setItem('applications', apps);
-  }
-  document.getElementById('applications').innerHTML = apps.map(a => `
-    <div class="bg-blue-50 p-3 rounded mb-2">\( {a.name} – Applied \){a.date}</div>
-  `).join('');
+function addNotif(name) {
+  notifications[name] = (notifications[name] || 0) + (notifications[name] ? -notifications[name] : 1);
+  if (notifications[name] === 0) delete notifications[name];
+  localStorage.setItem('hub-notifs', JSON.stringify(notifications));
+  const activeTab = document.querySelector('.tab.active').textContent.toLowerCase().replace(/\/tv|stores/g, '').split(' ')[0];
+  render(activeTab);
 }
 
-// === 3. Events (from public Google Sheet via Sheety) ===
-fetch('https://api.sheety.co/YOUR_SHEETY_ID/events') // create free at sheety.co
-  .then(r => r.json())
-  .then(data => {
-    document.getElementById('eventsList').innerHTML = data.events.map(e => `
-      <div class="bg-white p-4 rounded shadow">
-        <h3 class="font-bold">${e.name}</h3>
-        <p>\( {e.date} | \){e.location}</p>
-        <a href="${e.link}" class="text-indigo-600">Book →</a>
-      </div>
-    `).join('');
-  });
-
-// === 4. Transport Deep Links ===
-function bookUber() {
-  const pickup = encodeURIComponent(document.getElementById('pickup').value || "Current Location");
-  const dest = encodeURIComponent(document.getElementById('destination').value);
-  window.open(`uber://?action=setPickup&pickup=my_location&dropoff[formatted_address]=${dest}`);
-}
-function bookBolt() {
-  const pickup = document.getElementById('pickup').value;
-  const dest = document.getElementById('destination').value;
-  window.open(`https://bolt.eu/en/cities/?pickup=\( {pickup}&destination= \){dest}`);
+function show(tab) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  event.target.classList.add('active');
+  render(tab);
 }
 
-// === 5. Banking Deep Links (South Africa example) ===
-function openBank(bank) {
-  const banks = {
-    capitec: 'capitec://',
-    fnb: 'fnbapp://',
-    nedbank: 'nedbank://'
-  };
-  window.open(banks[bank] || 'https://google.com/search?q=' + bank + '+app');
-}
-
-// Init
-loadMilestones();
-applySchool(); // load existing
+// Load first
+render('social');
 </script>
 </body>
 </html>
