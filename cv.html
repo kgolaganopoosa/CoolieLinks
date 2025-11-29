@@ -3,75 +3,336 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Your CV – Coolie Links SA</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <title>LifeOS - The Universal Planner</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
     <style>
-        body {background:#f8f9fa;font-family:'Inter', 'Segoe UI', sans-serif;}
-        .cv-preview {
-            background:white;color:#1e293b;border-radius:16px;
-            box-shadow:0 20px 60px rgba(0,0,0,0.1);
-            padding:40px 50px;max-width:900px;margin:0 auto;
-            font-size:16px;line-height:1.6;
-        }
-        .cv-header {text-align:center;border-bottom:4px solid #f97316;padding-bottom:20px;margin-bottom:30px;}
-        .cv-header h1 {font-size:2.8rem;font-weight:800;color:#1e293b;margin:0;}
-        .cv-header p {color:#f97316;font-weight:600;margin:10px 0;}
-        .contact-info {display:flex;flex-wrap:wrap;gap:20px;justify-content:center;margin-top:15px;font-size:14px;}
-        .contact-item {display:flex;align-items:center;gap:8px;color:#555;}
-        .section-title {
-            color:#f97316;font-size:1.4rem;font-weight:700;
-            border-bottom:2px solid #f97316;padding-bottom:8px;margin:35px 0 20px;
-        }
-        .education-entry, .experience-entry {margin-bottom:25px;}
-        .education-entry h5, .experience-entry h5 {margin:0;font-weight:600;color:#1e293b;}
-        .education-entry small, .experience-entry small {color:#888;}
-        .skill-tag {
-            display:inline-block;background:#e2e8f0;color:#1e293b;
-            padding:6px 14px;border-radius:30px;font-size:13px;margin:5px;
-        }
-        .btn-download {
-            background:#f97316;color:white;border:none;
-            padding:14px 32px;border-radius:50px;font-size:1.1rem;font-weight:600;
-            transition:all 0.3s;
-        }
-        .btn-download:hover {background:#ea580c;transform:scale(1.05);}
-        .form-container {background:white;border-radius:16px;padding:30px;box-shadow:0 10px 30px rgba(0,0,0,0.08);}
+        body { background-color: #f4f6f9; }
+        .sidebar { min-height: 100vh; background: #2c3e50; color: white; }
+        .nav-link { color: #bdc3c7; cursor: pointer; }
+        .nav-link:hover, .nav-link.active { color: white; background: #34495e; border-radius: 5px; }
+        .card { border: none; box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        .timeline-item { border-left: 3px solid #3498db; padding-left: 20px; margin-bottom: 20px; position: relative; }
+        .timeline-item::before { content: ''; position: absolute; left: -8px; top: 0; width: 13px; height: 13px; background: #3498db; border-radius: 50%; }
+        .balance-display { font-size: 2rem; font-weight: bold; color: #27ae60; }
+        .hidden { display: none; }
     </style>
 </head>
-<body class="bg-light py-5">
+<body>
 
-<div class="container">
-    <div class="row g-5">
-        <!-- Form -->
-        <div class="col-lg-5">
-            <div class="form-container">
-                <h2 class="mb-4">Build Your CV</h2>
-                <form id="cvForm">
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-2 sidebar p-3">
+            <h3 class="mb-4"><i class="fas fa-dna"></i> LifeOS</h3>
+            <ul class="nav flex-column">
+                <li class="nav-item mb-2" onclick="app.render('dashboard')">
+                    <a class="nav-link active" id="nav-dashboard"><i class="fas fa-chart-pie me-2"></i> Dashboard</a>
+                </li>
+                <li class="nav-item mb-2" onclick="app.render('education')">
+                    <a class="nav-link" id="nav-education"><i class="fas fa-graduation-cap me-2"></i> Education</a>
+                </li>
+                <li class="nav-item mb-2" onclick="app.render('career')">
+                    <a class="nav-link" id="nav-career"><i class="fas fa-briefcase me-2"></i> Career</a>
+                </li>
+                <li class="nav-item mb-2" onclick="app.render('utilities')">
+                    <a class="nav-link" id="nav-utilities"><i class="fas fa-bolt me-2"></i> Utilities & Fun</a>
+                </li>
+                <li class="nav-item mb-2" onclick="app.render('finance')">
+                    <a class="nav-link" id="nav-finance"><i class="fas fa-wallet me-2"></i> Banking</a>
+                </li>
+                <li class="nav-item mt-5" onclick="app.exportData()">
+                    <a class="nav-link text-warning"><i class="fas fa-download me-2"></i> Backup Data</a>
+                </li>
+            </ul>
+        </div>
 
-                    <h5 class="mt-4">Personal Information</h5>
-                    <input type="text" class="form-control mb-3" placeholder="Full Name" id="fullName" required>
-                    <input type="text" class="form-control mb-3" placeholder="Profession / Job Title" id="title">
+        <div class="col-md-10 p-4" id="main-content">
+            </div>
+    </div>
+</div>
+
+<script>
+    const app = {
+        // STATE MANAGEMENT (The "Database")
+        data: {
+            user: { name: "Guest", age: 0, balance: 0 },
+            education: [],
+            jobs: [],
+            goals: []
+        },
+
+        init: function() {
+            // Load from LocalStorage if exists
+            const saved = localStorage.getItem('lifeOS_data');
+            if (saved) {
+                this.data = JSON.parse(saved);
+            } else {
+                // Initialize Default Data
+                this.data.user.name = prompt("Welcome to LifeOS. What is the name of the person you are planning for?") || "User";
+                this.data.user.age = parseInt(prompt("Current Age?", "5"));
+                this.save();
+            }
+            this.render('dashboard');
+        },
+
+        save: function() {
+            localStorage.setItem('lifeOS_data', JSON.stringify(this.data));
+            this.render(this.currentView); // Re-render to show changes
+        },
+
+        // ROUTING (Switching Views)
+        currentView: 'dashboard',
+        render: function(view) {
+            this.currentView = view;
+            const container = document.getElementById('main-content');
+            
+            // Highlight sidebar
+            document.querySelectorAll('.nav-link').forEach(el => el.classList.remove('active'));
+            document.getElementById(`nav-${view}`).classList.add('active');
+
+            let html = '';
+
+            if (view === 'dashboard') {
+                const stage = this.getLifeStage(this.data.user.age);
+                html = `
+                    <h2>Welcome, ${this.data.user.name}</h2>
+                    <p class="text-muted">Current Stage: <strong>${stage}</strong> | Age: ${this.data.user.age}</p>
                     
-                    <h5 class="mt-4">Contact Details</h5>
-                    <div class="row g-3">
-                        <div class="col-12"><input type="email" class="form-control" placeholder="Email Address" id="email"></div>
-                        <div class="col-12"><input type="tel" class="form-control" placeholder="Phone Number" id="phone"></div>
-                        <div class="col-12"><input type="text" class="form-control" placeholder="City, Province (e.g. Johannesburg, Gauteng)" id="location"></div>
-                        <div class="col-12"><input type="url" class="form-control" placeholder="LinkedIn / Portfolio (optional)" id="linkedin"></div>
-                    </div>
-
-                    <textarea class="form-control mt-3" rows="3" placeholder="Professional Summary (optional)" id="bio"></textarea>
-
-                    <h5 class="mt-4">Education</h5>
-                    <div id="educationFields">
-                        <div class="border rounded p-3 mb-3 bg-light">
-                            <input type="text" class="form-control mb-2" placeholder="Institution (e.g. University of Cape Town)">
-                            <input type="text" class="form-control mb-2" placeholder="Qualification (e.g. Bachelor of Commerce)">
-                            <input type="text" class="form-control" placeholder="Years (e.g. 2021 – 2024)">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="card p-3">
+                                <h5><i class="fas fa-piggy-bank text-success"></i> Net Worth</h5>
+                                <h3 class="mt-2">$${this.data.user.balance}</h3>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card p-3">
+                                <h5><i class="fas fa-clock text-primary"></i> Next Milestone</h5>
+                                <p class="mt-2">${this.getNextMilestone(stage)}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card p-3">
+                                <h5>Actions</h5>
+                                <button class="btn btn-sm btn-outline-dark" onclick="app.updateAge(1)">+ Add Year to Age</button>
+                            </div>
                         </div>
                     </div>
-                    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="addEducation()">+ Add Education</button>
 
-                    <h5 class="mt-4">Work Experience</h5>
-                    <div id="experienceFields
+                    <h4 class="mt-4">Life Timeline</h4>
+                    <div class="card p-4">
+                        ${this.renderTimeline()}
+                    </div>
+                `;
+            } 
+            
+            else if (view === 'education') {
+                html = `
+                    <h2>Education Planner</h2>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card p-3">
+                                <h5>School Finder (Google Maps)</h5>
+                                <p>Finding schools near your location...</p>
+                                <iframe width="100%" height="250" frameborder="0" style="border:0" 
+                                src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d10000!2d0!3d0!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sus!4v1" allowfullscreen></iframe>
+                                <small class="text-muted">*Map centered on generic location for demo</small>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card p-3">
+                                <h5>Academic Record</h5>
+                                <div class="mb-3">
+                                    <input type="text" id="gradeInput" class="form-control mb-2" placeholder="Subject (e.g. Mathematics)">
+                                    <input type="text" id="scoreInput" class="form-control mb-2" placeholder="Score (e.g. A+ or 90%)">
+                                    <button class="btn btn-primary w-100" onclick="app.addGrade()">Save Record</button>
+                                </div>
+                                <ul class="list-group">
+                                    ${this.data.education.map(e => `<li class="list-group-item d-flex justify-content-between"><span>${e.subject}</span> <strong>${e.score}</strong></li>`).join('')}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            else if (view === 'utilities') {
+                html = `
+                    <h2>Utilities & Services Hub</h2>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="card p-3 text-center">
+                                <i class="fas fa-taxi fa-3x mb-3 text-dark"></i>
+                                <h5>Transport</h5>
+                                <p>Quickly hail a ride to your saved locations.</p>
+                                <a href="https://m.uber.com/ul" target="_blank" class="btn btn-dark mb-2">Open Uber</a>
+                                <a href="https://bolt.eu" target="_blank" class="btn btn-success mb-2">Open Bolt/Taxify</a>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="card p-3 text-center">
+                                <i class="fas fa-ticket-alt fa-3x mb-3 text-danger"></i>
+                                <h5>Events & Fun</h5>
+                                <p>Find activities based on age: ${this.data.user.age}</p>
+                                <button class="btn btn-danger" onclick="alert('Fetching events from Ticketmaster API... Found: Disney on Ice, Science Expo.')">Find Local Events</button>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="card p-3 text-center">
+                                <i class="fas fa-utensils fa-3x mb-3 text-warning"></i>
+                                <h5>Food Delivery</h5>
+                                <a href="https://www.ubereats.com" target="_blank" class="btn btn-warning text-white">Order Food</a>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            else if (view === 'finance') {
+                html = `
+                    <h2>Personal Banking Simulator</h2>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="card p-4 bg-success text-white">
+                                <small>Current Balance</small>
+                                <h1 class="display-4">$${this.data.user.balance}</h1>
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card p-3">
+                                <h5>Transaction Manager</h5>
+                                <div class="input-group mb-3">
+                                    <input type="number" id="amountInput" class="form-control" placeholder="Amount">
+                                    <button class="btn btn-success" onclick="app.updateMoney(1)">Deposit</button>
+                                    <button class="btn btn-danger" onclick="app.updateMoney(-1)">Withdraw</button>
+                                </div>
+                                <div class="alert alert-info">
+                                    Tip: Start saving for University fees early! Projected cost: $20,000.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+             else if (view === 'career') {
+                html = `
+                    <h2>Career & Jobs</h2>
+                    <div class="alert alert-secondary">
+                        Current Status: <strong>${this.data.user.age < 16 ? "Student (Too young for full-time work)" : "Eligible for Work"}</strong>
+                    </div>
+                    
+                    <div class="card p-3">
+                        <h5>Application Tracker</h5>
+                        <p>Keep track of jobs you have applied for.</p>
+                        <div class="input-group mb-3">
+                             <input type="text" id="jobInput" class="form-control" placeholder="Company Name / Role">
+                             <button class="btn btn-primary" onclick="app.addJob()">Track Application</button>
+                        </div>
+                        <ul class="list-group">
+                             ${this.data.jobs.map(j => `<li class="list-group-item"><i class="fas fa-check-circle text-success"></i> Applied to: ${j}</li>`).join('')}
+                        </ul>
+                    </div>
+
+                    <div class="mt-4">
+                        <h5>External Job Boards</h5>
+                        <a href="https://www.linkedin.com/jobs" target="_blank" class="btn btn-outline-primary">LinkedIn Jobs</a>
+                        <a href="https://www.indeed.com" target="_blank" class="btn btn-outline-primary">Indeed</a>
+                    </div>
+                `;
+            }
+
+            container.innerHTML = html;
+        },
+
+        // LOGIC HELPERS
+        getLifeStage: function(age) {
+            if (age < 5) return "Preschool / Toddler";
+            if (age < 13) return "Primary School";
+            if (age < 18) return "High School";
+            if (age < 23) return "University / College";
+            return "Workforce / Career";
+        },
+
+        getNextMilestone: function(stage) {
+            const path = {
+                "Preschool / Toddler": "Apply for Primary School (Grade 1)",
+                "Primary School": "High School Entrance Exams",
+                "High School": "University Applications (SATs/Matric)",
+                "University / College": "Internships & Graduation",
+                "Workforce / Career": "Retirement Planning"
+            };
+            return path[stage] || "Enjoy Life!";
+        },
+
+        renderTimeline: function() {
+            // Generates the visual path
+            const milestones = [
+                { age: 1, label: "Birth & Vaccination" },
+                { age: 5, label: "Preschool Graduation" },
+                { age: 13, label: "Primary School Completed" },
+                { age: 18, label: "High School Diploma" },
+                { age: 22, label: "University Degree" },
+                { age: 25, label: "First Full-time Job" }
+            ];
+
+            return milestones.map(m => {
+                const isPast = this.data.user.age >= m.age;
+                const color = isPast ? "text-success" : "text-muted";
+                const check = isPast ? '<i class="fas fa-check-circle"></i>' : '<i class="far fa-circle"></i>';
+                return `<div class="timeline-item ${color}">
+                            <strong>Age ${m.age}:</strong> ${m.label} ${check}
+                        </div>`;
+            }).join('');
+        },
+
+        // ACTIONS
+        updateAge: function(years) {
+            this.data.user.age += years;
+            this.save();
+        },
+
+        updateMoney: function(multiplier) {
+            const amount = parseFloat(document.getElementById('amountInput').value);
+            if (!amount) return;
+            this.data.user.balance += (amount * multiplier);
+            this.save();
+        },
+
+        addGrade: function() {
+            const sub = document.getElementById('gradeInput').value;
+            const scr = document.getElementById('scoreInput').value;
+            if(sub && scr) {
+                this.data.education.push({ subject: sub, score: scr });
+                this.save();
+            }
+        },
+
+        addJob: function() {
+            const job = document.getElementById('jobInput').value;
+            if(job) {
+                this.data.jobs.push(job);
+                this.save();
+            }
+        },
+
+        exportData: function() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(this.data));
+            const downloadAnchorNode = document.createElement('a');
+            downloadAnchorNode.setAttribute("href", dataStr);
+            downloadAnchorNode.setAttribute("download", "life_plan_backup.json");
+            document.body.appendChild(downloadAnchorNode);
+            downloadAnchorNode.click();
+            downloadAnchorNode.remove();
+        }
+    };
+
+    // Start the App
+    app.init();
+</script>
+
+</body>
+</html>
