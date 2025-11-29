@@ -1,548 +1,209 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <title>Global App Launcher — Full</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <style>
-    :root{
-      --bg:#f5f7fb; --card:#ffffff; --muted:#6c757d; --text:#111;
-      --accent:#0d6efd; --danger:#dc3545;
-    }
-    [data-theme="dark"]{
-      --bg:#0d1117; --card:#0b1220; --muted:#9aa4b2; --text:#e6eef6; --accent:#4ea8ff; --danger:#ff6b6b;
-    }
-    body{ background:var(--bg); color:var(--text); font-family: Arial, sans-serif; padding:18px; }
-    .topbar{ display:flex; gap:12px; align-items:center; justify-content:space-between; margin-bottom:12px; }
-    .controls{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
-    .searchbox{ width:320px; max-width:40vw; }
-    .card-grid{ display:grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap:12px; margin-top:12px; }
-    .platform-card{ background:var(--card); border-radius:12px; padding:12px; text-align:center; position:relative; box-shadow:0 6px 14px rgba(2,6,23,0.06); cursor:pointer; transition:transform .12s ease;}
-    .platform-card:hover{ transform:translateY(-4px); }
-    .picon{ width:56px; height:56px; border-radius:10px; object-fit:cover; display:block; margin:0 auto 8px; }
-    .badge-count{ position:absolute; top:8px; right:10px; background:var(--danger); color:white; border-radius:20px; padding:3px 7px; font-size:12px; display:none; }
-    .meta{ font-size:12px; color:var(--muted); margin-top:6px; }
-    .filters{ display:flex; gap:8px; flex-wrap:wrap; }
-    .filter-select{ min-width:160px; }
-    .small-muted{ color:var(--muted); font-size:13px; }
-    .section-title{ margin-top:20px; margin-bottom:6px; font-weight:700; }
-    .footer-note{ margin-top:18px; color:var(--muted); font-size:13px; }
-    .country-pill{ display:inline-block; padding:4px 8px; border-radius:999px; background:rgba(0,0,0,0.04); margin:2px; font-size:12px; }
-    .toolbar-btn{ min-width:42px; }
-    @media(max-width:700px){ .searchbox{ width:100%; max-width:100%; } .topbar{flex-direction:column; align-items:flex-start;} }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PlatformVerse</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+body.dark { background-color: #121212; color: white; }
+.nav-tabs .nav-link.active { font-weight: bold; }
+.platform-card {
+    border-radius: 10px;
+    padding: 15px;
+    background: #ffffff;
+    transition: 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+body.dark .platform-card { background: #1e1e1e; color: white; }
+.platform-card:hover { transform: scale(1.03); }
+.platform-icon { font-size: 32px; margin-right: 10px; }
+.analytics-count { font-size: 12px; color: gray; }
+</style>
 </head>
 <body>
-  <div>
-    <div class="topbar">
-      <div>
-        <h2 style="margin:0">Global App Launcher — Full</h2>
-        <div class="small-muted">Large curated platform list · search · filters · dark mode · client-only badges</div>
-      </div>
 
-      <div class="controls">
-        <input id="searchInput" class="form-control searchbox" placeholder="Search apps, e.g. 'Spotify' or 'Amazon'">
-        <select id="categoryFilter" class="form-select filter-select" title="Filter category">
-          <option value="">All categories</option>
-        </select>
-        <select id="countryFilter" class="form-select filter-select" title="Filter country">
-          <option value="">All countries</option>
-        </select>
-        <select id="sortSelect" class="form-select filter-select" title="Sort by">
-          <option value="pop">Sort: Popularity</option>
-          <option value="alpha">Sort: A → Z</option>
-        </select>
-        <button id="darkToggle" class="btn btn-outline-secondary toolbar-btn" title="Toggle dark mode">🌗</button>
-        <button id="simBtn" class="btn btn-outline-primary toolbar-btn" title="Simulate notifications">🔔</button>
-        <button id="exportBtn" class="btn btn-outline-success toolbar-btn" title="Export">⬇</button>
-        <button id="importBtn" class="btn btn-outline-info toolbar-btn" title="Import">⬆</button>
-        <button id="addBtn" class="btn btn-success" title="Add custom platform">+ Add</button>
-      </div>
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg bg-light px-3">
+  <a class="navbar-brand fw-bold">PlatformVerse</a>
+  <div class="ms-auto d-flex gap-2">
+    <button class="btn btn-outline-dark" id="darkModeBtn">Dark Mode</button>
+  </div>
+</nav>
+
+<!-- SEARCH + SORT -->
+<div class="container mt-3">
+  <div class="row mb-3">
+    <div class="col-md-8">
+      <input id="searchInput" class="form-control" placeholder="Search platforms...">
     </div>
-
-    <div>
-      <div class="small-muted">Group view: <span id="groupInfo" class="small-muted">All platforms</span></div>
-    </div>
-
-    <div id="results" class="card-grid" aria-live="polite"></div>
-
-    <div class="footer-note">
-      Note: This page is client-only. Badges are stored locally. Deep-link behavior varies by device/browser.
+    <div class="col-md-4">
+      <select id="sortSelect" class="form-select">
+        <option value="popularity">Sort by Popularity</option>
+        <option value="alpha">Sort Alphabetically</option>
+        <option value="country">Sort by Country</option>
+      </select>
     </div>
   </div>
+</div>
 
-  <!-- Modals -->
-  <div class="modal fade" id="editModal" tabindex="-1">
-    <div class="modal-dialog modal-sm">
-      <div class="modal-content">
-        <form id="editForm">
-          <div class="modal-header"><h5 class="modal-title">Edit Badge / Platform</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
-          <div class="modal-body">
-            <input type="hidden" id="editId">
-            <div class="mb-2"><label class="form-label">Platform</label><input id="editName" class="form-control" required></div>
-            <div class="mb-2"><label class="form-label">Category</label><input id="editCategory" class="form-control"></div>
-            <div class="mb-2"><label class="form-label">Country</label><input id="editCountry" class="form-control"></div>
-            <div class="mb-2"><label class="form-label">App Link</label><input id="editApp" class="form-control" placeholder="whatsapp://send?text=hi or intent://..."></div>
-            <div class="mb-2"><label class="form-label">Web URL</label><input id="editWeb" class="form-control" placeholder="https://..."></div>
-            <div class="mb-2"><label class="form-label">Icon URL</label><input id="editIcon" class="form-control" placeholder="https://..."></div>
-            <div class="mb-2"><label class="form-label">Badge count</label><input id="editBadge" type="number" min="0" class="form-control"></div>
-          </div>
-          <div class="modal-footer"><button class="btn btn-primary" type="submit">Save</button></div>
-        </form>
-      </div>
-    </div>
-  </div>
+<!-- CATEGORY TABS -->
+<div class="container">
+  <ul class="nav nav-tabs" id="categoryTabs">
+    <li class="nav-item"><a class="nav-link active" data-category="social">Social Media</a></li>
+    <li class="nav-item"><a class="nav-link" data-category="shopping">Shopping</a></li>
+    <li class="nav-item"><a class="nav-link" data-category="ai">AI Platforms</a></li>
+    <li class="nav-item"><a class="nav-link" data-category="music">Music</a></li>
+    <li class="nav-item"><a class="nav-link" data-category="movies">Movies & TV</a></li>
+    <li class="nav-item"><a class="nav-link" data-category="games">Games</a></li>
+    <li class="nav-item"><a class="nav-link" data-category="search">Search Engines</a></li>
+    <li class="nav-item"><a class="nav-link" data-category="appstores">App Stores</a></li>
+    <li class="nav-item"><a class="nav-link" data-category="sa">🇿🇦 South Africa</a></li>
+  </ul>
+</div>
 
-  <input type="file" id="fileInput" accept="application/json" style="display:none">
+<!-- PLATFORM GRID -->
+<div class="container mt-3">
+  <div id="platformList" class="row g-3"></div>
+</div>
 
-  <script>
-/* ============================
-   FULL CLIENT-SIDE GLOBAL LAUNCHER
-   - Large curated platforms array
-   - Search, filter, sort
-   - Dark mode
-   - Local badges in localStorage
-   - Deep-link attempt with fallback
-   ============================ */
+<script>
+/* --------------------------
+   PLATFORM DATA
+---------------------------*/
 
-const STORAGE = 'global_launcher_state_v1';
-const state = {
-  platforms: [], // filled below
-  badges: {},    // id -> count
-  prefs: { theme: 'light' }
+const platforms = {
+  social: [
+    { name:"Instagram", country:"USA", popularity:1, icon:"fab fa-instagram", link:"https://instagram.com" },
+    { name:"TikTok", country:"China", popularity:2, icon:"fab fa-tiktok", link:"https://tiktok.com" },
+    { name:"X (Twitter)", country:"USA", popularity:3, icon:"fab fa-x-twitter", link:"https://x.com" },
+    { name:"Facebook", country:"USA", popularity:4, icon:"fab fa-facebook", link:"https://facebook.com" },
+    { name:"YouTube", country:"USA", popularity:5, icon:"fab fa-youtube", link:"https://youtube.com" },
+    { name:"WhatsApp", country:"USA", popularity:6, icon:"fab fa-whatsapp", link:"https://whatsapp.com" }
+  ],
+  shopping: [
+    { name:"Amazon", country:"Global", popularity:1, icon:"fas fa-shopping-bag", link:"https://amazon.com" },
+    { name:"eBay", country:"Global", popularity:2, icon:"fas fa-store", link:"https://ebay.com" }
+  ],
+  ai: [
+    { name:"ChatGPT", country:"USA", popularity:1, icon:"fas fa-robot", link:"https://chat.openai.com" },
+    { name:"DALL·E", country:"USA", popularity:2, icon:"fas fa-brain", link:"https://openai.com/dall-e" }
+  ],
+  music: [
+    { name:"Spotify", country:"Global", popularity:1, icon:"fab fa-spotify", link:"https://spotify.com" },
+    { name:"Apple Music", country:"USA", popularity:2, icon:"fab fa-apple", link:"https://music.apple.com" }
+  ],
+  movies: [
+    { name:"Netflix", country:"Global", popularity:1, icon:"fas fa-film", link:"https://netflix.com" },
+    { name:"Hulu", country:"USA", popularity:2, icon:"fas fa-tv", link:"https://hulu.com" }
+  ],
+  games: [
+    { name:"Steam", country:"Global", popularity:1, icon:"fas fa-gamepad", link:"https://steampowered.com" },
+    { name:"Epic Games", country:"USA", popularity:2, icon:"fas fa-gamepad", link:"https://epicgames.com" }
+  ],
+  search: [
+    { name:"Google", country:"USA", popularity:1, icon:"fas fa-magnifying-glass", link:"https://google.com" },
+    { name:"Bing", country:"USA", popularity:2, icon:"fas fa-magnifying-glass", link:"https://bing.com" }
+  ],
+  appstores: [
+    { name:"Apple App Store", country:"Global", popularity:1, icon:"fab fa-apple", link:"https://apps.apple.com" },
+    { name:"Google Play Store", country:"Global", popularity:2, icon:"fab fa-google-play", link:"https://play.google.com" }
+  ],
+  sa: [
+    { name:"Takealot", country:"South Africa", popularity:1, icon:"fas fa-box", link:"https://takealot.com" },
+    { name:"Mr D Food", country:"South Africa", popularity:2, icon:"fas fa-utensils", link:"https://mrdfood.com" },
+    { name:"Showmax", country:"South Africa", popularity:3, icon:"fas fa-tv", link:"https://showmax.com" },
+    { name:"DStv Stream", country:"South Africa", popularity:4, icon:"fas fa-tv", link:"https://dstv.com" },
+    { name:"FNB App", country:"South Africa", popularity:5, icon:"fas fa-university", link:"https://fnb.co.za" },
+    { name:"Capitec Bank App", country:"South Africa", popularity:6, icon:"fas fa-university", link:"https://capitecbank.co.za" },
+    { name:"Woolworths", country:"South Africa", popularity:7, icon:"fas fa-tshirt", link:"https://www.woolworths.co.za" },
+    { name:"Makro", country:"South Africa", popularity:8, icon:"fas fa-shopping-cart", link:"https://makro.co.za" },
+    { name:"Checkers Sixty60", country:"South Africa", popularity:9, icon:"fas fa-shopping-basket", link:"https://sixty60.co.za" },
+    { name:"Uber Eats SA", country:"South Africa", popularity:10, icon:"fas fa-motorcycle", link:"https://ubereats.com" }
+  ]
 };
 
-// -------------------- LARGE PLATFORM LIST --------------------
-/* Each item: {id, name, category, country, popularity (0-100), icon, app_link, web_url} */
-/* This is a curated global list across categories & countries. You can add more platforms via UI or import JSON. */
-state.platforms = [
-  /* ---------- SOCIAL (global) ---------- */
-  {id:'facebook', name:'Facebook', category:'Social', country:'Global', popularity:95,
-   icon:'https://cdn-icons-png.flaticon.com/512/733/733547.png', app_link:'fb://', web_url:'https://facebook.com'},
-  {id:'instagram', name:'Instagram', category:'Social', country:'Global', popularity:90,
-   icon:'https://cdn-icons-png.flaticon.com/512/2111/2111463.png', app_link:'instagram://app', web_url:'https://instagram.com'},
-  {id:'x', name:'X', category:'Social', country:'Global', popularity:80,
-   icon:'https://abs.twimg.com/favicons/twitter.ico', app_link:'twitter://', web_url:'https://x.com'},
-  {id:'whatsapp', name:'WhatsApp', category:'Social', country:'Global', popularity:92,
-   icon:'https://www.whatsapp.com/favicon.ico', app_link:'whatsapp://send?text=hey', web_url:'https://web.whatsapp.com'},
-  {id:'telegram', name:'Telegram', category:'Social', country:'Global', popularity:75,
-   icon:'https://telegram.org/img/t_logo.png', app_link:'tg://', web_url:'https://telegram.org'},
-  {id:'wechat', name:'WeChat', category:'Social', country:'China', popularity:85,
-   icon:'https://res.wx.qq.com/mpres/htmledition/images/favicon_160.png', app_link:'weixin://', web_url:'https://www.wechat.com'},
-  {id:'qq', name:'QQ', category:'Social', country:'China', popularity:70,
-   icon:'https://imgcache.qq.com/endpoint/portal/img/favicon.ico', app_link:'tencent://', web_url:'https://im.qq.com'},
-  {id:'tiktok', name:'TikTok', category:'Social', country:'Global', popularity:88,
-   icon:'https://cdn-icons-png.flaticon.com/512/3046/3046121.png', app_link:'snssdk://', web_url:'https://www.tiktok.com'},
-  {id:'snapchat', name:'Snapchat', category:'Social', country:'Global', popularity:65,
-   icon:'https://cdn-icons-png.flaticon.com/512/732/732200.png', app_link:'snapchat://', web_url:'https://www.snapchat.com'},
-  {id:'linkedin', name:'LinkedIn', category:'Social', country:'Global', popularity:68,
-   icon:'https://cdn-icons-png.flaticon.com/512/174/174857.png', app_link:'linkedin://', web_url:'https://www.linkedin.com'},
-  {id:'pinterest', name:'Pinterest', category:'Social', country:'Global', popularity:58,
-   icon:'https://cdn-icons-png.flaticon.com/512/174/174863.png', app_link:'pinterest://', web_url:'https://www.pinterest.com'},
-  {id:'vkontakte', name:'VKontakte', category:'Social', country:'Russia', popularity:55,
-   icon:'https://static.vkcdn.ru/common/images/favicons/fav_logo.ico', app_link:'vk://', web_url:'https://vk.com'},
-  {id:'ok', name:'Odnoklassniki', category:'Social', country:'Russia', popularity:40,
-   icon:'https://ok.ru/favicon.ico', app_link:'ok://', web_url:'https://ok.ru'},
-  {id:'line', name:'LINE', category:'Social', country:'Japan', popularity:54,
-   icon:'https://d.line-scdn.net/line-rich/1.0/line.png', app_link:'line://', web_url:'https://line.me'},
-  {id:'kakao', name:'KakaoTalk', category:'Social', country:'South Korea', popularity:60,
-   icon:'https://developers.kakao.com/assets/img/about/logos/kakaolink/kakaolink_btn_small.png', app_link:'kakaotalk://', web_url:'https://www.kakao.com'},
+let activeCategory = "social";
 
-  /* ---------- SHOPPING ---------- */
-  {id:'amazon', name:'Amazon', category:'Shopping', country:'Global', popularity:98,
-   icon:'https://cdn-icons-png.flaticon.com/512/733/733579.png', app_link:'amazon://', web_url:'https://www.amazon.com'},
-  {id:'ebay', name:'eBay', category:'Shopping', country:'Global', popularity:85,
-   icon:'https://cdn-icons-png.flaticon.com/512/732/732084.png', app_link:'ebay://', web_url:'https://www.ebay.com'},
-  {id:'alibaba', name:'Alibaba', category:'Shopping', country:'China', popularity:80,
-   icon:'https://cdn-icons-png.flaticon.com/512/873/873107.png', app_link:'aliexpress://', web_url:'https://www.aliexpress.com'},
-  {id:'aliexpress', name:'AliExpress', category:'Shopping', country:'Global', popularity:76,
-   icon:'https://ae01.alicdn.com/kf/HTB1B9xwXkLrK1Rjy0Fp7605pVXaQ.png', app_link:'aliexpress://', web_url:'https://www.aliexpress.com'},
-  {id:'shopify', name:'Shopify', category:'Shopping', country:'Global', popularity:68,
-   icon:'https://cdn.worldvectorlogo.com/logos/shopify.svg', app_link:'shopify://', web_url:'https://www.shopify.com'},
-  {id:'walmart', name:'Walmart', category:'Shopping', country:'USA', popularity:78,
-   icon:'https://www.walmart.com/favicon.ico', app_link:'walmart://', web_url:'https://www.walmart.com'},
-  {id:'target', name:'Target', category:'Shopping', country:'USA', popularity:61,
-   icon:'https://s3-us-west-2.amazonaws.com/brand-assets/target/favicon.ico', app_link:'target://', web_url:'https://www.target.com'},
-  {id:'jd', name:'JD.com', category:'Shopping', country:'China', popularity:72,
-   icon:'https://cdn1.jdmobile.com/static/img/favicon.ico', app_link:'jd://', web_url:'https://www.jd.com'},
-  {id:'mercadolibre', name:'Mercado Libre', category:'Shopping', country:'LatAm', popularity:70,
-   icon:'https://mla-s1-p.mlstatic.com/static/org-img/homesite/favicon/favicon-32x32.png', app_link:'mercadolibre://', web_url:'https://www.mercadolibre.com'},
-  {id:'flipkart', name:'Flipkart', category:'Shopping', country:'India', popularity:74,
-   icon:'https://cdn-icons-png.flaticon.com/512/5968/5968417.png', app_link:'flipkart://', web_url:'https://www.flipkart.com'},
+/* --------------------------
+   RENDER FUNCTION
+---------------------------*/
+function renderPlatforms() {
+  const container = document.getElementById("platformList");
+  container.innerHTML = "";
+  let list = platforms[activeCategory];
+  
+  const search = document.getElementById("searchInput").value.toLowerCase();
+  list = list.filter(p => p.name.toLowerCase().includes(search));
 
-  /* ---------- AI PLATFORMS ---------- */
-  {id:'chatgpt', name:'ChatGPT', category:'AI', country:'Global', popularity:95,
-   icon:'https://cdn.openai.com/favicon.ico', app_link:'openai://', web_url:'https://chat.openai.com'},
-  {id:'bard', name:'Google Bard', category:'AI', country:'Global', popularity:80,
-   icon:'https://www.google.com/favicon.ico', app_link:'googlebard://', web_url:'https://bard.google.com'},
-  {id:'claude', name:'Claude', category:'AI', country:'Global', popularity:50,
-   icon:'https://claude.ai/favicon.ico', app_link:'claude://', web_url:'https://www.anthropic.com'},
-  {id:'bingai', name:'Bing AI', category:'AI', country:'Global', popularity:65,
-   icon:'https://www.bing.com/sa/simg/favicon-2x.ico', app_link:'bing://', web_url:'https://www.bing.com/chat'},
-  {id:'perplexity', name:'Perplexity', category:'AI', country:'Global', popularity:40,
-   icon:'https://www.perplexity.ai/favicon.ico', app_link:'perplexity://', web_url:'https://www.perplexity.ai'},
+  const sortType = document.getElementById("sortSelect").value;
+  if(sortType==="alpha"){ list.sort((a,b)=>a.name.localeCompare(b.name)); }
+  else if(sortType==="country"){ list.sort((a,b)=>a.country.localeCompare(b.country)); }
+  else{ list.sort((a,b)=>a.popularity - b.popularity); }
 
-  /* ---------- MUSIC ---------- */
-  {id:'spotify', name:'Spotify', category:'Music', country:'Global', popularity:92,
-   icon:'https://www.scdn.co/i/_global/favicon.png', app_link:'spotify://', web_url:'https://open.spotify.com'},
-  {id:'applemusic', name:'Apple Music', category:'Music', country:'Global', popularity:82,
-   icon:'https://www.apple.com/favicon.ico', app_link:'music://', web_url:'https://music.apple.com'},
-  {id:'youtube_music', name:'YouTube Music', category:'Music', country:'Global', popularity:78,
-   icon:'https://music.youtube.com/favicon.ico', app_link:'youtube-music://', web_url:'https://music.youtube.com'},
-  {id:'deezer', name:'Deezer', category:'Music', country:'Global', popularity:50,
-   icon:'https://www.deezer.com/favicon.ico', app_link:'deezer://', web_url:'https://www.deezer.com'},
-
-  /* ---------- MOVIES & TV ---------- */
-  {id:'netflix', name:'Netflix', category:'Movies', country:'Global', popularity:95,
-   icon:'https://assets.nflxext.com/us/ffe/siteui/common/icons/nficon2016.ico', app_link:'nflx://', web_url:'https://www.netflix.com'},
-  {id:'primevideo', name:'Prime Video', category:'Movies', country:'Global', popularity:82,
-   icon:'https://www.primevideo.com/favicon.ico', app_link:'primevideo://', web_url:'https://www.primevideo.com'},
-  {id:'disneyplus', name:'Disney+', category:'Movies', country:'Global', popularity:76,
-   icon:'https://www.disneyplus.com/favicon.ico', app_link:'disneyplus://', web_url:'https://www.disneyplus.com'},
-  {id:'hulu', name:'Hulu', category:'Movies', country:'USA', popularity:60,
-   icon:'https://www.hulu.com/favicon.ico', app_link:'hulu://', web_url:'https://www.hulu.com'},
-
-  /* ---------- APP STORES ---------- */
-  {id:'googleplay', name:'Google Play', category:'App Store', country:'Global', popularity:98,
-   icon:'https://play.google.com/favicon.ico', app_link:'market://details?id=', web_url:'https://play.google.com'},
-  {id:'appstore', name:'Apple App Store', category:'App Store', country:'Global', popularity:98,
-   icon:'https://www.apple.com/favicon.ico', app_link:'itms-apps://', web_url:'https://apps.apple.com'},
-
-  /* ---------- GAMES ---------- */
-  {id:'steam', name:'Steam', category:'Games', country:'Global', popularity:86,
-   icon:'https://store.cloudflare.steamstatic.com/public/shared/images/header/globalfavicon.ico', app_link:'steam://', web_url:'https://store.steampowered.com'},
-  {id:'epic', name:'Epic Games', category:'Games', country:'Global', popularity:70,
-   icon:'https://www.epicgames.com/favicon.ico', app_link:'com.epicgames.launcher://', web_url:'https://www.epicgames.com'},
-  {id:'roblox', name:'Roblox', category:'Games', country:'Global', popularity:80,
-   icon:'https://www.roblox.com/favicon.ico', app_link:'roblox://', web_url:'https://www.roblox.com'},
-  {id:'playstation', name:'PlayStation', category:'Games', country:'Global', popularity:72,
-   icon:'https://www.playstation.com/favicon.ico', app_link:'psapp://', web_url:'https://www.playstation.com'},
-
-  /* ---------- SEARCH ---------- */
-  {id:'google', name:'Google', category:'Search', country:'Global', popularity:100,
-   icon:'https://www.google.com/favicon.ico', app_link:'google://', web_url:'https://www.google.com'},
-  {id:'bing', name:'Bing', category:'Search', country:'Global', popularity:55,
-   icon:'https://www.bing.com/sa/simg/favicon-2x.ico', app_link:'bing://', web_url:'https://www.bing.com'},
-  {id:'yandex', name:'Yandex', category:'Search', country:'Russia', popularity:60,
-   icon:'https://yandex.com/favicon.ico', app_link:'yandexsearch://', web_url:'https://yandex.com'},
-
-  /* ---------- CLOTHING & FASHION ---------- */
-  {id:'zara', name:'ZARA', category:'Clothing', country:'Spain/Global', popularity:65,
-   icon:'https://static.zara.net/favicon.ico', app_link:'zara://', web_url:'https://www.zara.com'},
-  {id:'hm', name:'H&M', category:'Clothing', country:'Sweden/Global', popularity:64,
-   icon:'https://www2.hm.com/favicon.ico', app_link:'hm://', web_url:'https://www.hm.com'},
-  {id:'asos', name:'ASOS', category:'Clothing', country:'UK/Global', popularity:58,
-   icon:'https://www.asos.com/favicon.ico', app_link:'asos://', web_url:'https://www.asos.com'},
-  {id:'uniqlo', name:'UNIQLO', category:'Clothing', country:'Japan/Global', popularity:55,
-   icon:'https://www.uniqlo.com/favicon.ico', app_link:'uniqlo://', web_url:'https://www.uniqlo.com'},
-
-  /* ---------- REGIONAL / IMPORTANT PLATFORMS (examples) ---------- */
-  {id:'snapdeal', name:'Snapdeal', category:'Shopping', country:'India', popularity:40, icon:'https://snapdeal.com/favicon.ico', app_link:'snapdeal://', web_url:'https://www.snapdeal.com'},
-  {id:'momo', name:'MoMo', category:'Shopping', country:'Vietnam', popularity:45, icon:'https://momo.vn/favicon.ico', app_link:'momo://', web_url:'https://momo.vn'},
-  {id:'olat', name:'OLX', category:'Shopping', country:'Global', popularity:50, icon:'https://www.olx.com/favicon.ico', app_link:'olx://', web_url:'https://www.olx.com'},
-  {id:'shopee', name:'Shopee', category:'Shopping', country:'Southeast Asia', popularity:75, icon:'https://shopee.com/favicon.ico', app_link:'shopee://', web_url:'https://shopee.sg'},
-  {id:'lazada', name:'Lazada', category:'Shopping', country:'Southeast Asia', popularity:65, icon:'https://lazada.com/favicon.ico', app_link:'lazada://', web_url:'https://www.lazada.com'},
-
-  /* ---------- EXTRA SOCIAL / REGIONAL ---------- */
-  {id:'douyin', name:'Douyin', category:'Social', country:'China', popularity:88, icon:'https://www.douyin.com/favicon.ico', app_link:'douyin://', web_url:'https://www.douyin.com'},
-  {id:'kuaishou', name:'Kuaishou', category:'Social', country:'China', popularity:60, icon:'https://www.kuaishou.com/favicon.ico', app_link:'kuaishou://', web_url:'https://www.kuaishou.com'},
-  {id:'behance', name:'Behance', category:'Social', country:'Global', popularity:38, icon:'https://www.behance.net/favicon.ico', app_link:'behance://', web_url:'https://www.behance.net'},
-  {id:'dribbble', name:'Dribbble', category:'Social', country:'Global', popularity:35, icon:'https://dribbble.com/favicon.ico', app_link:'dribbble://', web_url:'https://dribbble.com'},
-
-  /* ---------- EXTRA AI / TOOLS ---------- */
-  {id:'notion', name:'Notion AI', category:'AI', country:'Global', popularity:52, icon:'https://www.notion.so/favicon.ico', app_link:'notion://', web_url:'https://www.notion.so'},
-  {id:'replit', name:'Replit AI', category:'AI', country:'Global', popularity:30, icon:'https://replit.com/public/images/favicon.ico', app_link:'replit://', web_url:'https://replit.com'},
-  {id:'midjourney', name:'Midjourney', category:'AI', country:'Global', popularity:42, icon:'https://midjourney.com/favicon.ico', app_link:'midjourney://', web_url:'https://www.midjourney.com'},
-
-  /* ---------- EXTRA MUSIC ---------- */
-  {id:'soundcloud', name:'SoundCloud', category:'Music', country:'Global', popularity:50, icon:'https://a-v2.sndcdn.com/assets/images/favicons/favicon-32x32.png', app_link:'soundcloud://', web_url:'https://soundcloud.com'},
-  {id:'tidal', name:'TIDAL', category:'Music', country:'Global', popularity:36, icon:'https://tidal.com/favicon.ico', app_link:'tidal://', web_url:'https://tidal.com'},
-
-  /* ---------- EXTRA VIDEO ---------- */
-  {id:'hotstar', name:'Hotstar', category:'Movies', country:'India', popularity:62, icon:'https://www.hotstar.com/favicon.ico', app_link:'hotstar://', web_url:'https://www.hotstar.com'},
-  {id:'hbo', name:'HBO Max', category:'Movies', country:'Global', popularity:58, icon:'https://www.hbomax.com/favicon.ico', app_link:'hbomax://', web_url:'https://www.hbomax.com'},
-
-  /* ---------- EXTRA GAMES ---------- */
-  {id:'xbox', name:'Xbox', category:'Games', country:'Global', popularity:64, icon:'https://www.xbox.com/favicon.ico', app_link:'xbox://', web_url:'https://www.xbox.com'},
-  {id:'nintendo', name:'Nintendo', category:'Games', country:'Global', popularity:60, icon:'https://www.nintendo.com/favicon.ico', app_link:'nintendo://', web_url:'https://www.nintendo.com'},
-
-  /* ---------- EXTRA SEARCH ---------- */
-  {id:'duckduckgo', name:'DuckDuckGo', category:'Search', country:'Global', popularity:40, icon:'https://duckduckgo.com/favicon.ico', app_link:'ddg://', web_url:'https://duckduckgo.com'},
-
-  /* ---------- EXTRA FASHION ---------- */
-  {id:'zalando', name:'Zalando', category:'Clothing', country:'Europe', popularity:48, icon:'https://www.zalando.com/favicon.ico', app_link:'zalando://', web_url:'https://www.zalando.com'},
-
-  /* ---------- Add more entries as desired via UI/import ---------- */
-];
-
-// load saved state from localStorage (badges & prefs)
-(function loadStored(){
-  try{
-    const raw = localStorage.getItem(STORAGE);
-    if(raw){
-      const obj = JSON.parse(raw);
-      if(obj.badges) state.badges = obj.badges;
-      if(obj.prefs) state.prefs = obj.prefs;
-      if(obj.platforms) {
-        // merge: add any new built-in platforms while preserving user imports
-        const existingIds = new Set(obj.platforms.map(p=>p.id));
-        // prefer user-saved list if present to let user overwrite built-ins
-        state.platforms = obj.platforms;
-      }
-    }
-  } catch(e){ console.warn('load failed', e); }
-})();
-
-// DOM references
-const resultsDiv = document.getElementById('results');
-const searchInput = document.getElementById('searchInput');
-const categoryFilter = document.getElementById('categoryFilter');
-const countryFilter = document.getElementById('countryFilter');
-const sortSelect = document.getElementById('sortSelect');
-const darkToggle = document.getElementById('darkToggle');
-const simBtn = document.getElementById('simBtn');
-const exportBtn = document.getElementById('exportBtn');
-const importBtn = document.getElementById('importBtn');
-const addBtn = document.getElementById('addBtn');
-const fileInput = document.getElementById('fileInput');
-const groupInfo = document.getElementById('groupInfo');
-
-// init theme
-(function initTheme(){
-  const t = state.prefs.theme || (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark':'light');
-  setTheme(t);
-})();
-darkToggle.addEventListener('click', ()=> setTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'));
-
-function setTheme(t){
-  document.documentElement.setAttribute('data-theme', t==='dark' ? 'dark' : 'light');
-  state.prefs.theme = t;
-  localSave();
-}
-
-// populate filters
-function populateFilters(){
-  const cats = Array.from(new Set(state.platforms.map(p=>p.category))).sort();
-  categoryFilter.innerHTML = '<option value="">All categories</option>' + cats.map(c=>`<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join('');
-  const countries = Array.from(new Set(state.platforms.map(p=>p.country))).sort();
-  countryFilter.innerHTML = '<option value="">All countries</option>' + countries.map(c=>`<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join('');
-}
-populateFilters();
-
-// search + filter + sort -> render
-function render(){
-  const q = (searchInput.value || '').trim().toLowerCase();
-  const cat = categoryFilter.value;
-  const country = countryFilter.value;
-  const sort = sortSelect.value;
-
-  // filter
-  let list = state.platforms.filter(p=>{
-    if(cat && p.category !== cat) return false;
-    if(country && p.country !== country) return false;
-    if(q){
-      const hay = `${p.name} ${p.id} ${p.category} ${p.country}`.toLowerCase();
-      if(!hay.includes(q)) return false;
-    }
-    return true;
-  });
-
-  // sort
-  if(sort === 'pop'){
-    list.sort((a,b)=> (b.popularity||0) - (a.popularity||0));
-    groupInfo.innerText = 'Sorted by Popularity';
-  } else {
-    list.sort((a,b)=> a.name.localeCompare(b.name));
-    groupInfo.innerText = 'Sorted Alphabetically';
-  }
-
-  // render cards
-  resultsDiv.innerHTML = '';
-  if(list.length === 0){
-    resultsDiv.innerHTML = '<div class="small-muted">No platforms found.</div>';
-    return;
-  }
-
-  const fragment = document.createDocumentFragment();
   list.forEach(p=>{
-    const div = document.createElement('div');
-    div.className = 'platform-card';
-    div.title = `${p.name} — ${p.category} — ${p.country}`;
-    div.innerHTML = `
-      <img loading="lazy" class="picon" src="${escapeHtml(p.icon || placeholderIcon(p.name))}" alt="${escapeHtml(p.name)}" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2256%22 height=%2256%22><rect width=%2256%22 height=%2256%22 fill=%22%23cccccc%22 /><text x=%2228%22 y=%2232%22 font-size=%2210%22 text-anchor=%22middle%22 fill=%22%23666%22>${encodeURIComponent(p.name.slice(0,2))}</text></svg>'">
-      <div style="font-weight:600;margin-top:6px">${escapeHtml(p.name)}</div>
-      <div class="meta">${escapeHtml(p.category)} · ${escapeHtml(p.country)}</div>
-      <div id="badge-${p.id}" class="badge-count" style="display:none">0</div>
+    let clicks = localStorage.getItem("click_"+p.name) || 0;
+    container.innerHTML += `
+      <div class="col-md-4">
+        <div class="platform-card">
+          <div><i class="${p.icon} platform-icon"></i><strong>${p.name}</strong><br><small>🌍 ${p.country}</small></div>
+          <div>
+            <span class="analytics-count">Clicks: ${clicks}</span><br>
+            <a href="${p.link}" target="_blank" class="btn btn-primary mt-1" onclick="trackClick('${p.name}')">Open</a>
+          </div>
+        </div>
+      </div>
     `;
-    // click opens app/web
-    div.addEventListener('click', (e)=>{
-      attemptOpen(p);
-    });
-    // right-click (context) to edit badge/platform
-    div.addEventListener('contextmenu', (e)=>{
-      e.preventDefault();
-      openEditModal(p.id);
-    });
-    fragment.appendChild(div);
-    // set badge if exists
-    const b = state.badges[p.id] || 0;
-    if(b>0){
-      setBadgeDom(p.id, b, fragment);
-    }
   });
-  resultsDiv.appendChild(fragment);
-
-  // attach small tooltip or action (not required)
-}
-render();
-
-// attempt to open app via link then fallback to web
-function attemptOpen(p){
-  const ua = navigator.userAgent || '';
-  const isAndroid = /Android/i.test(ua);
-  // if app_link looks like intent: and on Android, directly set location
-  if(isAndroid && p.app_link && p.app_link.startsWith('intent:')){
-    window.location.href = p.app_link;
-    return;
-  }
-  // generic attempt: use iframe trick for custom URI schemes
-  if(p.app_link){
-    tryOpenURI(p.app_link, ()=>{ window.open(p.web_url || p.app_link, '_blank'); });
-  } else {
-    window.open(p.web_url, '_blank');
-  }
 }
 
-// iframe open fallback
-function tryOpenURI(uri, onFail, timeout=1000){
-  const start = Date.now();
-  const ifr = document.createElement('iframe');
-  ifr.style.display='none';
-  ifr.src = uri;
-  document.body.appendChild(ifr);
-  setTimeout(()=>{
-    try{ document.body.removeChild(ifr); }catch(e){}
-    if(document.visibilityState === 'visible' && (Date.now() - start) > (timeout - 50)){
-      onFail && onFail();
-    }
-  }, timeout);
+/* --------------------------
+   TRACK CLICKS
+---------------------------*/
+function trackClick(name){
+  let clicks = parseInt(localStorage.getItem("click_"+name)||"0")+1;
+  localStorage.setItem("click_"+name, clicks);
+  renderPlatforms();
 }
 
-// set badge in DOM & state
-function setBadgeDom(id, count, scope=document){
-  const el = (scope instanceof DocumentFragment) ? null : document.getElementById('badge-'+id);
-  // if not found in current DOM, find later; we'll update after render
-  if(el){
-    if(count>0){ el.innerText = (count>99? '99+': count); el.style.display='inline-block'; }
-    else { el.style.display='none'; }
-  }
-  if(count>0) state.badges[id] = count; else delete state.badges[id];
-  localSave();
-}
-
-// open edit modal (small)
-function openEditModal(id){
-  const p = state.platforms.find(x=>x.id===id);
-  if(!p) return;
-  // show quick prompt to set badge or edit (simple UX for now)
-  const input = prompt(`Set badge count for ${p.name} (leave blank to cancel, 0 to clear):`, state.badges[id] || 0);
-  if(input === null) return;
-  const n = parseInt(input||'0',10);
-  if(isNaN(n)) return alert('Invalid number');
-  setBadgeDom(id, n);
-  render();
-}
-
-// simulate
-simBtn.addEventListener('click', ()=>{
-  state.platforms.forEach(p=>{
-    if(Math.random() > 0.7){
-      const add = Math.floor(Math.random()*6)+1;
-      const cur = state.badges[p.id] || 0;
-      setBadgeDom(p.id, cur + add);
-    }
+/* --------------------------
+   TAB NAVIGATION
+---------------------------*/
+document.querySelectorAll("#categoryTabs .nav-link").forEach(tab=>{
+  tab.addEventListener("click", ()=>{
+    document.querySelectorAll("#categoryTabs .nav-link").forEach(t=>t.classList.remove("active"));
+    tab.classList.add("active");
+    activeCategory = tab.dataset.category;
+    renderPlatforms();
   });
-  render();
 });
 
-// search, filters events
-searchInput.addEventListener('input', debounce(render, 180));
-categoryFilter.addEventListener('change', render);
-countryFilter.addEventListener('change', render);
-sortSelect.addEventListener('change', render);
+/* --------------------------
+   SEARCH + SORT
+---------------------------*/
+document.getElementById("searchInput").addEventListener("input", renderPlatforms);
+document.getElementById("sortSelect").addEventListener("change", renderPlatforms);
 
-// export/import
-exportBtn.addEventListener('click', ()=>{
-  const dump = { platforms: state.platforms, badges: state.badges, prefs: state.prefs };
-  const blob = new Blob([JSON.stringify(dump, null, 2)], {type:'application/json'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url; a.download = 'global_launcher_export.json'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
-});
-importBtn.addEventListener('click', ()=> fileInput.click());
-fileInput.addEventListener('change', (e)=>{
-  const f = e.target.files[0];
-  if(!f) return;
-  const r = new FileReader();
-  r.onload = ()=> {
-    try{
-      const obj = JSON.parse(r.result);
-      if(obj.platforms && Array.isArray(obj.platforms)){
-        // replace entire dataset (user requested)
-        if(confirm('Import will replace current platform list and badges. Continue?')){
-          state.platforms = obj.platforms;
-          state.badges = obj.badges || {};
-          state.prefs = obj.prefs || state.prefs;
-          populateFilters();
-          render();
-          localSave();
-          alert('Import successful');
-        }
-      } else alert('Invalid import file');
-    } catch(err){ alert('Import error: '+err.message); }
-  };
-  r.readAsText(f);
+/* --------------------------
+   DARK MODE
+---------------------------*/
+const darkModeBtn = document.getElementById("darkModeBtn");
+if(localStorage.getItem("darkMode") === "true"){ document.body.classList.add("dark"); darkModeBtn.innerText="Light Mode"; }
+
+darkModeBtn.addEventListener("click", ()=>{
+  document.body.classList.toggle("dark");
+  const isDark = document.body.classList.contains("dark");
+  localStorage.setItem("darkMode", isDark);
+  darkModeBtn.innerText = isDark ? "Light Mode" : "Dark Mode";
 });
 
-// add custom platform
-addBtn.addEventListener('click', ()=>{
-  const id = prompt('Unique ID (e.g., myapp):');
-  if(!id) return;
-  if(state.platforms.find(p=>p.id===id)) return alert('ID exists');
-  const name = prompt('Name:');
-  if(!name) return;
-  const cat = prompt('Category (Social, Shopping, AI, Music, Movies, App Store, Games, Search, Clothing):','Social');
-  const country = prompt('Country or region:','Global');
-  const icon = prompt('Icon URL (favicon or image):','https://via.placeholder.com/56');
-  const app_link = prompt('App link (URI scheme) (optional):','');
-  const web_url = prompt('Web URL:','https://');
-  const pop = parseInt(prompt('Popularity (0-100):','50'),10) || 50;
-  state.platforms.push({id,name,category:cat,country,popularity:pop,icon,app_link,web_url});
-  populateFilters();
-  render();
-  localSave();
-});
+/* INIT */
+renderPlatforms();
+</script>
 
-// persist local state
-function localSave(){
-  try{
-    localStorage.setItem(STORAGE, JSON.stringify({platforms: state.platforms, badges: state.badges, prefs: state.prefs}));
-  }catch(e){ console.warn('save fail', e); }
-}
-window.addEventListener('beforeunload', localSave);
-
-// helper functions
-function escapeHtml(s){ return String(s||'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
-function placeholderIcon(name){ return 'https://via.placeholder.com/56?text=' + encodeURIComponent(name.slice(0,2)); }
-function debounce(fn, t){ let to; return function(...a){ clearTimeout(to); to=setTimeout(()=>fn.apply(this,a), t); }; }
-
-// initialize filters and render
-populateFilters();
-render();
-
-  </script>
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
