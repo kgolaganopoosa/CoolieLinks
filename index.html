@@ -1,312 +1,548 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Universal Hub • All Apps + 50+ SA Niches</title>
-  <meta name="description" content="One-tap access to global + South African niche platforms: social, shopping, AI, music, movies, gaming, search."/>
-  
-  <!-- Icons from Simple Icons (CDN) -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-icons@v13/font/simple-icons.min.css"/>
-  
+  <meta charset="utf-8" />
+  <title>Global App Launcher — Full</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
-    :root { --primary: #2563eb; --bg: #0f172a; --card: #1e293b; --text: #e2e8f0; }
-    body { margin:0; font-family: system-ui, sans-serif; background: var(--bg); color: var(--text); padding-bottom: 80px; }
-    header { text-align:center; padding: 2rem 1rem; background: linear-gradient(135deg, #1e40af, #7c3aed); }
-    h1 { margin:0; font-size: 2.2rem; }
-    .tabs { display:flex; flex-wrap:wrap; gap:8px; justify-content:center; padding:1rem; background:#1e293b; position:sticky; top:0; z-index:10; }
-    .tab { padding:10px 16px; background:#334155; border-radius:8px; cursor:pointer; transition:all .2s; }
-    .tab.active { background:var(--primary); font-weight:bold; }
-    .grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap:16px; padding:20px; max-width:1400px; margin:0 auto; }
-    .item { background:var(--card); border-radius:12px; padding:16px 8px; text-align:center; position:relative; transition:transform .2s; }
-    .item:hover { transform:translateY(-4px); }
-    .icon { font-size:42px; margin-bottom:8px; width:100%; height:42px; display:flex; align-items:center; justify-content:center; }
-    .icon svg { width:42px; height:42px; fill:#ccc; transition:fill 0.3s; }
-    .item:hover .icon svg { fill:var(--primary); }
-    .name { font-size:13px; margin:4px 0 0; }
-    .badge { position:absolute; top:8px; right:8px; background:#ef4444; color:white; font-size:10px; width:18px; height:18px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:bold; }
-    .simulate { font-size:10px; color:#60a5fa; margin-top:6px; cursor:pointer; }
-    @media (max-width:640px) { .grid { grid-template-columns:repeat(3,1fr); gap:14px; padding:14px; } }
+    :root{
+      --bg:#f5f7fb; --card:#ffffff; --muted:#6c757d; --text:#111;
+      --accent:#0d6efd; --danger:#dc3545;
+    }
+    [data-theme="dark"]{
+      --bg:#0d1117; --card:#0b1220; --muted:#9aa4b2; --text:#e6eef6; --accent:#4ea8ff; --danger:#ff6b6b;
+    }
+    body{ background:var(--bg); color:var(--text); font-family: Arial, sans-serif; padding:18px; }
+    .topbar{ display:flex; gap:12px; align-items:center; justify-content:space-between; margin-bottom:12px; }
+    .controls{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+    .searchbox{ width:320px; max-width:40vw; }
+    .card-grid{ display:grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap:12px; margin-top:12px; }
+    .platform-card{ background:var(--card); border-radius:12px; padding:12px; text-align:center; position:relative; box-shadow:0 6px 14px rgba(2,6,23,0.06); cursor:pointer; transition:transform .12s ease;}
+    .platform-card:hover{ transform:translateY(-4px); }
+    .picon{ width:56px; height:56px; border-radius:10px; object-fit:cover; display:block; margin:0 auto 8px; }
+    .badge-count{ position:absolute; top:8px; right:10px; background:var(--danger); color:white; border-radius:20px; padding:3px 7px; font-size:12px; display:none; }
+    .meta{ font-size:12px; color:var(--muted); margin-top:6px; }
+    .filters{ display:flex; gap:8px; flex-wrap:wrap; }
+    .filter-select{ min-width:160px; }
+    .small-muted{ color:var(--muted); font-size:13px; }
+    .section-title{ margin-top:20px; margin-bottom:6px; font-weight:700; }
+    .footer-note{ margin-top:18px; color:var(--muted); font-size:13px; }
+    .country-pill{ display:inline-block; padding:4px 8px; border-radius:999px; background:rgba(0,0,0,0.04); margin:2px; font-size:12px; }
+    .toolbar-btn{ min-width:42px; }
+    @media(max-width:700px){ .searchbox{ width:100%; max-width:100%; } .topbar{flex-direction:column; align-items:flex-start;} }
   </style>
 </head>
 <body>
+  <div>
+    <div class="topbar">
+      <div>
+        <h2 style="margin:0">Global App Launcher — Full</h2>
+        <div class="small-muted">Large curated platform list · search · filters · dark mode · client-only badges</div>
+      </div>
 
-<header>
-  <h1>Universal Hub</h1>
-  <p>Global + 50+ SA niches (Takealot, Showmax, Mr D, etc.). Tap icons → opens app/site. Custom SA icons included!</p>
-</header>
+      <div class="controls">
+        <input id="searchInput" class="form-control searchbox" placeholder="Search apps, e.g. 'Spotify' or 'Amazon'">
+        <select id="categoryFilter" class="form-select filter-select" title="Filter category">
+          <option value="">All categories</option>
+        </select>
+        <select id="countryFilter" class="form-select filter-select" title="Filter country">
+          <option value="">All countries</option>
+        </select>
+        <select id="sortSelect" class="form-select filter-select" title="Sort by">
+          <option value="pop">Sort: Popularity</option>
+          <option value="alpha">Sort: A → Z</option>
+        </select>
+        <button id="darkToggle" class="btn btn-outline-secondary toolbar-btn" title="Toggle dark mode">🌗</button>
+        <button id="simBtn" class="btn btn-outline-primary toolbar-btn" title="Simulate notifications">🔔</button>
+        <button id="exportBtn" class="btn btn-outline-success toolbar-btn" title="Export">⬇</button>
+        <button id="importBtn" class="btn btn-outline-info toolbar-btn" title="Import">⬆</button>
+        <button id="addBtn" class="btn btn-success" title="Add custom platform">+ Add</button>
+      </div>
+    </div>
 
-<div class="tabs">
-  <div class="tab active" onclick="show('social')">Social</div>
-  <div class="tab" onclick="show('shopping')">Shopping</div>
-  <div class="tab" onclick="show('ai')">AI</div>
-  <div class="tab" onclick="show('music')">Music</div>
-  <div class="tab" onclick="show('movies')">Movies/TV</div>
-  <div class="tab" onclick="show('appstores')">App Stores</div>
-  <div class="tab" onclick="show('gaming')">Gaming</div>
-  <div class="tab" onclick="show('search')">Search</div>
-</div>
+    <div>
+      <div class="small-muted">Group view: <span id="groupInfo" class="small-muted">All platforms</span></div>
+    </div>
 
-<div id="content" class="grid"></div>
+    <div id="results" class="card-grid" aria-live="polite"></div>
 
-<script>
-// Deep link database - Expanded with 50+ SA niches + custom icons
-const apps = {
-  // SOCIAL (Global + SA niches: HelloPeter forums, MyBroadband community, YFM social, etc. ~15 SA)
-  social: [
-    {n:"Facebook", i:"facebook", d:"fb://", w:"https://facebook.com"},
-    {n:"Instagram", i:"instagram", d:"instagram://", w:"https://instagram.com"},
-    {n:"X (Twitter)", i:"x", d:"twitter://", w:"https://x.com"},
-    {n:"TikTok", i:"tiktok", d:"snssdk1233://", w:"https://tiktok.com"},
-    {n:"WhatsApp", i:"whatsapp", d:"whatsapp://", w:"https://wa.me"},
-    {n:"YouTube", i:"youtube", d:"vnd.youtube://", w:"https://youtube.com"},
-    {n:"Snapchat", i:"snapchat", d:"snapchat://", w:"https://snapchat.com"},
-    {n:"Telegram", i:"telegram", d:"tg://", w:"https://t.me"},
-    {n:"LinkedIn", i:"linkedin", d:"linkedin://", w:"https://linkedin.com"},
-    {n:"Reddit", i:"reddit", d:"reddit://", w:"https://reddit.com"},
-    {n:"Pinterest", i:"pinterest", d:"pinterest://", w:"https://pinterest.com"},
-    {n:"Discord", i:"discord", d:"discord://", w:"https://discord.com"},
-    {n:"WeChat", i:"wechat", d:"weixin://", w:"https://weixin.qq.com"},
-    {n:"Threads", i:"threads", d:"threads://", w:"https://threads.net"},
-    {n:"Twitch", i:"twitch", d:"twitch://", w:"https://twitch.tv"},
-    {n:"BeReal", i:"bereal", d:"bereal://", w:"https://bereal.com"},
-    {n:"VK", i:"vk", d:"vk://", w:"https://vk.com"},
-    {n:"Line", i:"line", d:"line://", w:"https://line.me"},
-    {n:"Weibo", i:"weibo", d:"sinaweibo://", w:"https://weibo.com"},
-    {n:"Bluesky", i:"bluesky", d:"bluesky://", w:"https://bsky.app"},
-    // SA Niches
-    {n:"HelloPeter", i:"hellopeter", d:"hellopeter://", w:"https://hellopeter.com", icon:'<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>'},
-    {n:"MyBroadband", i:"mybroadband", d:"mybroadband://", w:"https://mybroadband.co.za/forum", icon:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><text x="12" y="17" text-anchor="middle">MB</text></svg>'},
-    {n:"YFM Social", i:"yfm", d:"yfm://", w:"https://yfm.co.za", icon:'<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg>'},
-    {n:"News24 Community", i:"news24", d:"news24://", w:"https://news24.com", icon:'<svg viewBox="0 0 24 24"><rect width="24" height="24" fill="#007bff"/><text x="12" y="17" text-anchor="middle" fill="white">N24</text></svg>'},
-    {n:"Gumtree SA", i:"gumtree", d:"gumtree://", w:"https://gumtree.co.za", icon:'<svg viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/></svg>'},
-    {n:"Property24", i:"property24", d:"property24://", w:"https://property24.com", icon:'<svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>'},
-    {n:"Cars.co.za", i:"cars", d:"cars://", w:"https://cars.co.za", icon:'<svg viewBox="0 0 24 24"><rect x="3" y="12" width="18" height="8" rx="2"/></svg>'},
-    {n:"AutoTrader", i:"autotrader", d:"autotrader://", w:"https://autotrader.co.za", icon:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>'},
-    {n:"OLX SA", i:"olx", d:"olx://", w:"https://olx.co.za", icon:'<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>'},
-    {n:"SkilledAfricans", i:"skilledafricans", d:"skilledafricans://", w:"https://skilledafricans.org", icon:'<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg>'},
-    {n:"Afriuka", i:"afriuka", d:"afriuka://", w:"https://afriuka.com", icon:'<svg viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/></svg>'},
-    {n:"Yarnme", i:"yarnme", d:"yarnme://", w:"https://yarnme.com", icon:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>'},
-    {n:"Konnect Africa", i:"konnect", d:"konnect://", w:"https://konnect.africa", icon:'<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg>'},
-    {n:"Ayoba", i:"ayoba", d:"ayoba://", w:"https://ayoba.com", icon:'<svg viewBox="0 0 24 24"><rect width="24" height="24" fill="#00a651"/><text x="12" y="17" text-anchor="middle" fill="white">A</text></svg>'},
-    {n:"Koo SA", i:"koo", d:"koo://", w:"https://kooapp.com", icon:'<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg>'},
-  ],
-  // SHOPPING (Global + SA niches: Mr D Food, SweepSouth, TymeBank Shop, Checkers Sixty60, etc. ~20 SA)
-  shopping: [
-    {n:"Takealot", i:"takealot", d:"takealot://", w:"https://takealot.com", icon:'<svg viewBox="0 0 100 35"><path d="M0 0h100v35H0z" fill="#e31e24"/><text x="50" y="25" text-anchor="middle" fill="white" font-size="20">Takealot</text></svg>'}, // Custom SVG
-    {n:"Amazon", i:"amazon", d:"amzn://", w:"https://amazon.com"},
-    {n:"Superbalist", i:"superbalist", d:"superbalist://", w:"https://superbalist.com", icon:'<svg viewBox="0 0 100 35"><path d="M0 0h100v35H0z" fill="#000"/><text x="50" y="25" text-anchor="middle" fill="white" font-size="12">Superbalist</text></svg>'}, // Custom
-    {n:"eBay", i:"ebay", d:"ebay://", w:"https://ebay.com"},
-    {n:"Zando", i:"zando", d:"zando://", w:"https://zando.co.za"},
-    {n:"AliExpress", i:"alibaba", d:"aliexpress://", w:"https://aliexpress.com"},
-    {n:"Bob Shop", i:"bobshop", d:"bobshop://", w:"https://bobshop.co.za"},
-    {n:"Walmart", i:"walmart", d:"walmart://", w:"https://walmart.com"},
-    {n:"Bidorbuy", i:"bidorbuy", d:"bidorbuy://", w:"https://bidorbuy.co.za"},
-    {n:"Shopee", i:"shopee", d:"shopee://", w:"https://shopee.com"},
-    {n:"Loot Marketplace", i:"loot", d:"loot://", w:"https://loot.co.za"},
-    {n:"Temu", i:"temu", d:"temu://", w:"https://temu.com"},
-    {n:"Taobao", i:"taobao", d:"taobao://", w:"https://taobao.com"},
-    {n:"JD.com", i:"jd", d:"jd://", w:"https://jd.com"},
-    {n:"Flipkart", i:"flipkart", d:"flipkart://", w:"https://flipkart.com"},
-    {n:"Woolworths", i:"woolworths", d:"woolworths://", w:"https://woolworths.co.za"},
-    {n:"Mercado Libre", i:"mercadolibre", d:"mercadolibre://", w:"https://mercadolibre.com"},
-    {n:"Etsy", i:"etsy", d:"etsy://", w:"https://etsy.com"},
-    {n:"Rakuten", i:"rakuten", d:"rakuten://", w:"https://rakuten.co.jp"},
-    {n:"Lazada", i:"lazada", d:"lazada://", w:"https://lazada.com"},
-    {n:"Pinduoduo", i:"pinduoduo", d:"pinduoduo://", w:"https://pinduoduo.com"},
-    {n:"Wish", i:"wish", d:"wish://", w:"https://wish.com"},
-    // SA Niches
-    {n:"Mr D Food", i:"mrd", d:"mrd://", w:"https://mrd.co.za", icon:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#ff6b35"/><text x="12" y="17" text-anchor="middle" fill="white">MD</text></svg>'},
-    {n:"SweepSouth", i:"sweepsouth", d:"sweepsouth://", w:"https://sweepsouth.com", icon:'<svg viewBox="0 0 24 24"><path d="M3 17h18v2H3z"/></svg>'},
-    {n:"TymeBank Shop", i:"tyme", d:"tyme://", w:"https://tyme.bank", icon:'<svg viewBox="0 0 24 24"><rect width="24" height="24" fill="#00a651"/><text x="12" y="17" text-anchor="middle" fill="white">T</text></svg>'},
-    {n:"Checkers Sixty60", i:"checkers", d:"checkers://", w:"https://checkers.co.za", icon:'<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg>'},
-    {n:"Uber Eats SA", i:"ubereats", d:"ubereats://", w:"https://ubereats.com", icon:'<svg viewBox="0 0 24 24"><path d="M5.94 3.94L12 10l6.06-6.06L22 6.28l-8.94 8.94L12 21.71 3.06 12.64z"/></svg>'},
-    {n:"Makro", i:"makro", d:"makro://", w:"https://makro.co.za", icon:'<svg viewBox="0 0 24 24"><rect width="24" height="24" fill="#ff0000"/><text x="12" y="17" text-anchor="middle" fill="white">M</text></svg>'},
-    {n:"Pick n Pay", i:"picknpay", d:"picknpay://", w:"https://picknpay.co.za", icon:'<svg viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/></svg>'},
-    {n:"Edgars", i:"edgars", d:"edgars://", w:"https://edgars.co.za", icon:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>'},
-    {n:"Truworths", i:"truworths", d:"truworths://", w:"https://truworths.co.za", icon:'<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg>'},
-    {n:"Mr Price", i:"mrprice", d:"mrprice://", w:"https://mrprice.com", icon:'<svg viewBox="0 0 24 24"><rect width="24" height="24" fill="#ff6b35"/><text x="12" y="17" text-anchor="middle" fill="white">MP</text></svg>'},
-    {n:"Cape Union Mart", i:"capeunion", d:"capeunion://", w:"https://capeunionmart.co.za", icon:'<svg viewBox="0 0 24 24"><path d="M3 17h18v2H3z"/></svg>'},
-    {n:"Outdoor Warehouse", i:"outdoorwarehouse", d:"outdoorwarehouse://", w:"https://outdoorwarehouse.co.za", icon:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>'},
-    {n:"Pet Heaven", i:"petheaven", d:"petheaven://", w:"https://petheaven.co.za", icon:'<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg>'},
-    {n:"Farmers Weekly Shop", i:"farmersweekly", d:"farmersweekly://", w:"https://farmersweekly.co.za", icon:'<svg viewBox="0 0 24 24"><rect width="24" height="24" fill="#228b22"/><text x="12" y="17" text-anchor="middle" fill="white">FW</text></svg>'},
-    {n:"Books24x7", i:"books", d:"books24x7://", w:"https://books24x7.co.za", icon:'<svg viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/></svg>'},
-    {n:"Computershare", i:"computershare", d:"computershare://", w:"https://computershare.com", icon:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>'},
-    {n:"Jumia SA", i:"jumia", d:"jumia://", w:"https://jumia.co.za", icon:'<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg>'},
-    {n:"Konga SA", i:"konga", d:"konga://", w:"https://konga.com", icon:'<svg viewBox="0 0 24 24"><rect width="24" height="24" fill="#ff0000"/><text x="12" y="17" text-anchor="middle" fill="white">K</text></svg>'},
-    {n:"Omniretail", i:"omniretail", d:"omniretail://", w:"https://omniretail.com", icon:'<svg viewBox="0 0 24 24"><path d="M3 17h18v2H3z"/></svg>'},
-    {n:"Qwili", i:"qwili", d:"qwili://", w:"https://qwili.co.za", icon:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>'},
-  ],
-  // AI (Global + SA niches: Lelapa AI, DataProphet, Zindi, Carscan, Aerobotics, etc. ~10 SA)
-  ai: [
-    {n:"ChatGPT", i:"openai", d:"chatgpt://", w:"https://chat.openai.com"},
-    {n:"Grok", i:"xai", d:"grok://", w:"https://grok.x.ai"},
-    {n:"Claude", i:"anthropic", d:"claude://", w:"https://claude.ai"},
-    {n:"Gemini", i:"google", d:"gemini://", w:"https://gemini.google.com"},
-    {n:"Perplexity", i:"perplexity", d:"perplexity://", w:"https://perplexity.ai"},
-    {n:"Midjourney", i:"midjourney", d:"midjourney://", w:"https://midjourney.com"},
-    {n:"Copilot", i:"microsoft", d:"ms-copilot://", w:"https://copilot.microsoft.com"},
-    {n:"Character.AI", i:"characterai", d:"characterai://", w:"https://character.ai"},
-    {n:"Lelapa AI", i:"lelapaai", d:"lelapaai://", w:"https://lelapa.ai", icon:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#4a90e2"/><text x="12" y="17" text-anchor="middle" fill="white">LA</text></svg>'}, // Custom
-    {n:"DataProphet", i:"datapro phet", d:"datapro phet://", w:"https://datapro phet.com", icon:'<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg>'},
-    {n:"Zindi", i:"zindi", d:"zindi://", w:"https://zindi.africa"},
-    {n:"Carscan", i:"carscan", d:"carscan://", w:"https://carscan.ai"},
-    {n:"Aerobotics", i:"aerobotics", d:"aerobotics://", w:"https://aerobotics.com"},
-    {n:"Pineapple AI", i:"pineapple", d:"pineapple://", w:"https://pineapple.co.za", icon:'<svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="2"/></svg>'},
-    {n:"Itakane Health AI", i:"itakane", d:"itakane://", w:"https://itakane.co.za", icon:'<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg>'},
-    {n:"Thalia Psychotherapy AI", i:"thalia", d:"thalia://", w:"https://thalia.ai", icon:'<svg viewBox="0 0 24 24"><rect width="24" height="24" fill="#9b59b6"/><text x="12" y="17" text-anchor="middle" fill="white">T</text></svg>'},
-    {n:"Agrigistics AI", i:"agrigistics", d:"agrigistics://", w:"https://agrigistics.com", icon:'<svg viewBox="0 0 24 24"><path d="M3 17h18v2H3z"/></svg>'},
-    {n:"PayCurve AI", i:"paycurve", d:"paycurve://", w:"https://paycurve.co.za", icon:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>'},
-    {n:"Nulitics XR AI", i:"nulitics", d:"nulitics://", w:"https://nulitics.com", icon:'<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg>'},
-    {n:"Formplus AI", i:"formplus", d:"formplus://", w:"https://formplus.io", icon:'<svg viewBox="0 0 24 24"><rect width="24" height="24" fill="#e74c3c"/><text x="12" y="17" text-anchor="middle" fill="white">F</text></svg>'},
-  ],
-  // MUSIC (Global + SA niches: Simfy, YeboYethu, YFM App, 5FM, RSG, etc. ~10 SA)
-  music: [
-    {n:"Spotify", i:"spotify", d:"spotify://", w:"https://spotify.com"},
-    {n:"Apple Music", i:"apple", d:"music://", w:"https://music.apple.com"},
-    {n:"YouTube Music", i:"youtubemusic", d:"youtubemusic://", w:"https://music.youtube.com"},
-    {n:"Amazon Music", i:"amazon", d:"amazonmusic://", w:"https://music.amazon.com"},
-    {n:"Tidal", i:"tidal", d:"tidal://", w:"https://tidal.com"},
-    {n:"Deezer", i:"deezer", d:"deezer://", w:"https://deezer.com"},
-    {n:"SoundCloud", i:"soundcloud", d:"soundcloud://", w:"https://soundcloud.com"},
-    {n:"Pandora", i:"pandora", d:"pandora://", w:"https://pandora.com"},
-    {n:"Audiomack", i:"audiomack", d:"audiomack://", w:"https://audiomack.com"},
-    {n:"Boomplay", i:"boomplay", d:"boomplay://", w:"https://boomplay.com"},
-    {n:"Simfy Africa", i:"simfyafrica", d:"simfy://", w:"https://simfy.co.za"},
-    {n:"YeboYethu", i:"yeboyethu", d:"yeboyethu://", w:"https://yeboyethu.co.za"},
-    // SA Niches
-    {n:"YFM App", i:"yfm", d:"yfm://", w:"https://yfm.co.za/app", icon:'<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" fill="#ff6b35"/></svg>'},
-    {n:"5FM", i:"5fm", d:"5fm://", w:"https://5fm.co.za", icon:'<svg viewBox="0 0 24 24"><rect width="24" height="24" fill="#00a651"/><text x="12" y="17" text-anchor="middle" fill="white">5</text></svg>'},
-    {n:"RSG", i:"rsg", d:"rsg://", w:"https://rsg.co.za", icon:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>'},
-    {n:"CapeTalk", i:"capetalk", d:"capetalk://", w:"https://capetalk.co.za", icon:'<svg viewBox="0 0 24 24"><path d="M3 17h18v2H3z"/></svg>'},
-    {n:"KFM", i:"kfm", d:"kfm://", w:"https://kfm.co.za", icon:'<svg viewBox="0 0 24 24"><rect width="24" height="24" fill="#e74c3c"/><text x="12" y="17" text-anchor="middle" fill="white">K</text></svg>'},
-    {n:"Good Hope FM", i:"goodhope", d:"goodhope://", w:"https://goodhopefm.co.za", icon:'<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg>'},
-    {n:"Umhlobo Wenene", i:"umhlobo", d:"umhlobo://", w:"https://umhlobowene.co.za", icon:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>'},
-    {n:"TruFM", i:"trufm", d:"trufm://", w:"https://trufm.co.za", icon:'<svg viewBox="0 0 24 24"><rect width="24" height="24" fill="#9b59b6"/><text x="12" y="17" text-anchor="middle" fill="white">T</text></svg>'},
-    {n:"Lesedi FM", i:"lesedi", d:"lesedi://", w:"https://lesedifm.co.za", icon:'<svg viewBox="0 0 24 24"><path d="M3 17h18v2H3z"/></svg>'},
-    {n:"Ikwekwezi FM", i:"ikwekwezi", d:"ikwekwezi://", w:"https://ikwekwezifm.co.za", icon:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>'},
-  ],
-  // MOVIES & SERIES (Global + SA niches: Showmax, DStv Stream, SABC+, eVOD, BritBox SA, etc. ~10 SA)
-  movies: [
-    {n:"Showmax", i:"showmax", d:"showmax://", w:"https://showmax.com", icon:'<svg viewBox="0 0 100 35"><path d="M0 0h100v35H0z" fill="#ff6d00"/><text x="50" y="25" text-anchor="middle" fill="white" font-size="15">Showmax</text></svg>'}, // Custom
-    {n:"Netflix", i:"netflix", d:"nflx://", w:"https://netflix.com"},
-    {n:"Disney+", i:"disneyplus", d:"disneyplus://", w:"https://disneyplus.com"},
-    {n:"Prime Video", i:"amazonprimevideo", d:"primevideo://", w:"https://primevideo.com"},
-    {n:"HBO Max / Max", i:"hbomax", d:"hbomax://", w:"https://max.com"},
-    {n:"Hulu", i:"hulu", d:"hulu://", w:"https://hulu.com"},
-    {n:"Paramount+", i:"paramountplus", d:"paramountplus://", w:"https://paramountplus.com"},
-    {n:"Peacock", i:"peacock", d:"peacocktv://", w:"https://peacocktv.com"},
-    {n:"Apple TV+", i:"appletv", d:"tv://", w:"https://tv.apple.com"},
-    {n:"Viu Africa", i:"viu", d:"viu://", w:"https://viu.com"},
-    {n:"Hotstar", i:"hotstar", d:"hotstar://", w:"https://hotstar.com"},
-    {n:"Tuluntulu", i:"tuluntulu", d:"tuluntulu://", w:"https://tuluntulu.com"},
-    // SA Niches
-    {n:"DStv Stream", i:"dstv", d:"dstv://", w:"https://dstv.com", icon:'<svg viewBox="0 0 24 24"><rect width="24" height="24" fill="#00a651"/><text x="12" y="17" text-anchor="middle" fill="white">D</text></svg>'},
-    {n:"SABC+", i:"sabc", d:"sabc://", w:"https://sabcplus.com", icon:'<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg>'},
-    {n:"eVOD", i:"evod", d:"evod://", w:"https://evod.co.za", icon:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>'},
-    {n:"BritBox SA", i:"britbox", d:"britbox://", w:"https://britbox.co.za", icon:'<svg viewBox="0 0 24 24"><rect width="24" height="24" fill="#ff6b35"/><text x="12" y="17" text-anchor="middle" fill="white">B</text></svg>'},
-    {n:"M-Net Movies", i:"mnet", d:"mnet://", w:"https://mnet.co.za", icon:'<svg viewBox="0 0 24 24"><path d="M3 17h18v2H3z"/></svg>'},
-    {n:"kykNET", i:"kyknet", d:"kyknet://", w:"https://kyknet.co.za", icon:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>'},
-    {n:"Africa Channel", i:"africachannel", d:"africachannel://", w:"https://africachannel.co.za", icon:'<svg viewBox="0 0 24 24"><rect width="24" height="24" fill="#228b22"/><text x="12" y="17" text-anchor="middle" fill="white">AC</text></svg>'},
-    {n:"Tuluntulu", i:"tuluntulu", d:"tuluntulu://", w:"https://tuluntulu.com"},
-    {n:"YeboYethu TV", i:"yeboyethu", d:"yeboyethu://", w:"https://yeboyethu.co.za/tv", icon:'<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg>'},
-    {n:"Vaya", i:"vaya", d:"vaya://", w:"https://vaya.co.za", icon:'<svg viewBox="0 0 24 24"><rect width="24" height="24" fill="#9b59b6"/><text x="12" y="17" text-anchor="middle" fill="white">V</text></svg>'},
-  ],
-  // APP STORES (Global + SA: No major uniques, but added SnapStore, Aptoide SA focus ~3 SA)
-  appstores: [
-    {n:"Google Play", i:"googleplay", d:"market://", w:"https://play.google.com"},
-    {n:"App Store", i:"apple", d:"itms-apps://", w:"https://apps.apple.com"},
-    {n:"Huawei AppGallery", i:"huawei", d:"appgallery://", w:"https://appgallery.huawei.com"},
-    {n:"Samsung Galaxy Store", i:"samsung", d:"samsungapps://", w:"https://galaxystore.samsung.com"},
-    {n:"Amazon Appstore", i:"amazon", d:"amzn://apps", w:"https://amazon.com/appstore"},
-    {n:"Aptoide", i:"aptoide", d:"aptoide://", w:"https://aptoide.com"},
-    {n:"F-Droid", i:"fdroid", d:"fdroid://", w:"https://f-droid.org"},
-    // SA Niches
-    {n:"SnapStore SA", i:"snapstore", d:"snapstore://", w:"https://snapstore.co.za", icon:'<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg>'},
-    {n:"MTN App Store", i:"mtn", d:"mtnapp://", w:"https://mtn.co.za/apps", icon:'<svg viewBox="0 0 24 24"><rect width="24" height="24" fill="#00a651"/><text x="12" y="17" text-anchor="middle" fill="white">MTN</text></svg>'},
-    {n:"Vodacom Apps", i:"vodacom", d:"vodacomapp://", w:"https://vodacom.co.za/apps", icon:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#e31e24"/></svg>'},
-  ],
-  // GAMING (Global + SA niches: Carry1st, ACGL, Leti Arts, QP Dronetech, etc. ~8 SA)
-  gaming: [
-    {n:"Steam", i:"steam", d:"steam://", w:"https://store.steampowered.com"},
-    {n:"Epic Games", i:"epicgames", d:"epicgames://", w:"https://store.epicgames.com"},
-    {n:"Xbox", i:"xbox", d:"xbox://", w:"https://xbox.com"},
-    {n:"PlayStation", i:"playstation", d:"psapp://", w:"https://playstation.com"},
-    {n:"Roblox", i:"roblox", d:"roblox://", w:"https://roblox.com"},
-    {n:"Nintendo", i:"nintendo", d:"nintendo://", w:"https://nintendo.com"},
-    {n:"GeForce Now", i:"nvidia", d:"nvidia://", w:"https://geforcenow.com"},
-    {n:"Game Pass", i:"xboxgamepass", d:"xboxgamepass://", w:"https://xbox.com/gamepass"},
-    {n:"Carry1st", i:"carry1st", d:"carry1st://", w:"https://carry1st.com"},
-    {n:"FPS Strike Ops", i:"fpsstrike", d:"fpsstrike://", w:"https://play.google.com/store/apps/details?id=com.fps.strike.ops"},
-    // SA Niches
-    {n:"African Cyber Gaming League", i:"acgl", d:"acgl://", w:"https://acgl.co.za", icon:'<svg viewBox="0 0 24 24"><rect width="24" height="24" fill="#00a651"/><text x="12" y="17" text-anchor="middle" fill="white">ACGL</text></svg>'},
-    {n:"Leti Arts", i:"letiarts", d:"letiarts://", w:"https://letiarts.com", icon:'<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg>'},
-    {n:"QP Dronetech", i:"qpdronetech", d:"qpdronetech://", w:"https://qpdronetech.com", icon:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>'},
-    {n:"Dragonfly Aerospace", i:"dragonfly", d:"dragonfly://", w:"https://dragonflyaerospace.com", icon:'<svg viewBox="0 0 24 24"><path d="M3 17h18v2H3z"/></svg>'},
-    {n:"Fixxr Gaming", i:"fixxr", d:"fixxr://", w:"https://fixxr.co.za", icon:'<svg viewBox="0 0 24 24"><rect width="24" height="24" fill="#ff6b35"/><text x="12" y="17" text-anchor="middle" fill="white">F</text></svg>'},
-    {n:"ProItUP Optics Games", i:"proitup", d:"proitup://", w:"https://proitup.com", icon:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>'},
-    {n:"Tipped Gaming", i:"tipped", d:"tipped://", w:"https://tipped.co.za", icon:'<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg>'},
-    {n:"TUNL Esports", i:"tunl", d:"tunl://", w:"https://tunl.co.za", icon:'<svg viewBox="0 0 24 24"><rect width="24" height="24" fill="#9b59b6"/><text x="12" y="17" text-anchor="middle" fill="white">T</text></svg>'},
-  ],
-  // SEARCH (Global + SA: No major, but added niche like SA-specific search tools ~3)
-  search: [
-    {n:"Google", i:"google", d:"googlechrome://", w:"https://google.com"},
-    {n:"Bing", i:"bing", d:"bing://", w:"https://bing.com"},
-    {n:"DuckDuckGo", i:"duckduckgo", d:"ddgQuickLink://", w:"https://duckduckgo.com"},
-    {n:"Baidu", i:"baidu", d:"baidu://", w:"https://baidu.com"},
-    {n:"Yandex", i:"yandex", d:"yandexsearch://", w:"https://yandex.com"},
-    {n:"Naver", i:"naver", d:"naversearch://", w:"https://naver.com"},
-    {n:"Yahoo", i:"yahoo", d:"yahoo://", w:"https://yahoo.com"},
-    {n:"Ecosia", i:"ecosia", d:"ecosia://", w:"https://ecosia.org"},
-    // SA Niches
-    {n:"MyBroadband Search", i:"mybroadband", d:"mybroadbandsearch://", w:"https://mybroadband.co.za/search", icon:'<svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>'},
-    {n:"News24 Search", i:"news24", d:"news24search://", w:"https://news24.com/search", icon:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>'},
-    {n:"IOL Search", i:"iol", d:"iolsearch://", w:"https://iol.co.za/search", icon:'<svg viewBox="0 0 24 24"><path d="M3 17h18v2H3z"/></svg>'},
-  ]
+    <div class="footer-note">
+      Note: This page is client-only. Badges are stored locally. Deep-link behavior varies by device/browser.
+    </div>
+  </div>
+
+  <!-- Modals -->
+  <div class="modal fade" id="editModal" tabindex="-1">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-content">
+        <form id="editForm">
+          <div class="modal-header"><h5 class="modal-title">Edit Badge / Platform</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+          <div class="modal-body">
+            <input type="hidden" id="editId">
+            <div class="mb-2"><label class="form-label">Platform</label><input id="editName" class="form-control" required></div>
+            <div class="mb-2"><label class="form-label">Category</label><input id="editCategory" class="form-control"></div>
+            <div class="mb-2"><label class="form-label">Country</label><input id="editCountry" class="form-control"></div>
+            <div class="mb-2"><label class="form-label">App Link</label><input id="editApp" class="form-control" placeholder="whatsapp://send?text=hi or intent://..."></div>
+            <div class="mb-2"><label class="form-label">Web URL</label><input id="editWeb" class="form-control" placeholder="https://..."></div>
+            <div class="mb-2"><label class="form-label">Icon URL</label><input id="editIcon" class="form-control" placeholder="https://..."></div>
+            <div class="mb-2"><label class="form-label">Badge count</label><input id="editBadge" type="number" min="0" class="form-control"></div>
+          </div>
+          <div class="modal-footer"><button class="btn btn-primary" type="submit">Save</button></div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <input type="file" id="fileInput" accept="application/json" style="display:none">
+
+  <script>
+/* ============================
+   FULL CLIENT-SIDE GLOBAL LAUNCHER
+   - Large curated platforms array
+   - Search, filter, sort
+   - Dark mode
+   - Local badges in localStorage
+   - Deep-link attempt with fallback
+   ============================ */
+
+const STORAGE = 'global_launcher_state_v1';
+const state = {
+  platforms: [], // filled below
+  badges: {},    // id -> count
+  prefs: { theme: 'light' }
 };
 
-// Notification simulation
-let notifications = JSON.parse(localStorage.getItem('hub-notifs') || '{}');
+// -------------------- LARGE PLATFORM LIST --------------------
+/* Each item: {id, name, category, country, popularity (0-100), icon, app_link, web_url} */
+/* This is a curated global list across categories & countries. You can add more platforms via UI or import JSON. */
+state.platforms = [
+  /* ---------- SOCIAL (global) ---------- */
+  {id:'facebook', name:'Facebook', category:'Social', country:'Global', popularity:95,
+   icon:'https://cdn-icons-png.flaticon.com/512/733/733547.png', app_link:'fb://', web_url:'https://facebook.com'},
+  {id:'instagram', name:'Instagram', category:'Social', country:'Global', popularity:90,
+   icon:'https://cdn-icons-png.flaticon.com/512/2111/2111463.png', app_link:'instagram://app', web_url:'https://instagram.com'},
+  {id:'x', name:'X', category:'Social', country:'Global', popularity:80,
+   icon:'https://abs.twimg.com/favicons/twitter.ico', app_link:'twitter://', web_url:'https://x.com'},
+  {id:'whatsapp', name:'WhatsApp', category:'Social', country:'Global', popularity:92,
+   icon:'https://www.whatsapp.com/favicon.ico', app_link:'whatsapp://send?text=hey', web_url:'https://web.whatsapp.com'},
+  {id:'telegram', name:'Telegram', category:'Social', country:'Global', popularity:75,
+   icon:'https://telegram.org/img/t_logo.png', app_link:'tg://', web_url:'https://telegram.org'},
+  {id:'wechat', name:'WeChat', category:'Social', country:'China', popularity:85,
+   icon:'https://res.wx.qq.com/mpres/htmledition/images/favicon_160.png', app_link:'weixin://', web_url:'https://www.wechat.com'},
+  {id:'qq', name:'QQ', category:'Social', country:'China', popularity:70,
+   icon:'https://imgcache.qq.com/endpoint/portal/img/favicon.ico', app_link:'tencent://', web_url:'https://im.qq.com'},
+  {id:'tiktok', name:'TikTok', category:'Social', country:'Global', popularity:88,
+   icon:'https://cdn-icons-png.flaticon.com/512/3046/3046121.png', app_link:'snssdk://', web_url:'https://www.tiktok.com'},
+  {id:'snapchat', name:'Snapchat', category:'Social', country:'Global', popularity:65,
+   icon:'https://cdn-icons-png.flaticon.com/512/732/732200.png', app_link:'snapchat://', web_url:'https://www.snapchat.com'},
+  {id:'linkedin', name:'LinkedIn', category:'Social', country:'Global', popularity:68,
+   icon:'https://cdn-icons-png.flaticon.com/512/174/174857.png', app_link:'linkedin://', web_url:'https://www.linkedin.com'},
+  {id:'pinterest', name:'Pinterest', category:'Social', country:'Global', popularity:58,
+   icon:'https://cdn-icons-png.flaticon.com/512/174/174863.png', app_link:'pinterest://', web_url:'https://www.pinterest.com'},
+  {id:'vkontakte', name:'VKontakte', category:'Social', country:'Russia', popularity:55,
+   icon:'https://static.vkcdn.ru/common/images/favicons/fav_logo.ico', app_link:'vk://', web_url:'https://vk.com'},
+  {id:'ok', name:'Odnoklassniki', category:'Social', country:'Russia', popularity:40,
+   icon:'https://ok.ru/favicon.ico', app_link:'ok://', web_url:'https://ok.ru'},
+  {id:'line', name:'LINE', category:'Social', country:'Japan', popularity:54,
+   icon:'https://d.line-scdn.net/line-rich/1.0/line.png', app_link:'line://', web_url:'https://line.me'},
+  {id:'kakao', name:'KakaoTalk', category:'Social', country:'South Korea', popularity:60,
+   icon:'https://developers.kakao.com/assets/img/about/logos/kakaolink/kakaolink_btn_small.png', app_link:'kakaotalk://', web_url:'https://www.kakao.com'},
 
-function openApp(deep, web) {
-  location.href = deep || web;
-  setTimeout(() => { if (document.visibilityState === 'visible') location.href = web; }, 1000);
+  /* ---------- SHOPPING ---------- */
+  {id:'amazon', name:'Amazon', category:'Shopping', country:'Global', popularity:98,
+   icon:'https://cdn-icons-png.flaticon.com/512/733/733579.png', app_link:'amazon://', web_url:'https://www.amazon.com'},
+  {id:'ebay', name:'eBay', category:'Shopping', country:'Global', popularity:85,
+   icon:'https://cdn-icons-png.flaticon.com/512/732/732084.png', app_link:'ebay://', web_url:'https://www.ebay.com'},
+  {id:'alibaba', name:'Alibaba', category:'Shopping', country:'China', popularity:80,
+   icon:'https://cdn-icons-png.flaticon.com/512/873/873107.png', app_link:'aliexpress://', web_url:'https://www.aliexpress.com'},
+  {id:'aliexpress', name:'AliExpress', category:'Shopping', country:'Global', popularity:76,
+   icon:'https://ae01.alicdn.com/kf/HTB1B9xwXkLrK1Rjy0Fp7605pVXaQ.png', app_link:'aliexpress://', web_url:'https://www.aliexpress.com'},
+  {id:'shopify', name:'Shopify', category:'Shopping', country:'Global', popularity:68,
+   icon:'https://cdn.worldvectorlogo.com/logos/shopify.svg', app_link:'shopify://', web_url:'https://www.shopify.com'},
+  {id:'walmart', name:'Walmart', category:'Shopping', country:'USA', popularity:78,
+   icon:'https://www.walmart.com/favicon.ico', app_link:'walmart://', web_url:'https://www.walmart.com'},
+  {id:'target', name:'Target', category:'Shopping', country:'USA', popularity:61,
+   icon:'https://s3-us-west-2.amazonaws.com/brand-assets/target/favicon.ico', app_link:'target://', web_url:'https://www.target.com'},
+  {id:'jd', name:'JD.com', category:'Shopping', country:'China', popularity:72,
+   icon:'https://cdn1.jdmobile.com/static/img/favicon.ico', app_link:'jd://', web_url:'https://www.jd.com'},
+  {id:'mercadolibre', name:'Mercado Libre', category:'Shopping', country:'LatAm', popularity:70,
+   icon:'https://mla-s1-p.mlstatic.com/static/org-img/homesite/favicon/favicon-32x32.png', app_link:'mercadolibre://', web_url:'https://www.mercadolibre.com'},
+  {id:'flipkart', name:'Flipkart', category:'Shopping', country:'India', popularity:74,
+   icon:'https://cdn-icons-png.flaticon.com/512/5968/5968417.png', app_link:'flipkart://', web_url:'https://www.flipkart.com'},
+
+  /* ---------- AI PLATFORMS ---------- */
+  {id:'chatgpt', name:'ChatGPT', category:'AI', country:'Global', popularity:95,
+   icon:'https://cdn.openai.com/favicon.ico', app_link:'openai://', web_url:'https://chat.openai.com'},
+  {id:'bard', name:'Google Bard', category:'AI', country:'Global', popularity:80,
+   icon:'https://www.google.com/favicon.ico', app_link:'googlebard://', web_url:'https://bard.google.com'},
+  {id:'claude', name:'Claude', category:'AI', country:'Global', popularity:50,
+   icon:'https://claude.ai/favicon.ico', app_link:'claude://', web_url:'https://www.anthropic.com'},
+  {id:'bingai', name:'Bing AI', category:'AI', country:'Global', popularity:65,
+   icon:'https://www.bing.com/sa/simg/favicon-2x.ico', app_link:'bing://', web_url:'https://www.bing.com/chat'},
+  {id:'perplexity', name:'Perplexity', category:'AI', country:'Global', popularity:40,
+   icon:'https://www.perplexity.ai/favicon.ico', app_link:'perplexity://', web_url:'https://www.perplexity.ai'},
+
+  /* ---------- MUSIC ---------- */
+  {id:'spotify', name:'Spotify', category:'Music', country:'Global', popularity:92,
+   icon:'https://www.scdn.co/i/_global/favicon.png', app_link:'spotify://', web_url:'https://open.spotify.com'},
+  {id:'applemusic', name:'Apple Music', category:'Music', country:'Global', popularity:82,
+   icon:'https://www.apple.com/favicon.ico', app_link:'music://', web_url:'https://music.apple.com'},
+  {id:'youtube_music', name:'YouTube Music', category:'Music', country:'Global', popularity:78,
+   icon:'https://music.youtube.com/favicon.ico', app_link:'youtube-music://', web_url:'https://music.youtube.com'},
+  {id:'deezer', name:'Deezer', category:'Music', country:'Global', popularity:50,
+   icon:'https://www.deezer.com/favicon.ico', app_link:'deezer://', web_url:'https://www.deezer.com'},
+
+  /* ---------- MOVIES & TV ---------- */
+  {id:'netflix', name:'Netflix', category:'Movies', country:'Global', popularity:95,
+   icon:'https://assets.nflxext.com/us/ffe/siteui/common/icons/nficon2016.ico', app_link:'nflx://', web_url:'https://www.netflix.com'},
+  {id:'primevideo', name:'Prime Video', category:'Movies', country:'Global', popularity:82,
+   icon:'https://www.primevideo.com/favicon.ico', app_link:'primevideo://', web_url:'https://www.primevideo.com'},
+  {id:'disneyplus', name:'Disney+', category:'Movies', country:'Global', popularity:76,
+   icon:'https://www.disneyplus.com/favicon.ico', app_link:'disneyplus://', web_url:'https://www.disneyplus.com'},
+  {id:'hulu', name:'Hulu', category:'Movies', country:'USA', popularity:60,
+   icon:'https://www.hulu.com/favicon.ico', app_link:'hulu://', web_url:'https://www.hulu.com'},
+
+  /* ---------- APP STORES ---------- */
+  {id:'googleplay', name:'Google Play', category:'App Store', country:'Global', popularity:98,
+   icon:'https://play.google.com/favicon.ico', app_link:'market://details?id=', web_url:'https://play.google.com'},
+  {id:'appstore', name:'Apple App Store', category:'App Store', country:'Global', popularity:98,
+   icon:'https://www.apple.com/favicon.ico', app_link:'itms-apps://', web_url:'https://apps.apple.com'},
+
+  /* ---------- GAMES ---------- */
+  {id:'steam', name:'Steam', category:'Games', country:'Global', popularity:86,
+   icon:'https://store.cloudflare.steamstatic.com/public/shared/images/header/globalfavicon.ico', app_link:'steam://', web_url:'https://store.steampowered.com'},
+  {id:'epic', name:'Epic Games', category:'Games', country:'Global', popularity:70,
+   icon:'https://www.epicgames.com/favicon.ico', app_link:'com.epicgames.launcher://', web_url:'https://www.epicgames.com'},
+  {id:'roblox', name:'Roblox', category:'Games', country:'Global', popularity:80,
+   icon:'https://www.roblox.com/favicon.ico', app_link:'roblox://', web_url:'https://www.roblox.com'},
+  {id:'playstation', name:'PlayStation', category:'Games', country:'Global', popularity:72,
+   icon:'https://www.playstation.com/favicon.ico', app_link:'psapp://', web_url:'https://www.playstation.com'},
+
+  /* ---------- SEARCH ---------- */
+  {id:'google', name:'Google', category:'Search', country:'Global', popularity:100,
+   icon:'https://www.google.com/favicon.ico', app_link:'google://', web_url:'https://www.google.com'},
+  {id:'bing', name:'Bing', category:'Search', country:'Global', popularity:55,
+   icon:'https://www.bing.com/sa/simg/favicon-2x.ico', app_link:'bing://', web_url:'https://www.bing.com'},
+  {id:'yandex', name:'Yandex', category:'Search', country:'Russia', popularity:60,
+   icon:'https://yandex.com/favicon.ico', app_link:'yandexsearch://', web_url:'https://yandex.com'},
+
+  /* ---------- CLOTHING & FASHION ---------- */
+  {id:'zara', name:'ZARA', category:'Clothing', country:'Spain/Global', popularity:65,
+   icon:'https://static.zara.net/favicon.ico', app_link:'zara://', web_url:'https://www.zara.com'},
+  {id:'hm', name:'H&M', category:'Clothing', country:'Sweden/Global', popularity:64,
+   icon:'https://www2.hm.com/favicon.ico', app_link:'hm://', web_url:'https://www.hm.com'},
+  {id:'asos', name:'ASOS', category:'Clothing', country:'UK/Global', popularity:58,
+   icon:'https://www.asos.com/favicon.ico', app_link:'asos://', web_url:'https://www.asos.com'},
+  {id:'uniqlo', name:'UNIQLO', category:'Clothing', country:'Japan/Global', popularity:55,
+   icon:'https://www.uniqlo.com/favicon.ico', app_link:'uniqlo://', web_url:'https://www.uniqlo.com'},
+
+  /* ---------- REGIONAL / IMPORTANT PLATFORMS (examples) ---------- */
+  {id:'snapdeal', name:'Snapdeal', category:'Shopping', country:'India', popularity:40, icon:'https://snapdeal.com/favicon.ico', app_link:'snapdeal://', web_url:'https://www.snapdeal.com'},
+  {id:'momo', name:'MoMo', category:'Shopping', country:'Vietnam', popularity:45, icon:'https://momo.vn/favicon.ico', app_link:'momo://', web_url:'https://momo.vn'},
+  {id:'olat', name:'OLX', category:'Shopping', country:'Global', popularity:50, icon:'https://www.olx.com/favicon.ico', app_link:'olx://', web_url:'https://www.olx.com'},
+  {id:'shopee', name:'Shopee', category:'Shopping', country:'Southeast Asia', popularity:75, icon:'https://shopee.com/favicon.ico', app_link:'shopee://', web_url:'https://shopee.sg'},
+  {id:'lazada', name:'Lazada', category:'Shopping', country:'Southeast Asia', popularity:65, icon:'https://lazada.com/favicon.ico', app_link:'lazada://', web_url:'https://www.lazada.com'},
+
+  /* ---------- EXTRA SOCIAL / REGIONAL ---------- */
+  {id:'douyin', name:'Douyin', category:'Social', country:'China', popularity:88, icon:'https://www.douyin.com/favicon.ico', app_link:'douyin://', web_url:'https://www.douyin.com'},
+  {id:'kuaishou', name:'Kuaishou', category:'Social', country:'China', popularity:60, icon:'https://www.kuaishou.com/favicon.ico', app_link:'kuaishou://', web_url:'https://www.kuaishou.com'},
+  {id:'behance', name:'Behance', category:'Social', country:'Global', popularity:38, icon:'https://www.behance.net/favicon.ico', app_link:'behance://', web_url:'https://www.behance.net'},
+  {id:'dribbble', name:'Dribbble', category:'Social', country:'Global', popularity:35, icon:'https://dribbble.com/favicon.ico', app_link:'dribbble://', web_url:'https://dribbble.com'},
+
+  /* ---------- EXTRA AI / TOOLS ---------- */
+  {id:'notion', name:'Notion AI', category:'AI', country:'Global', popularity:52, icon:'https://www.notion.so/favicon.ico', app_link:'notion://', web_url:'https://www.notion.so'},
+  {id:'replit', name:'Replit AI', category:'AI', country:'Global', popularity:30, icon:'https://replit.com/public/images/favicon.ico', app_link:'replit://', web_url:'https://replit.com'},
+  {id:'midjourney', name:'Midjourney', category:'AI', country:'Global', popularity:42, icon:'https://midjourney.com/favicon.ico', app_link:'midjourney://', web_url:'https://www.midjourney.com'},
+
+  /* ---------- EXTRA MUSIC ---------- */
+  {id:'soundcloud', name:'SoundCloud', category:'Music', country:'Global', popularity:50, icon:'https://a-v2.sndcdn.com/assets/images/favicons/favicon-32x32.png', app_link:'soundcloud://', web_url:'https://soundcloud.com'},
+  {id:'tidal', name:'TIDAL', category:'Music', country:'Global', popularity:36, icon:'https://tidal.com/favicon.ico', app_link:'tidal://', web_url:'https://tidal.com'},
+
+  /* ---------- EXTRA VIDEO ---------- */
+  {id:'hotstar', name:'Hotstar', category:'Movies', country:'India', popularity:62, icon:'https://www.hotstar.com/favicon.ico', app_link:'hotstar://', web_url:'https://www.hotstar.com'},
+  {id:'hbo', name:'HBO Max', category:'Movies', country:'Global', popularity:58, icon:'https://www.hbomax.com/favicon.ico', app_link:'hbomax://', web_url:'https://www.hbomax.com'},
+
+  /* ---------- EXTRA GAMES ---------- */
+  {id:'xbox', name:'Xbox', category:'Games', country:'Global', popularity:64, icon:'https://www.xbox.com/favicon.ico', app_link:'xbox://', web_url:'https://www.xbox.com'},
+  {id:'nintendo', name:'Nintendo', category:'Games', country:'Global', popularity:60, icon:'https://www.nintendo.com/favicon.ico', app_link:'nintendo://', web_url:'https://www.nintendo.com'},
+
+  /* ---------- EXTRA SEARCH ---------- */
+  {id:'duckduckgo', name:'DuckDuckGo', category:'Search', country:'Global', popularity:40, icon:'https://duckduckgo.com/favicon.ico', app_link:'ddg://', web_url:'https://duckduckgo.com'},
+
+  /* ---------- EXTRA FASHION ---------- */
+  {id:'zalando', name:'Zalando', category:'Clothing', country:'Europe', popularity:48, icon:'https://www.zalando.com/favicon.ico', app_link:'zalando://', web_url:'https://www.zalando.com'},
+
+  /* ---------- Add more entries as desired via UI/import ---------- */
+];
+
+// load saved state from localStorage (badges & prefs)
+(function loadStored(){
+  try{
+    const raw = localStorage.getItem(STORAGE);
+    if(raw){
+      const obj = JSON.parse(raw);
+      if(obj.badges) state.badges = obj.badges;
+      if(obj.prefs) state.prefs = obj.prefs;
+      if(obj.platforms) {
+        // merge: add any new built-in platforms while preserving user imports
+        const existingIds = new Set(obj.platforms.map(p=>p.id));
+        // prefer user-saved list if present to let user overwrite built-ins
+        state.platforms = obj.platforms;
+      }
+    }
+  } catch(e){ console.warn('load failed', e); }
+})();
+
+// DOM references
+const resultsDiv = document.getElementById('results');
+const searchInput = document.getElementById('searchInput');
+const categoryFilter = document.getElementById('categoryFilter');
+const countryFilter = document.getElementById('countryFilter');
+const sortSelect = document.getElementById('sortSelect');
+const darkToggle = document.getElementById('darkToggle');
+const simBtn = document.getElementById('simBtn');
+const exportBtn = document.getElementById('exportBtn');
+const importBtn = document.getElementById('importBtn');
+const addBtn = document.getElementById('addBtn');
+const fileInput = document.getElementById('fileInput');
+const groupInfo = document.getElementById('groupInfo');
+
+// init theme
+(function initTheme(){
+  const t = state.prefs.theme || (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark':'light');
+  setTheme(t);
+})();
+darkToggle.addEventListener('click', ()=> setTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'));
+
+function setTheme(t){
+  document.documentElement.setAttribute('data-theme', t==='dark' ? 'dark' : 'light');
+  state.prefs.theme = t;
+  localSave();
 }
 
-function render(category) {
-  const container = document.getElementById('content');
-  container.innerHTML = apps[category].map(app => {
-    const count = notifications[app.n] || 0;
-    const iconHtml = app.icon || `<i class="si si-${app.i}" style="color:#ccc"></i>`;
-    return `
-      <div class="item" onclick="openApp('\( {app.d}',' \){app.w}')">
-        <div class="icon">${iconHtml}</div>
-        \( {count > 0 ? `<div class="badge"> \){count}</div>` : ''}
-        <div class="name">${app.n}</div>
-        <div class="simulate" onclick="event.stopPropagation(); addNotif('${app.n}')">
-          ${count > 0 ? 'Clear' : '+ Notify'}
-        </div>
-      </div>
+// populate filters
+function populateFilters(){
+  const cats = Array.from(new Set(state.platforms.map(p=>p.category))).sort();
+  categoryFilter.innerHTML = '<option value="">All categories</option>' + cats.map(c=>`<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join('');
+  const countries = Array.from(new Set(state.platforms.map(p=>p.country))).sort();
+  countryFilter.innerHTML = '<option value="">All countries</option>' + countries.map(c=>`<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join('');
+}
+populateFilters();
+
+// search + filter + sort -> render
+function render(){
+  const q = (searchInput.value || '').trim().toLowerCase();
+  const cat = categoryFilter.value;
+  const country = countryFilter.value;
+  const sort = sortSelect.value;
+
+  // filter
+  let list = state.platforms.filter(p=>{
+    if(cat && p.category !== cat) return false;
+    if(country && p.country !== country) return false;
+    if(q){
+      const hay = `${p.name} ${p.id} ${p.category} ${p.country}`.toLowerCase();
+      if(!hay.includes(q)) return false;
+    }
+    return true;
+  });
+
+  // sort
+  if(sort === 'pop'){
+    list.sort((a,b)=> (b.popularity||0) - (a.popularity||0));
+    groupInfo.innerText = 'Sorted by Popularity';
+  } else {
+    list.sort((a,b)=> a.name.localeCompare(b.name));
+    groupInfo.innerText = 'Sorted Alphabetically';
+  }
+
+  // render cards
+  resultsDiv.innerHTML = '';
+  if(list.length === 0){
+    resultsDiv.innerHTML = '<div class="small-muted">No platforms found.</div>';
+    return;
+  }
+
+  const fragment = document.createDocumentFragment();
+  list.forEach(p=>{
+    const div = document.createElement('div');
+    div.className = 'platform-card';
+    div.title = `${p.name} — ${p.category} — ${p.country}`;
+    div.innerHTML = `
+      <img loading="lazy" class="picon" src="${escapeHtml(p.icon || placeholderIcon(p.name))}" alt="${escapeHtml(p.name)}" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2256%22 height=%2256%22><rect width=%2256%22 height=%2256%22 fill=%22%23cccccc%22 /><text x=%2228%22 y=%2232%22 font-size=%2210%22 text-anchor=%22middle%22 fill=%22%23666%22>${encodeURIComponent(p.name.slice(0,2))}</text></svg>'">
+      <div style="font-weight:600;margin-top:6px">${escapeHtml(p.name)}</div>
+      <div class="meta">${escapeHtml(p.category)} · ${escapeHtml(p.country)}</div>
+      <div id="badge-${p.id}" class="badge-count" style="display:none">0</div>
     `;
-  }).join('');
+    // click opens app/web
+    div.addEventListener('click', (e)=>{
+      attemptOpen(p);
+    });
+    // right-click (context) to edit badge/platform
+    div.addEventListener('contextmenu', (e)=>{
+      e.preventDefault();
+      openEditModal(p.id);
+    });
+    fragment.appendChild(div);
+    // set badge if exists
+    const b = state.badges[p.id] || 0;
+    if(b>0){
+      setBadgeDom(p.id, b, fragment);
+    }
+  });
+  resultsDiv.appendChild(fragment);
+
+  // attach small tooltip or action (not required)
+}
+render();
+
+// attempt to open app via link then fallback to web
+function attemptOpen(p){
+  const ua = navigator.userAgent || '';
+  const isAndroid = /Android/i.test(ua);
+  // if app_link looks like intent: and on Android, directly set location
+  if(isAndroid && p.app_link && p.app_link.startsWith('intent:')){
+    window.location.href = p.app_link;
+    return;
+  }
+  // generic attempt: use iframe trick for custom URI schemes
+  if(p.app_link){
+    tryOpenURI(p.app_link, ()=>{ window.open(p.web_url || p.app_link, '_blank'); });
+  } else {
+    window.open(p.web_url, '_blank');
+  }
 }
 
-function addNotif(name) {
-  notifications[name] = (notifications[name] || 0) + (notifications[name] ? -notifications[name] : 1);
-  if (notifications[name] === 0) delete notifications[name];
-  localStorage.setItem('hub-notifs', JSON.stringify(notifications));
-  const activeTab = document.querySelector('.tab.active').textContent.toLowerCase().replace(/\/tv|stores/g, '').split(' ')[0];
-  render(activeTab);
+// iframe open fallback
+function tryOpenURI(uri, onFail, timeout=1000){
+  const start = Date.now();
+  const ifr = document.createElement('iframe');
+  ifr.style.display='none';
+  ifr.src = uri;
+  document.body.appendChild(ifr);
+  setTimeout(()=>{
+    try{ document.body.removeChild(ifr); }catch(e){}
+    if(document.visibilityState === 'visible' && (Date.now() - start) > (timeout - 50)){
+      onFail && onFail();
+    }
+  }, timeout);
 }
 
-function show(tab) {
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  event.target.classList.add('active');
-  render(tab);
+// set badge in DOM & state
+function setBadgeDom(id, count, scope=document){
+  const el = (scope instanceof DocumentFragment) ? null : document.getElementById('badge-'+id);
+  // if not found in current DOM, find later; we'll update after render
+  if(el){
+    if(count>0){ el.innerText = (count>99? '99+': count); el.style.display='inline-block'; }
+    else { el.style.display='none'; }
+  }
+  if(count>0) state.badges[id] = count; else delete state.badges[id];
+  localSave();
 }
 
-// Load first
-render('social');
-</script>
+// open edit modal (small)
+function openEditModal(id){
+  const p = state.platforms.find(x=>x.id===id);
+  if(!p) return;
+  // show quick prompt to set badge or edit (simple UX for now)
+  const input = prompt(`Set badge count for ${p.name} (leave blank to cancel, 0 to clear):`, state.badges[id] || 0);
+  if(input === null) return;
+  const n = parseInt(input||'0',10);
+  if(isNaN(n)) return alert('Invalid number');
+  setBadgeDom(id, n);
+  render();
+}
+
+// simulate
+simBtn.addEventListener('click', ()=>{
+  state.platforms.forEach(p=>{
+    if(Math.random() > 0.7){
+      const add = Math.floor(Math.random()*6)+1;
+      const cur = state.badges[p.id] || 0;
+      setBadgeDom(p.id, cur + add);
+    }
+  });
+  render();
+});
+
+// search, filters events
+searchInput.addEventListener('input', debounce(render, 180));
+categoryFilter.addEventListener('change', render);
+countryFilter.addEventListener('change', render);
+sortSelect.addEventListener('change', render);
+
+// export/import
+exportBtn.addEventListener('click', ()=>{
+  const dump = { platforms: state.platforms, badges: state.badges, prefs: state.prefs };
+  const blob = new Blob([JSON.stringify(dump, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'global_launcher_export.json'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+});
+importBtn.addEventListener('click', ()=> fileInput.click());
+fileInput.addEventListener('change', (e)=>{
+  const f = e.target.files[0];
+  if(!f) return;
+  const r = new FileReader();
+  r.onload = ()=> {
+    try{
+      const obj = JSON.parse(r.result);
+      if(obj.platforms && Array.isArray(obj.platforms)){
+        // replace entire dataset (user requested)
+        if(confirm('Import will replace current platform list and badges. Continue?')){
+          state.platforms = obj.platforms;
+          state.badges = obj.badges || {};
+          state.prefs = obj.prefs || state.prefs;
+          populateFilters();
+          render();
+          localSave();
+          alert('Import successful');
+        }
+      } else alert('Invalid import file');
+    } catch(err){ alert('Import error: '+err.message); }
+  };
+  r.readAsText(f);
+});
+
+// add custom platform
+addBtn.addEventListener('click', ()=>{
+  const id = prompt('Unique ID (e.g., myapp):');
+  if(!id) return;
+  if(state.platforms.find(p=>p.id===id)) return alert('ID exists');
+  const name = prompt('Name:');
+  if(!name) return;
+  const cat = prompt('Category (Social, Shopping, AI, Music, Movies, App Store, Games, Search, Clothing):','Social');
+  const country = prompt('Country or region:','Global');
+  const icon = prompt('Icon URL (favicon or image):','https://via.placeholder.com/56');
+  const app_link = prompt('App link (URI scheme) (optional):','');
+  const web_url = prompt('Web URL:','https://');
+  const pop = parseInt(prompt('Popularity (0-100):','50'),10) || 50;
+  state.platforms.push({id,name,category:cat,country,popularity:pop,icon,app_link,web_url});
+  populateFilters();
+  render();
+  localSave();
+});
+
+// persist local state
+function localSave(){
+  try{
+    localStorage.setItem(STORAGE, JSON.stringify({platforms: state.platforms, badges: state.badges, prefs: state.prefs}));
+  }catch(e){ console.warn('save fail', e); }
+}
+window.addEventListener('beforeunload', localSave);
+
+// helper functions
+function escapeHtml(s){ return String(s||'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
+function placeholderIcon(name){ return 'https://via.placeholder.com/56?text=' + encodeURIComponent(name.slice(0,2)); }
+function debounce(fn, t){ let to; return function(...a){ clearTimeout(to); to=setTimeout(()=>fn.apply(this,a), t); }; }
+
+// initialize filters and render
+populateFilters();
+render();
+
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
