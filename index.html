@@ -3,454 +3,269 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Coolie Links SA – Education & Career Hub</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <title>Coolie Links SA</title>
+    <meta name="description" content="All South African universities, TVET colleges, textbooks, bursaries & jobs in one place">
+    <meta name="theme-color" content="#000000">
+
+    <!-- PWA -->
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
     <style>
-        :root {
-            --bg: #ffffff;
-            --surface: #f8f9fa;
-            --card: #ffffff;
-            --text: #000000;
-            --text-muted: #555555;
-            --border: #000000;
-            --hover: #000000;
-            --light-gray: #eeeeee;
-        }
-        body {
-            background: var(--bg);
-            color: var(--text);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            padding-top: 90px;
-            line-height: 1.6;
-        }
-        .navbar {
-            position: fixed;
-            top: 0; left: 0; right: 0;
-            z-index: 1000;
-            background: #ffffff !important;
-            border-bottom: 3px solid #000;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.12);
-        }
-        .navbar-brand {
-            font-weight: 900;
-            font-size: 1.9rem;
-            color: #000 !important;
-        }
-        .nav-link {
-            color: #000 !important;
-            font-weight: 600;
-            padding: 0.8rem 1.3rem !important;
-            transition: all 0.3s;
-        }
-        .nav-link:hover {
-            background: #f0f0f0;
-            border-radius: 8px;
-        }
-        .hero {
-            text-align: center;
-            padding: 140px 20px 100px;
-            background: linear-gradient(135deg, #ffffff 0%, #f5f5f5 100%);
-        }
-        .hero h1 {
-            font-size: 4.2rem;
-            font-weight: 900;
-            color: #000;
-            margin-bottom: 1rem;
-        }
-        .hero .lead {
-            font-size: 1.5rem;
-            color: #333;
-            max-width: 900px;
-            margin: 0 auto 3rem;
-        }
-        .card {
-            background: var(--card);
-            border: 2px solid #000;
-            border-radius: 16px;
-            transition: all 0.4s ease;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-        }
-        .card:hover {
-            transform: translateY(-12px);
-            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
-        }
-        .card-title {
-            color: #000;
-            font-weight: 700;
-            font-size: 1.15rem;
-        }
-        .btn-primary {
-            background: #000;
-            border: 2px solid #000;
-            color: #fff;
-            font-weight: 600;
-            padding: 0.75rem 1.8rem;
-            border-radius: 50px;
-            transition: all 0.3s;
-        }
-        .btn-primary:hover {
-            background: #333;
-            border-color: #333;
-        }
-        .form-control, .input-group-text {
-            border: 2px solid #000;
-            background: #fff;
-            color: #000;
-        }
-        .input-group-text {
-            background: #000;
-            color: #fff;
-            font-weight: bold;
-        }
-        .form-control:focus {
-            border-color: #000;
-            box-shadow: 0 0 0 4px rgba(0,0,0,0.15);
-        }
-        footer {
-            background: #000;
-            color: #ccc;
-            padding: 80px 0 40px;
-            margin-top: 160px;
-        }
-        footer p {
-            color: #999;
-            font-size: 0.95rem;
-        }
-        .section-title {
-            font-size: 2.5rem;
-            font-weight: 800;
-            color: #000;
-            margin-bottom: 3rem;
-            position: relative;
-        }
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: -12px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100px;
-            height: 5px;
-            background: #000;
-        }
-        .category-btns {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 16px;
-            justify-content: center;
-            margin-top: 60px;
-        }
-        .cat-btn {
-            background: transparent;
-            border: 2.5px solid #000;
-            color: #000;
-            padding: 15px 34px;
-            border-radius: 50px;
-            font-weight: 700;
-            transition: all 0.4s;
-        }
-        .cat-btn:hover {
-            background: #000;
-            color: #fff;
-            transform: translateY(-4px);
-        }
-        .cat-btn.active {
-            background: #000;
-            color: #fff;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-        }
-        .badge {
-            background: #000 !important;
-            color: #fff;
-            font-weight: 600;
-            font-size: 0.8rem;
-        }
-        @media (max-width: 768px) {
-            .hero h1 { font-size: 3rem; }
-            .hero .lead { font-size: 1.2rem; }
+        :root{--bg:#fff;--text:#000;--gray:#666;--border:#000}
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;padding-top:70px}
+        header{position:fixed;top:0;left:0;right:0;background:#fff;border-bottom:3px solid #000;z-index:1000;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 4px 15px rgba(0,0,0,0.1)}
+        header h1{font-size:1.4rem;font-weight:900}
+        .hero{text-align:center;padding:100px 20px 60px;background:linear-gradient(#fff,#f5f5f5)}
+        .hero h2{font-size:2.6rem;font-weight:900;margin-bottom:12px}
+        .hero p{font-size:1.2rem;color:#444;margin:16px 0 32px}
+        .search{max-width:90%;margin:0 auto 40px}
+        .search input{width:100%;padding:16px 20px;font-size:1.1rem;border:3px solid #000;border-radius:50px;outline:none}
+        .cats{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:20px 0 40px}
+        .cat-btn{padding:12px 20px;border:2.5px solid #000;background:#fff;color:#000;font-weight:700;border-radius:50px;font-size:0.95rem;transition:.3s;cursor:pointer}
+        .cat-btn.active,.cat-btn:hover{background:#000;color:#fff}
+        .container{max-width:1100px;margin:0 auto;padding:0 16px}
+        .section{margin:60px 0}
+        .section h3{font-size:1.8rem;text-align:center;margin-bottom:30px;position:relative;font-weight:800}
+        .section h3::after{content:'';position:absolute;bottom:-10px;left:50%;transform:translateX(-50%);width:70px;height:4px;background:#000}
+        .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px}
+        .card{background:#fff;border:2px solid #000;border-radius:14px;overflow:hidden;box-shadow:0 4px 15px rgba(0,0,0,0.1);transition:.3s;display:flex;flex-direction:column;height:100%}
+        .card:hover{transform:translateY(-8px);box-shadow:0 16px 30px rgba(0,0,0,0.2)}
+        .card-body{padding:20px;text-align:center;flex-grow:1;display:flex;flex-direction:column}
+        .badge{background:#000;color:#fff;padding:4px 10px;border-radius:20px;font-size:0.8rem;margin-bottom:8px;display:inline-block}
+        .card-title{font-weight:700;font-size:1.1rem;margin:8px 0 12px}
+        .card-text{color:var(--gray);font-size:0.9rem;margin-bottom:auto}
+        .btn{display:block;background:#000;color:#fff;padding:14px;margin-top:auto;border-radius:50px;text-decoration:none;font-weight:600}
+        footer{background:#000;color:#ccc;padding:60px 20px 30px;text-align:center;font-size:0.9rem}
+        .install{display:none;background:#000;color:#fff;padding:16px;position:fixed;bottom:0;left:0;right:0;text-align:center;z-index:1000;font-weight:600}
+        @media(max-width:480px){
+            .hero h2{font-size:2.2rem}
+            .grid{grid-template-columns:1fr}
         }
     </style>
 </head>
 <body>
 
-<!-- Navbar -->
-<nav class="navbar navbar-expand-lg">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="#">Coolie Links SA</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item"><a class="nav-link" href="#universities">Universities</a></li>
-                <li class="nav-item"><a class="nav-link" href="#tvet">TVET Colleges</a></li>
-                <li class="nav-item"><a class="nav-link" href="#textbooks">Textbooks</a></li>
-                <li class="nav-item"><a class="nav-link" href="#bursaries">Bursaries</a></li>
-                <li class="nav-item"><a class="nav-link" href="#jobs">Jobs</a></li>
-            </ul>
-        </div>
-    </div>
-</nav>
+<header>
+    <h1>Coolie Links SA</h1>
+</header>
 
-<!-- Hero -->
 <div class="hero">
-    <h1>Your Future Starts Here – South Africa</h1>
-    <p class="lead">Universities • TVET Colleges • Textbooks • Bursaries • Graduate Jobs – All in one place</p>
-    
-    <div class="search-box mt-5">
-        <div class="input-group input-group-lg" style="max-width: 800px; margin: 0 auto;">
-            <span class="input-group-text">Search</span>
-            <input type="text" id="globalSearch" class="form-control" placeholder="Search anything on Coolie Links SA...">
-        </div>
+    <h2>Your Future Starts Here</h2>
+    <p>Universities • TVET • Textbooks • Bursaries • Jobs</p>
+    <div class="search">
+        <input type="text" id="search" placeholder="Search anything...">
     </div>
-
-    <div class="category-btns">
-        <button class="cat-btn active" data-category="all">All</button>
-        <button class="cat-btn" data-category="universities">Universities</button>
-        <button class="cat-btn" data-category="tvet">Colleges</button>
-        <button class="cat-btn" data-category="textbooks">Textbooks</button>
-        <button class="cat-btn" data-category="bursaries">Bursaries</button>
-        <button class="cat-btn" data-category="jobs">Jobs</button>
+    <div class="cats">
+        <button class="cat-btn active" data-cat="all">All</button>
+        <button class="cat-btn" data-cat="uni">Universities</button>
+        <button class="cat-btn" data-cat="tvet">TVET</button>
+        <button class="cat-btn" data-cat="books">Textbooks</button>
+        <button class="cat-btn" data-cat="burs">Bursaries</button>
+        <button class="cat-btn" data-cat="jobs">Jobs</button>
     </div>
 </div>
 
 <div class="container">
-    <section id="universities" class="my-5">
-        <h2 class="text-center section-title">Public Universities (26)</h2>
-        <div class="row row-cols-1 row-cols-md-3 g-4" id="universityList"></div>
+    <section class="section">
+        <h3>Public Universities (26)</h3>
+        <div class="grid" id="list-uni"></div>
     </section>
 
-    <section id="tvet" class="my-5">
-        <h2 class="text-center section-title">TVET Colleges (50 Registered)</h2>
-        <div class="row row-cols-1 row-cols-md-3 g-4" id="tvetList"></div>
+    <section class="section">
+        <h3>TVET Colleges (50)</h3>
+        <div class="grid" id="list-tvet"></div>
     </section>
 
-    <section id="textbooks" class="my-5">
-        <h2 class="text-center section-title">Textbook Shops & Second-Hand Platforms</h2>
-        <div class="row row-cols-1 row-cols-md-3 g-4" id="textbookList"></div>
+    <section class="section">
+        <h3>Textbook Shops & Platforms</h3>
+        <div class="grid" id="list-books"></div>
     </section>
 
-    <section id="bursaries" class="my-5">
-        <h2 class="text-center section-title">Top Bursaries & Scholarships</h2>
-        <div class="row row-cols-1 row-cols-md-3 g-4" id="bursaryList"></div>
+    <section class="section">
+        <h3>Top Bursaries & Scholarships</h3>
+        <div class="grid" id="list-burs"></div>
     </section>
 
-    <section id="jobs" class="my-5">
-        <h2 class="text-center section-title">Graduate & Student Job Portals</h2>
-        <div class="row row-cols-1 row-cols-md-4 g-4" id="jobList"></div>
+    <section class="section">
+        <h3>Job Portals for Students</h3>
+        <div class="grid" id="list-jobs"></div>
     </section>
 </div>
 
-<footer class="text-center">
-    <div class="container">
-        <p>© 2025 Coolie Links SA – Empowering Mzansi Youth</p>
-    </div>
+<footer>
+    <p>© 2025 Coolie Links SA • Made with love for Mzansi Youth</p>
 </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<div class="install" id="installBanner">
+    Tap “Add to Home Screen” for offline access
+    <button onclick="document.getElementById('installBanner').style.display='none'" style="background:none;border:none;color:#fff;float:right;font-size:1.4rem">×</button>
+</div>
+
 <script>
-// ==================== FULL DATA ====================
-const universities = [
-    {name:"University of Cape Town",city:"Cape Town",website:"https://www.uct.ac.za"},
-    {name:"University of the Witwatersrand",city:"Johannesburg",website:"https://www.wits.ac.za"},
-    {name:"Stellenbosch University",city:"Stellenbosch",website:"https://www.sun.ac.za"},
-    {name:"University of Pretoria",city:"Pretoria",website:"https://www.up.ac.za"},
-    {name:"University of Johannesburg",city:"Johannesburg",website:"https://www.uj.ac.za"},
-    {name:"University of KwaZulu-Natal",city:"Durban/Pietermaritzburg",website:"https://www.ukzn.ac.za"},
-    {name:"University of the Free State",city:"Bloemfontein",website:"https://www.ufs.ac.za"},
-    {name:"University of the Western Cape",city:"Bellville",website:"https://www.uwc.ac.za"},
-    {name:"North-West University",city:"Potchefstroom/Mahikeng/Vanderbijlpark",website:"https://www.nwu.ac.za"},
-    {name:"Nelson Mandela University",city:"Gqeberha",website:"https://www.mandela.ac.za"},
-    {name:"Rhodes University",city:"Makhanda",website:"https://www.ru.ac.za"},
-    {name:"University of Fort Hare",city:"Alice",website:"https://www.ufh.ac.za"},
-    {name:"University of Zululand",city:"KwaDlangezwa",website:"https://www.unizulu.ac.za"},
-    {name:"Walter Sisulu University",city:"Mthatha",website:"https://www.wsu.ac.za"},
-    {name:"University of Limpopo",city:"Polokwane",website:"https://www.ul.ac.za"},
-    {name:"University of Venda",city:"Thohoyandou",website:"https://www.univen.ac.za"},
-    {name:"Sefako Makgatho Health Sciences University",city:"Pretoria",website:"https://www.smu.ac.za"},
-    {name:"Sol Plaatje University",city:"Kimberley",website:"https://www.spu.ac.za"},
-    {name:"University of Mpumalanga",city:"Mbombela",website:"https://www.ump.ac.za"},
-    {name:"Cape Peninsula University of Technology",city:"Cape Town",website:"https://www.cput.ac.za"},
-    {name:"Central University of Technology",city:"Bloemfontein",website:"https://www.cut.ac.za"},
-    {name:"Durban University of Technology",city:"Durban",website:"https://www.dut.ac.za"},
-    {name:"Tshwane University of Technology",city:"Pretoria",website:"https://www.tut.ac.za"},
-    {name:"Vaal University of Technology",city:"Vanderbijlpark",website:"https://www.vut.ac.za"},
-    {name:"Mangosuthu University of Technology",city:"Durban",website:"https://www.mut.ac.za"}
-];
+// FULL DATA — ALL 26 Universities, 50 TVETs, Textbooks, Bursaries & Jobs
+const data = {
+    uni: [
+        ["University of Cape Town","Cape Town","https://www.uct.ac.za"],
+        ["University of the Witwatersrand","Johannesburg","https://www.wits.ac.za"],
+        ["Stellenbosch University","Stellenbosch","https://www.sun.ac.za"],
+        ["University of Pretoria","Pretoria","https://www.up.ac.za"],
+        ["University of Johannesburg","Johannesburg","https://www.uj.ac.za"],
+        ["University of KwaZulu-Natal","Durban/PMB","https://www.ukzn.ac.za"],
+        ["University of the Free State","Bloemfontein","https://www.ufs.ac.za"],
+        ["University of the Western Cape","Bellville","https://www.uwc.ac.za"],
+        ["North-West University","Potchefstroom/Mahikeng","https://www.nwu.ac.za"],
+        ["Nelson Mandela University","Gqeberha","https://www.mandela.ac.za"],
+        ["Rhodes University","Makhanda","https://www.ru.ac.za"],
+        ["University of Fort Hare","Alice","https://www.ufh.ac.za"],
+        ["University of Zululand","KwaDlangezwa","https://www.unizulu.ac.za"],
+        ["Walter Sisulu University","Mthatha","https://www.wsu.ac.za"],
+        ["University of Limpopo","Polokwane","https://www.ul.ac.za"],
+        ["University of Venda","Thohoyandou","https://www.univen.ac.za"],
+        ["Sefako Makgatho University","Pretoria","https://www.smu.ac.za"],
+        ["Sol Plaatje University","Kimberley","https://www.spu.ac.za"],
+        ["University of Mpumalanga","Mbombela","https://www.ump.ac.za"],
+        ["Cape Peninsula Uni of Tech","Cape Town","https://www.cput.ac.za"],
+        ["Central Uni of Technology","Bloemfontein","https://www.cut.ac.za"],
+        ["Durban Uni of Technology","Durban","https://www.dut.ac.za"],
+        ["Tshwane Uni of Technology","Pretoria","https://www.tut.ac.za"],
+        ["Vaal Uni of Technology","Vanderbijlpark","https://www.vut.ac.za"],
+        ["Mangosuthu Uni of Tech","Durban","https://www.mut.ac.za"]
+    ],
+    tvet: [
+        ["Buffalo City TVET College","Eastern Cape","https://www.bccollege.co.za"],
+        ["Eastcape Midlands TVET College","Eastern Cape","https://www.emcol.co.za"],
+        ["Ikhala TVET College","Eastern Cape","https://www.ikhala.edu.za"],
+        ["Ingwe TVET College","Eastern Cape","https://www.ingwecollege.edu.za"],
+        ["King Hintsa TVET College","Eastern Cape","https://www.kinghintsacollege.edu.za"],
+        ["King Sabata Dalindyebo TVET","Eastern Cape","https://www.ksdcollege.edu.za"],
+        ["Lovedale TVET College","Eastern Cape","https://www.lovedale.edu.za"],
+        ["Port Elizabeth TVET College","Eastern Cape","https://www.pecollege.edu.za"],
+        ["Central Johannesburg TVET","Gauteng","https://www.cjc.edu.za"],
+        ["Ekurhuleni East TVET College","Gauteng","https://www.eec.edu.za"],
+        ["Ekurhuleni West TVET College","Gauteng","https://www.ewc.edu.za"],
+        ["Sedibeng TVET College","Gauteng","https://www.sedcol.co.za"],
+        ["South West Gauteng TVET","Gauteng","https://www.swgc.co.za"],
+        ["Tshwane North TVET College","Gauteng","https://www.tnc.edu.za"],
+        ["Tshwane South TVET College","Gauteng","https://www.tsc.edu.za"],
+        ["Western TVET College","Gauteng","https://www.westcol.co.za"],
+        ["Coastal KZN TVET College","KwaZulu-Natal","https://www.coastalkzn.co.za"],
+        ["Elangeni TVET College","KwaZulu-Natal","https://www.elangeni.edu.za"],
+        ["Esayidi TVET College","KwaZulu-Natal","https://www.esayidifet.co.za"],
+        ["Majuba TVET College","KwaZulu-Natal","https://www.majuba.edu.za"],
+        ["Mnambithi TVET College","KwaZulu-Natal","https://www.mnambithicollege.co.za"],
+        ["Mthashana TVET College","KwaZulu-Natal","https://www.mthashanacollege.co.za"],
+        ["Thekwini TVET College","KwaZulu-Natal","https://www.thekwinicollege.co.za"],
+        ["Umfolozi TVET College","KwaZulu-Natal","https://www.umfolozicollege.co.za"],
+        ["Umgungundlovu TVET College","KwaZulu-Natal","https://www.utvet.co.za"],
+        ["Flavius Mareka TVET College","Free State","https://www.flaviusmareka.net"],
+        ["Goldfields TVET College","Free State","https://www.goldfieldstvet.edu.za"],
+        ["Maluti TVET College","Free State","https://www.malutitvet.co.za"],
+        ["Motheo TVET College","Free State","https://www.motheotvet.co.za"],
+        ["Boland TVET College","Western Cape","https://www.bolandcollege.com"],
+        ["College of Cape Town","Western Cape","https://www.cct.edu.za"],
+        ["False Bay TVET College","Western Cape","https://www.falsebaycollege.co.za"],
+        ["Northlink TVET College","Western Cape","https://www.northlink.co.za"],
+        ["South Cape TVET College","Western Cape","https://www.sccollege.co.za"],
+        ["West Coast TVET College","Western Cape","https://www.westcoastcollege.co.za"],
+        ["Ehlanzeni TVET College","Mpumalanga","https://www.ehlanzenicollege.co.za"],
+        ["Gert Sibande TVET College","Mpumalanga","https://www.gscollege.co.za"],
+        ["Nkangala TVET College","Mpumalanga","https://www.nkangalafet.edu.za"],
+        ["Capricorn TVET College","Limpopo","https://www.capricorncollege.co.za"],
+        ["Lephalale TVET College","Limpopo","https://www.lephalale.edu.za"],
+        ["Letaba TVET College","Limpopo","https://www.letabafet.co.za"],
+        ["Mopani South East TVET","Limpopo","https://www.mopanicollege.edu.za"],
+        ["Sekhukhune TVET College","Limpopo","https://www.sekhukhunetvet.edu.za"],
+        ["Vhembe TVET College","Limpopo","https://www.vhembecollege.edu.za"],
+        ["Waterberg TVET College","Limpopo","https://www.waterbergcollege.co.za"],
+        ["Orbit TVET College","North West","https://www.orbitcollege.co.za"],
+        ["Taletso TVET College","North West","https://www.taletso.edu.za"],
+        ["Vuselela TVET College","North West","https://www.vuselelacollege.co.za"],
+        ["Northern Cape Rural TVET","Northern Cape","https://ncrvet.com"],
+        ["Northern Cape Urban TVET","Northern Cape","https://www.ncutvet.edu.za"]
+    ],
+    books: [
+        ["Van Schaik Bookstore","Official uni bookstore","https://www.vanschaik.com"],
+        ["Protea Bookshop","Nationwide delivery","https://www.proteabookshop.co.za"],
+        ["Takealot Textbooks","Cheapest prices","https://www.takealot.com/books/textbooks"],
+        ["Exclusive Books","Student discounts","https://www.exclusivebooks.co.za"],
+        ["BookExpress","Prescribed books","https://www.bookexpress.co.za"],
+        ["ItsAcademic","UJ, Wits, UP","https://itsacademic.co.za"],
+        ["Adams Books","Second-hand (CT)","https://www.adamsbooks.co.za"],
+        ["Mind-Matters","Medical books","https://www.mindmatters.co.za"],
+        ["Book Bound","Student-run","https://bookboundonline.co.za"],
+        ["Textbook Trader (FB)","Student deals","https://facebook.com/groups/textbooktrader"],
+        ["Gumtree Textbooks","Local deals","https://www.gumtree.co.za/s-textbooks"],
+        ["CNA Academic","Campus stores","https://www.cna.co.za"]
+    ],
+    burs: [
+        ["NSFAS","Tuition + living","https://www.nsfas.org.za"],
+        ["Funza Lushaka","Teaching bursary","https://www.funzalushaka.doe.gov.za"],
+        ["Sasol Bursary","Engineering & Science","https://www.sasolbursaries.com"],
+        ["Standard Bank Bursary","All fields","https://www.standardbank.co.za"],
+        ["StudyTrust","Many options","https://studytrust.org.za"],
+        ["Exxaro Bursaries","Mining & Eng","https://www.exxaro.com/careers"],
+        ["Moshal Scholarship","Full support","https://moshalprogram.org"]
+    ],
+    jobs: [
+        ["PNet","https://www.pnet.co.za"],
+        ["Careers24","https://www.careers24.com"],
+        ["CareerJunction","https://www.careerjunction.co.za"],
+        ["Indeed South Africa","https://za.indeed.com"],
+        ["GradConnection","https://za.gradconnection.com"],
+        ["Careers Portal","https://www.careersportal.co.za"],
+        ["Student Village","https://studentvillage.co.za"],
+        ["The Jobs Portal","https://www.thejobsportal.co.za"]
+    ]
+};
 
-const tvetColleges = [
-    {name:"Buffalo City TVET College",province:"Eastern Cape",website:"https://www.bccollege.co.za"},
-    {name:"Eastcape Midlands TVET College",province:"Eastern Cape",website:"https://www.emcol.co.za"},
-    {name:"Ikhala TVET College",province:"Eastern Cape",website:"https://www.ikhala.edu.za"},
-    {name:"Ingwe TVET College",province:"Eastern Cape",website:"https://www.ingwecollege.edu.za"},
-    {name:"King Hintsa TVET College",province:"Eastern Cape",website:"https://www.kinghintsacollege.edu.za"},
-    {name:"King Sabata Dalindyebo TVET College",province:"Eastern Cape",website:"https://www.ksdcollege.edu.za"},
-    {name:"Lovedale TVET College",province:"Eastern Cape",website:"https://www.lovedale.edu.za"},
-    {name:"Port Elizabeth TVET College",province:"Eastern Cape",website:"https://www.pecollege.edu.za"},
-    {name:"Central Johannesburg TVET College",province:"Gauteng",website:"https://www.cjc.edu.za"},
-    {name:"Ekurhuleni East TVET College",province:"Gauteng",website:"https://www.eec.edu.za"},
-    {name:"Ekurhuleni West TVET College",province:"Gauteng",website:"https://www.ewc.edu.za"},
-    {name:"Sedibeng TVET College",province:"Gauteng",website:"https://www.sedcol.co.za"},
-    {name:"South West Gauteng TVET College",province:"Gauteng",website:"https://www.swgc.co.za"},
-    {name:"Tshwane North TVET College",province:"Gauteng",website:"https://www.tnc.edu.za"},
-    {name:"Tshwane South TVET College",province:"Gauteng",website:"https://www.tsc.edu.za"},
-    {name:"Western TVET College",province:"Gauteng",website:"https://www.westcol.co.za"},
-    {name:"Coastal KZN TVET College",province:"KwaZulu-Natal",website:"https://www.coastalkzn.co.za"},
-    {name:"Elangeni TVET College",province:"KwaZulu-Natal",website:"https://www.elangeni.edu.za"},
-    {name:"Esayidi TVET College",province:"KwaZulu-Natal",website:"https://www.esayidifet.co.za"},
-    {name:"Majuba TVET College",province:"KwaZulu-Natal",website:"https://www.majuba.edu.za"},
-    {name:"Mnambithi TVET College",province:"KwaZulu-Natal",website:"https://www.mnambithicollege.co.za"},
-    {name:"Mthashana TVET College",province:"KwaZulu-Natal",website:"https://www.mthashanacollege.co.za"},
-    {name:"Thekwini TVET College",province:"KwaZulu-Natal",website:"https://www.thekwinicollege.co.za"},
-    {name:"Umfolozi TVET College",province:"KwaZulu-Natal",website:"https://www.umfolozicollege.co.za"},
-    {name:"Umgungundlovu TVET College",province:"KwaZulu-Natal",website:"https://www.utvet.co.za"},
-    {name:"Flavius Mareka TVET College",province:"Free State",website:"https://www.flaviusmareka.net"},
-    {name:"Goldfields TVET College",province:"Free State",website:"https://www.goldfieldstvet.edu.za"},
-    {name:"Maluti TVET College",province:"Free State",website:"https://www.malutitvet.co.za"},
-    {name:"Motheo TVET College",province:"Free State",website:"https://www.motheotvet.co.za"},
-    {name:"Boland TVET College",province:"Western Cape",website:"https://www.bolandcollege.com"},
-    {name:"College of Cape Town",province:"Western Cape",website:"https://www.cct.edu.za"},
-    {name:"False Bay TVET College",province:"Western Cape",website:"https://www.falsebaycollege.co.za"},
-    {name:"Northlink TVET College",province:"Western Cape",website:"https://www.northlink.co.za"},
-    {name:"South Cape TVET College",province:"Western Cape",website:"https://www.sccollege.co.za"},
-    {name:"West Coast TVET College",province:"Western Cape",website:"https://www.westcoastcollege.co.za"},
-    {name:"Ehlanzeni TVET College",province:"Mpumalanga",website:"https://www.ehlanzenicollege.co.za"},
-    {name:"Gert Sibande TVET College",province:"Mpumalanga",website:"https://www.gscollege.co.za"},
-    {name:"Nkangala TVET College",province:"Mpumalanga",website:"https://www.nkangalafet.edu.za"},
-    {name:"Capricorn TVET College",province:"Limpopo",website:"https://www.capricorncollege.co.za"},
-    {name:"Lephalale TVET College",province:"Limpopo",website:"https://www.lephalale.edu.za"},
-    {name:"Letaba TVET College",province:"Limpopo",website:"https://www.letabafet.co.za"},
-    {name:"Mopani South East TVET College",province:"Limpopo",website:"https://www.mopanicollege.edu.za"},
-    {name:"Sekhukhune TVET College",province:"Limpopo",website:"https://www.sekhukhunetvet.edu.za"},
-    {name:"Vhembe TVET College",province:"Limpopo",website:"https://www.vhembecollege.edu.za"},
-    {name:"Waterberg TVET College",province:"Limpopo",website:"https://www.waterbergcollege.co.za"},
-    {name:"Orbit TVET College",province:"North West",website:"https://www.orbitcollege.co.za"},
-    {name:"Taletso TVET College",province:"North West",website:"https://www.taletso.edu.za"},
-    {name:"Vuselela TVET College",province:"North West",website:"https://www.vuselelacollege.co.za"},
-    {name:"Northern Cape Rural TVET College",province:"Northern Cape",website:"https://ncrvet.com"},
-    {name:"Northern Cape Urban TVET College",province:"Northern Cape",website:"https://www.ncutvet.edu.za"}
-];
-
-const textbookShops = [
-    {name:"Van Schaik Bookstore",website:"https://www.vanschaik.com",desc:"Official bookstore for many universities"},
-    {name:"Protea Bookshop",website:"https://www.proteabookshop.co.za",desc:"Nationwide delivery, great selection"},
-    {name:"Takealot Textbooks",website:"https://www.takealot.com/books/textbooks",desc:"Cheapest new & used textbooks"},
-    {name:"Exclusive Books",website:"https://www.exclusivebooks.co.za",desc:"Academic section + student discounts"},
-    {name:"BookExpress",website:"https://www.bookexpress.co.za",desc:"Specialises in prescribed books"},
-    {name:"ItsAcademic",website:"https://itsacademic.co.za",desc:"Prescribed books for UJ, Wits, UP, etc."},
-    {name:"Adams Books",website:"https://www.adamsbooks.co.za",desc:"Second-hand textbooks (Cape Town)"},
-    {name:"Mind-Matters",website:"https://www.mindmatters.co.za",desc:"Medical & health science books"},
-    {name:"Book Bound",website:"https://bookboundonline.co.za",desc:"Student-run second-hand platform"},
-    {name:"Textbook Trader (FB)",website:"https://www.facebook.com/groups/textbooktrader",desc:"Popular student marketplace"},
-    {name:"Gumtree Textbooks",website:"https://www.gumtree.co.za/s-textbooks",desc:"Local second-hand deals"},
-    {name:"CNA Academic",website:"https://www.cna.co.za",desc:"Campus stores & online"}
-];
-
-const bursaries = [
-    {name:"NSFAS",website:"https://www.nsfas.org.za",desc:"Covers tuition, accommodation, materials"},
-    {name:"Funza Lushaka Bursary",website:"https://www.funzalushaka.doe.gov.za",desc:"Full-cost teaching bursary"},
-    {name:"Sasol Bursary",website:"https://www.sasolbursaries.com",desc:"Engineering & Science"},
-    {name:"Standard Bank Bursary",website:"https://www.standardbank.co.za",desc:"Various fields"},
-    {name:"StudyTrust",website:"https://studytrust.org.za",desc:"Many corporate bursaries"},
-    {name:"Exxaro Bursaries",website:"https://www.exxaro.com/careers",desc:"Mining & engineering"},
-    {name:"Moshal Scholarship",website:"https://moshalprogram.org",desc:"Full support for top students"}
-];
-
-const jobPortals = [
-    {name:"PNet",url:"https://www.pnet.co.za"},
-    {name:"Careers24",url:"https://www.careers24.com"},
-    {name:"CareerJunction",url:"https://www.careerjunction.co.za"},
-    {name:"Indeed SA",url:"https://za.indeed.com"},
-    {name:"GradConnection",url:"https://za.gradconnection.com"},
-    {name:"Careers Portal",url:"https://www.careersportal.co.za"},
-    {name:"Student Village",url:"https://studentvillage.co.za"},
-    {name:"The Jobs Portal",url:"https://www.thejobsportal.co.za"}
-];
-
-// Copies for filtering
-const allUniversities = [...universities];
-const allTvet = [...tvetColleges];
-const allTextbooks = [...textbookShops];
-const allBursaries = [...bursaries];
-const allJobs = [...jobPortals];
-
-// Render function
-function renderCards(containerId, items, type) {
-    const container = document.getElementById(containerId);
-    container.innerHTML = "";
-    items.forEach(item => {
-        const col = document.createElement("div");
-        col.className = "col";
-        let badge = type === "tvet" ? `<span class="badge mb-2">${item.province}</span>` : "";
-        let subtitle = "";
-        if (type === "university") subtitle = item.city || "";
-        else if (type === "textbook" || type === "bursary") subtitle = item.desc ? item.desc.substring(0,80) + (item.desc.length > 80 ? "…" : "") : "";
-
-        col.innerHTML = `
-            <div class="card h-100 text-center">
-                <div class="card-body d-flex flex-column">
-                    ${badge}
-                    <h5 class="card-title mt-2">${item.name}</h5>
-                    <p class="text-muted small flex-grow-1">${subtitle}</p>
-                    <a href="${item.website || item.url}" target="_blank" class="btn btn-primary mt-auto">Visit Site</a>
-                </div>
-            </div>`;
-        container.appendChild(col);
-    });
+function createCard([name, info, url]) {
+    const badge = info && ['Cape','Gauteng','KwaZulu','Western','Eastern','Limpopo','North West','Free State','Mpumalanga','Northern Cape'].some(p => info.includes(p)) 
+        ? `<span class="badge">${info}</span>` : '';
+    const text = info && !badge ? `<p class="card-text">${info}</p>` : '';
+    return `<div class="card"><div class="card-body">${badge}<div class="card-title">${name}</div>${text}<a href="${url}" target="_blank" class="btn">Visit Site</a></div></div>`;
 }
 
-// Filtering & Search
-const searchInput = document.getElementById("globalSearch");
-const catButtons = document.querySelectorAll(".cat-btn");
-
-function applyFilters() {
-    const query = searchInput.value.toLowerCase();
-    const activeCat = document.querySelector(".cat-btn.active").dataset.category;
-
-    let uni = allUniversities.filter(u => u.name.toLowerCase().includes(query) || (u.city && u.city.toLowerCase().includes(query)));
-    let tvet = allTvet.filter(t => t.name.toLowerCase().includes(query) || t.province.toLowerCase().includes(query));
-    let textbooks = allTextbooks.filter(t => t.name.toLowerCase().includes(query) || (t.desc && t.desc.toLowerCase().includes(query)));
-    let burs = allBursaries.filter(b => b.name.toLowerCase().includes(query) || (b.desc && b.desc.toLowerCase().includes(query)));
-    let jobs = allJobs.filter(j => j.name.toLowerCase().includes(query));
-
-    if (activeCat !== "all") {
-        if (activeCat === "universities") { tvet = textbooks = burs = jobs = []; }
-        else if (activeCat === "tvet") { uni = textbooks = burs = jobs = []; }
-        else if (activeCat === "textbooks") { uni = tvet = burs = jobs = []; }
-        else if (activeCat === "bursaries") { uni = tvet = textbooks = jobs = []; }
-        else if (activeCat === "jobs") { uni = tvet = textbooks = burs = []; }
-    }
-
-    renderCards("universityList", uni, "university");
-    renderCards("tvetList", tvet, "tvet");
-    renderCards("textbookList", textbooks, "textbook");
-    renderCards("bursaryList", burs, "bursary");
-    renderCards("jobList", jobs, "job");
+function render(id, items) {
+    document.getElementById(id).innerHTML = items.map(createCard).join('');
 }
 
-searchInput.addEventListener("input", applyFilters);
-catButtons.forEach(btn => {
-    btn.addEventListener("click", () => {
-        catButtons.forEach(b => b.classList.remove("active"));
-        btn.classList.add("active");
-        applyFilters();
-    });
-});
+// Search & Filter
+const search = document.getElementById('search');
+search.addEventListener('input', filter);
 
-// Initial render
-renderCards("universityList", universities, "university");
-renderCards("tvetList", tvetColleges, "tvet");
-renderCards("textbookList", textbookShops, "textbook");
-renderCards("bursaryList", bursaries, "bursary");
-renderCards("jobList", jobPortals, "job");
+function filter() {
+    const q = search.value.toLowerCase();
+    const active = document.querySelector('.cat-btn.active')?.dataset.cat || 'all';
 
-// Smooth scrolling
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener("click", function(e) {
-        e.preventDefault();
-        document.querySelector(this.getAttribute("href")).scrollIntoView({ behavior: "smooth" });
-    });
+    const f = arr => arr.filter(i => i[0].toLowerCase().includes(q) || (i[1] && i[1].toLowerCase().includes(q)));
+
+    render('list-uni', (active === 'all' || active === 'uni') ? f(data.uni) : []);
+    render('list-tvet', (active === 'all' || active === 'tvet') ? f(data.tvet) : []);
+    render('list-books', (active === 'all' || active === 'books') ? f(data.books) : []);
+    render('list-burs', (active === 'all' || active === 'burs') ? f(data.burs) : []);
+    render('list-jobs', (active === 'all' || active === 'jobs') ? f(data.jobs) : []);
+}
+
+// Category buttons
+document.querySelectorAll('.cat-btn').forEach(b => b.addEventListener('click', () => {
+    document.querySelector('.cat-btn.active').classList.remove('active');
+    b.classList.add('active');
+    filter();
+}));
+
+// Initial load
+Object.keys(data).forEach(k => render('list-' + k, data[k]));
+
+// PWA Install
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', e => {
+    e.preventDefault();
+    deferredPrompt = e;
+    document.getElementById('installBanner').style.display = 'block';
 });
 </script>
 </body>
