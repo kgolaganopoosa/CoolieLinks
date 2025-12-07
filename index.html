@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Coolie Links SA – Universities, TVET Colleges, Bursaries & Jobs</title>
-    
+    <title>Coolie Links SA – Universities, TVET, Bursaries, Jobs & Textbooks</title>
+   
     <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-    
+   
     <style>
         :root {
             --bg: #000000;
@@ -19,150 +19,32 @@
             --border: #444444;
             --hover: #333333;
         }
-
-        body {
-            background: var(--bg);
-            min-height: 100vh;
-            font-family: 'Segoe UI', sans-serif;
-            padding-top: 90px;
-            color: var(--text);
-        }
-
-        .navbar {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            z-index: 1000;
-            background: var(--surface) !important;
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--border);
-            box-shadow: 0 4px 30px rgba(0,0,0,0.8);
-        }
-
-        .navbar-brand {
-            font-size: 2rem;
-            font-weight: 800;
-            color: #ffffff !important;
-        }
-
-        .navbar .nav-link {
-            color: #ffffff !important;
-            font-weight: 500;
-        }
-        .navbar .nav-link:hover { color: #cccccc !important; }
-
-        .hero {
-            text-align: center;
-            padding: 120px 20px 80px;
-        }
-
-        .hero h1 {
-            font-size: 3.8rem;
-            font-weight: 900;
-            letter-spacing: 1px;
-        }
-
-        .hero .lead {
-            font-size: 1.4rem;
-            color: #dddddd;
-            margin-bottom: 2rem;
-        }
-
-        .card {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            transition: all 0.4s ease;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.6);
-            color: var(--text);
-        }
-        .card:hover {
-            transform: translateY(-14px);
-            box-shadow: 0 30px 60px rgba(0,0,0,0.9);
-            border-color: #777;
-        }
-
-        .card-title { color: #ffffff; }
-        .text-muted { color: var(--text-muted) !important; }
-
-        .btn-light {
-            background: var(--hover);
-            border: 1px solid #555;
-            color: #ffffff;
-            font-weight: 600;
-        }
-        .btn-light:hover {
-            background: #444;
-            border-color: #888;
-        }
-
-        footer {
-            background: var(--surface);
-            color: #999;
-            padding: 60px 0;
-            margin-top: 140px;
-            border-top: 1px solid var(--border);
-        }
-
-        .search-box { max-width: 780px; margin: 0 auto; }
-        .input-group-text {
-            background: #222;
-            border: 1px solid var(--border);
-            color: #fff;
-        }
-        .form-control {
-            background: #111;
-            border: 1px solid var(--border);
-            color: #fff;
-        }
-        .form-control::placeholder { color: #888; }
-        .form-control:focus {
-            background: #1a1a1a;
-            border-color: #666;
-            box-shadow: 0 0 0 0.2rem rgba(255,255,255,0.15);
-            color: #fff;
-        }
-
-        .section-title {
-            font-size: 2.2rem;
-            font-weight: 700;
-            color: #ffffff;
-            margin-bottom: 2.5rem;
-        }
-
-        /* Category Buttons */
-        .category-btns {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 16px;
-            justify-content: center;
-            margin-top: 50px;
-        }
-        .cat-btn {
-            background: transparent;
-            border: 2px solid #666;
-            color: #ffffff;
-            padding: 14px 36px;
-            border-radius: 50px;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-        .cat-btn:hover {
-            background: var(--hover);
-            border-color: #aaa;
-            transform: translateY(-4px);
-        }
-        .cat-btn.active {
-            background: #ffffff;
-            color: #000000;
-            border-color: #ffffff;
-            box-shadow: 0 0 25px rgba(255,255,255,0.6);
-        }
-
-        .badge {
-            background: #444 !important;
-            font-size: 0.8rem;
-        }
+        body {background:var(--bg);min-height:100vh;font-family:'Segoe UI',sans-serif;padding-top:90px;color:var(--text);}
+        .navbar {position:fixed;top:0;width:100%;z-index:1000;background:var(--surface)!important;backdrop-filter:blur(10px);border-bottom:1px solid var(--border);box-shadow:0 4px 30px rgba(0,0,0,0.8);}
+        .navbar-brand {font-size:2rem;font-weight:800;color:#ffffff!important;}
+        .navbar .nav-link {color:#ffffff!important;font-weight:500;}
+        .navbar .nav-link:hover {color:#cccccc!important;}
+        .hero {text-align:center;padding:120px 20px 80px;}
+        .hero h1 {font-size:3.8rem;font-weight:900;letter-spacing:1px;}
+        .hero .lead {font-size:1.4rem;color:#dddddd;margin-bottom:2rem;}
+        .card {background:var(--card);border:1px solid var(--border);border-radius:16px;transition:all .4s ease;box-shadow:0 6px 20px rgba(0,0,0,0.6);color:var(--text);}
+        .card:hover {transform:translateY(-14px);box-shadow:0 30px 60px rgba(0,0,0,0.9);border-color:#777;}
+        .card-title {color:#ffffff;}
+        .text-muted {color:var(--text-muted)!important;}
+        .btn-light {background:var(--hover);border:1px solid #555;color:#ffffff;font-weight:600;}
+        .btn-light:hover {background:#444;border-color:#888;}
+        footer {background:var(--surface);color:#999;padding:60px 0;margin-top:140px;border-top:1px solid var(--border);}
+        .search-box {max-width:780px;margin:0 auto;}
+        .input-group-text {background:#222;border:1px solid var(--border);color:#fff;}
+        .form-control {background:#111;border:1px solid var(--border);color:#fff;}
+        .form-control::placeholder {color:#888;}
+        .form-control:focus {background:#1a1a1a;border-color:#666;box-shadow:0 0 0 .2rem rgba(255,255,255,0.15);color:#fff;}
+        .section-title {font-size:2.2rem;font-weight:700;color:#ffffff;margin-bottom:2.5rem;}
+        .category-btns {display:flex;flex-wrap:wrap;gap:16px;justify-content:center;margin-top:50px;}
+        .cat-btn {background:transparent;border:2px solid #666;color:#ffffff;padding:14px 36px;border-radius:50px;font-weight:600;transition:all .3s;}
+        .cat-btn:hover {background:var(--hover);border-color:#aaa;transform:translateY(-4px);}
+        .cat-btn.active {background:#ffffff;color:#000000;border-color:#ffffff;box-shadow:0 0 25px rgba(255,255,255,0.6);}
+        .badge {background:#444!important;font-size:0.8rem;}
     </style>
 </head>
 <body>
@@ -180,6 +62,7 @@
                 <li class="nav-item"><a class="nav-link" href="#tvet">TVET Colleges</a></li>
                 <li class="nav-item"><a class="nav-link" href="#bursaries">Bursaries</a></li>
                 <li class="nav-item"><a class="nav-link" href="#jobs">Jobs</a></li>
+                <li class="nav-item"><a class="nav-link" href="#textbooks">Textbooks</a></li>
             </ul>
         </div>
     </div>
@@ -188,21 +71,21 @@
 <!-- Hero -->
 <div class="hero">
     <h1 class="display-3 fw-bold">Your Future Starts Here – South Africa</h1>
-    <p class="lead">Universities • TVET Colleges • Bursaries • Graduate Jobs – All in one place</p>
-    
+    <p class="lead">Universities • TVET Colleges • Bursaries • Jobs • Textbooks – All in one place</p>
+   
     <div class="search-box mt-5">
         <div class="input-group input-group-lg">
             <span class="input-group-text">Search</span>
-            <input type="text" id="globalSearch" class="form-control" placeholder="Search any university, TVET, bursary or job portal...">
+            <input type="text" id="globalSearch" class="form-control" placeholder="Search universities, colleges, bursaries, jobs or textbook shops...">
         </div>
     </div>
-
     <div class="category-btns">
         <button class="cat-btn active" data-category="all">All</button>
         <button class="cat-btn" data-category="universities">Universities</button>
         <button class="cat-btn" data-category="tvet">Colleges</button>
         <button class="cat-btn" data-category="bursaries">Bursaries</button>
-        <button class="cat-btn" data-category="jobs">Job Portals</button>
+        <button class="cat-btn" data-category="jobs">Jobs</button>
+        <button class="cat-btn" data-category="textbooks">Textbooks</button>
     </div>
 </div>
 
@@ -232,6 +115,12 @@
         <div class="row row-cols-2 row-cols-md-4 g-4" id="jobList"></div>
     </section>
 
+    <!-- Textbooks -->
+    <section id="textbooks" class="my-5">
+        <h2 class="text-center section-title">Textbook Shops for University Students</h2>
+        <div class="row row-cols-1 row-cols-md-3 g-4" id="textbookList"></div>
+    </section>
+
 </div>
 
 <footer class="text-center">
@@ -241,7 +130,6 @@
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
 <script>
 // Full Data
 const universities = [
@@ -326,13 +214,13 @@ const tvetColleges = [
 ];
 
 const bursaries = [
-    {name:"NSFAS",website:"https://www.nsfas.org.za",desc:"Covers tuition, accommodation, learning materials for universities & TVET"},
-    {name:"Funza Lushaka Bursary",website:"https://www.funzalushaka.doe.gov.za",desc:"Full-cost bursary for teaching qualifications"},
-    {name:"Sasol Bursary",website:"https://www.sasolbursaries.com",desc:"Engineering & Science – work-back agreement"},
-    {name:"Standard Bank Bursary",website:"https://www.standardbank.co.za",desc:"Various fields – undergraduate & postgraduate"},
-    {name:"StudyTrust",website:"https://studytrust.org.za",desc:"Amazon, Investec, Old Mutual & many more"},
-    {name:"Exxaro Bursaries",website:"https://www.exxaro.com/careers",desc:"Mining, engineering, geology"},
-    {name:"Moshal Scholarship",website:"https://moshalprogram.org",desc:"Full support for top students from disadvantaged backgrounds"}
+    {name:"NSFAS",desc:"Covers tuition, accommodation & learning materials",website:"https://www.nsfas.org.za"},
+    {name:"Funza Lushaka Bursary",desc:"Full-cost bursary for teaching qualifications",website:"https://www.funzalushaka.doe.gov.za"},
+    {name:"Sasol Bursary",desc:"Engineering & Science – work-back agreement",website:"https://www.sasolbursaries.com"},
+    {name:"Standard Bank Bursary",desc:"Various fields – undergraduate & postgraduate",website:"https://www.standardbank.co.za"},
+    {name:"StudyTrust",desc:"Amazon, Investec, Old Mutual & many more",website:"https://studytrust.org.za"},
+    {name:"Exxaro Bursaries",desc:"Mining, engineering, geology",website:"https://www.exxaro.com/careers"},
+    {name:"Moshal Scholarship",desc:"Full support for top students from disadvantaged backgrounds",website:"https://moshalprogram.org"}
 ];
 
 const jobPortals = [
@@ -346,11 +234,30 @@ const jobPortals = [
     {name:"The Jobs Portal",url:"https://www.thejobsportal.co.za"}
 ];
 
+// Textbook Shops – All major South African university textbook suppliers
+const textbookShops = [
+    {name:"Van Schaik Bookstore",desc:"Largest academic bookseller – 70+ stores nationwide",website:"https://www.vanschaik.com"},
+    {name:"Juta Bookshops",desc:"Law, commerce & technical textbooks",website:"https://juta.co.za"},
+    {name:"Takealot Academic",desc:"Massive online selection with fast delivery",website:"https://www.takealot.com/books/academic"},
+    {name:"Wize Books",desc:"New & second-hand textbooks, nationwide delivery",website:"https://wizebooks.co.za"},
+    {name:"Red Pepper Books",desc:"Online academic bookstore – all publishers",website:"https://www.redpepperbooks.co.za"},
+    {name:"Sherwood Books",desc:"Management, accounting & STEM focus",website:"https://www.sherwoodbooks.co.za"},
+    {name:"Elex Academic Bookstore",desc:"Specialist law & custom university manuals",website:"https://elexacademicbookstore.co.za"},
+    {name:"Book Express",desc:"UNISA & distance learning specialist",website:"https://www.bookexpress.co.za"},
+    {name:"Mind-Matters",desc:"Business school & IMM textbooks",website:"https://www.mind-matters.co.za"},
+    {name:"Protea Boekwinkel (Hatfield)",desc:"Near UP – scholarly & prescribed books",website:"https://www.proteaboekhuis.com"},
+    {name:"Clarke's Bookshop",desc:"Academic & Africana specialist (Cape Town)",website:"https://www.clarkesbooks.co.za"},
+    {name:"Adams Books",desc:"Medical & health sciences textbooks",website:"https://www.adamsbooks.co.za"},
+    {name:"Fogarty's Bookshop",desc:"Academic supplier in Gqeberha/PE",website:"https://www.fogartys.co.za"},
+    {name:"The Book Lounge",desc:"Independent with strong academic section (Cape Town)",website:"https://www.booklounge.co.za"}
+];
+
 // Copies for filtering
 const allUniversities = [...universities];
 const allTvet = [...tvetColleges];
 const allBursaries = [...bursaries];
 const allJobs = [...jobPortals];
+const allTextbooks = [...textbookShops];
 
 // Render function
 function renderCards(containerId, items, type) {
@@ -359,8 +266,10 @@ function renderCards(containerId, items, type) {
     items.forEach(item => {
         const col = document.createElement("div");
         col.className = "col";
-        let badge = type === "tvet" ? `<span class="badge mb-2">${item.province}</span>` : "";
-        let subtitle = type === "university" ? item.city : (type === "bursary" ? item.desc.substring(0,70)+"…" : "");
+        let badge = (type === "tvet") ? `<span class="badge mb-2">${item.province}</span>` : "";
+        let subtitle = "";
+        if (type === "university") subtitle = item.city;
+        else if (type === "bursary" || type === "textbook") subtitle = item.desc ? item.desc.substring(0,80)+(item.desc.length>80?"…":"") : "";
         col.innerHTML = `
             <div class="card h-100 text-center">
                 <div class="card-body d-flex flex-column">
@@ -382,22 +291,25 @@ function applyFilters() {
     const query = searchInput.value.toLowerCase();
     const activeCat = document.querySelector(".cat-btn.active").dataset.category;
 
-    let uni = allUniversities.filter(u => u.name.toLowerCase().includes(query) || u.city.toLowerCase().includes(query));
+    let uni = allUniversities.filter(u => u.name.toLowerCase().includes(query) || (u.city && u.city.toLowerCase().includes(query)));
     let tvet = allTvet.filter(t => t.name.toLowerCase().includes(query) || t.province.toLowerCase().includes(query));
     let burs = allBursaries.filter(b => b.name.toLowerCase().includes(query) || (b.desc && b.desc.toLowerCase().includes(query)));
     let jobs = allJobs.filter(j => j.name.toLowerCase().includes(query));
+    let books = allTextbooks.filter(b => b.name.toLowerCase().includes(query) || (b.desc && b.desc.toLowerCase().includes(query)));
 
     if (activeCat !== "all") {
-        if (activeCat === "universities") { tvet = []; burs = []; jobs = []; }
-        else if (activeCat === "tvet") { uni = []; burs = []; jobs = []; }
-        else if (activeCat === "bursaries") { uni = []; tvet = []; jobs = []; }
-        else if (activeCat === "jobs") { uni = []; tvet = []; burs = []; }
+        if (activeCat === "universities") { tvet=[]; burs=[]; jobs=[]; books=[]; }
+        else if (activeCat === "tvet") { uni=[]; burs=[]; jobs=[]; books=[]; }
+        else if (activeCat === "bursaries") { uni=[]; tvet=[]; jobs=[]; books=[]; }
+        else if (activeCat === "jobs") { uni=[]; tvet=[]; burs=[]; books=[]; }
+        else if (activeCat === "textbooks") { uni=[]; tvet=[]; burs=[]; jobs=[]; }
     }
 
     renderCards("universityList", uni, "university");
     renderCards("tvetList", tvet, "tvet");
     renderCards("bursaryList", burs, "bursary");
     renderCards("jobList", jobs, "job");
+    renderCards("textbookList", books, "textbook");
 }
 
 // Events
@@ -415,12 +327,13 @@ renderCards("universityList", universities, "university");
 renderCards("tvetList", tvetColleges, "tvet");
 renderCards("bursaryList", bursaries, "bursary");
 renderCards("jobList", jobPortals, "job");
+renderCards("textbookList", textbookSh natuurlijk, "textbook");
 
 // Smooth scroll
 document.querySelectorAll('a[href^="#"]').forEach(a => {
     a.addEventListener("click", function(e) {
         e.preventDefault();
-        document.querySelector(this.getAttribute("href")).scrollIntoView({behavior: "smooth"});
+        document.querySelector(this.getAttribute("href")).scrollIntoView({behavior:"smooth"});
     });
 });
 </script>
