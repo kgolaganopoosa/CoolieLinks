@@ -43,7 +43,15 @@
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
+    </div>
+  </nav>
+
+  <!-- Catchphrase -->
+  <div class="catchphrase">
+    🌸 Choose your delight, Petal by Petal 🌸
+  </div>
+
+<div class="collapse navbar-collapse" id="navbarNav">
         <form class="d-flex ms-auto">
           <input class="form-control me-2" type="search" placeholder="Search items..." id="searchInput">
           <button class="btn btn-outline-light" type="button" onclick="searchItems()">Search</button>
@@ -60,113 +68,45 @@
             <li><a class="dropdown-item" href="#" onclick="filterCategory('Produce')">Produce</a></li>
           </ul>
         </div>
-      </div>
-    </div>
-  </nav>
-
-  <!-- Catchphrase -->
-  <div class="catchphrase">
-    🌸 Choose your delight, Petal by Petal 🌸
-  </div>
-
+</div>
+  
   <!-- Items Grid -->
   <div class="container">
     <div class="row" id="itemsContainer">
-      <!-- Dairy -->
-<div class="col-md-6 mb-4 item-card" data-category="Dairy" data-store="Fresh Farm">
-  <div class="card">
-    <img src="https://via.placeholder.com/300x200.png?text=Cheese" class="card-img-top" alt="Cheese">
-    <div class="card-body">
-      <h5 class="card-title">Cheddar Cheese</h5>
-      <p class="card-text">Price: R40</p>
-      <label for="quantity3">Quantity:</label>
-      <select id="quantity3" class="form-select w-50 mb-2">
-        <script>for(let i=1;i<=12;i++){document.write(`<option value="${i}">${i}</option>`);}</script>
-      </select>
-      <button class="btn btn-success" onclick="buyItem('Cheddar Cheese',40,'quantity3','https://via.placeholder.com/300x200.png?text=Cheese')">Buy</button>
-    </div>
-  </div>
-</div>
 
-<!-- Drinks -->
-<div class="col-md-6 mb-4 item-card" data-category="Drinks" data-store="Cool Beverages">
-  <div class="card">
-    <img src="https://via.placeholder.com/300x200.png?text=Orange+Juice" class="card-img-top" alt="Orange Juice">
-    <div class="card-body">
-      <h5 class="card-title">Orange Juice</h5>
-      <p class="card-text">Price: R30</p>
-      <label for="quantity4">Quantity:</label>
-      <select id="quantity4" class="form-select w-50 mb-2">
-        <script>for(let i=1;i<=12;i++){document.write(`<option value="${i}">${i}</option>`);}</script>
-      </select>
-      <button class="btn btn-success" onclick="buyItem('Orange Juice',30,'quantity4','https://via.placeholder.com/300x200.png?text=Orange+Juice')">Buy</button>
-    </div>
-  </div>
-</div>
+      <!-- Example Items -->
+      <div class="col-md-6 mb-4 item-card" data-category="Dairy" data-store="Fresh Farm">
+        <div class="card">
+          <img src="https://via.placeholder.com/300x200.png?text=Milk" class="card-img-top" alt="Milk">
+          <div class="card-body">
+            <h5 class="card-title">Fresh Milk</h5>
+            <p class="card-text">Price: R25</p>
+            <label for="quantity1">Quantity:</label>
+            <select id="quantity1" class="form-select w-50 mb-2">
+              <script>for(let i=1;i<=12;i++){document.write(`<option value="${i}">${i}</option>`);}</script>
+            </select>
+            <button class="btn btn-success" onclick="buyItem('Fresh Milk',25,'quantity1','https://via.placeholder.com/300x200.png?text=Milk')">Buy</button>
+          </div>
+        </div>
+      </div>
 
-<!-- Snacks -->
-<div class="col-md-6 mb-4 item-card" data-category="Snacks" data-store="Snack World">
-  <div class="card">
-    <img src="https://via.placeholder.com/300x200.png?text=Chocolate+Bar" class="card-img-top" alt="Chocolate Bar">
-    <div class="card-body">
-      <h5 class="card-title">Chocolate Bar</h5>
-      <p class="card-text">Price: R20</p>
-      <label for="quantity5">Quantity:</label>
-      <select id="quantity5" class="form-select w-50 mb-2">
-        <script>for(let i=1;i<=12;i++){document.write(`<option value="${i}">${i}</option>`);}</script>
-      </select>
-      <button class="btn btn-success" onclick="buyItem('Chocolate Bar',20,'quantity5','https://via.placeholder.com/300x200.png?text=Chocolate+Bar')">Buy</button>
-    </div>
-  </div>
-</div>
+      <div class="col-md-6 mb-4 item-card" data-category="Snacks" data-store="Snack World">
+        <div class="card">
+          <img src="https://via.placeholder.com/300x200.png?text=Chips" class="card-img-top" alt="Chips">
+          <div class="card-body">
+            <h5 class="card-title">Potato Chips</h5>
+            <p class="card-text">Price: R15</p>
+            <label for="quantity2">Quantity:</label>
+            <select id="quantity2" class="form-select w-50 mb-2">
+              <script>for(let i=1;i<=12;i++){document.write(`<option value="${i}">${i}</option>`);}</script>
+            </select>
+            <button class="btn btn-success" onclick="buyItem('Potato Chips',15,'quantity2','https://via.placeholder.com/300x200.png?text=Chips')">Buy</button>
+          </div>
+        </div>
+      </div>
 
-<!-- Bakery -->
-<div class="col-md-6 mb-4 item-card" data-category="Bakery" data-store="Golden Crust">
-  <div class="card">
-    <img src="https://via.placeholder.com/300x200.png?text=Bread+Loaf" class="card-img-top" alt="Bread Loaf">
-    <div class="card-body">
-      <h5 class="card-title">Whole Wheat Bread</h5>
-      <p class="card-text">Price: R18</p>
-      <label for="quantity6">Quantity:</label>
-      <select id="quantity6" class="form-select w-50 mb-2">
-        <script>for(let i=1;i<=12;i++){document.write(`<option value="${i}">${i}</option>`);}</script>
-      </select>
-      <button class="btn btn-success" onclick="buyItem('Whole Wheat Bread',18,'quantity6','https://via.placeholder.com/300x200.png?text=Bread+Loaf')">Buy</button>
-    </div>
-  </div>
-</div>
+      <!-- Add more items here following the same pattern -->
 
-<!-- Produce -->
-<div class="col-md-6 mb-4 item-card" data-category="Produce" data-store="Green Basket">
-  <div class="card">
-    <img src="https://via.placeholder.com/300x200.png?text=Apples" class="card-img-top" alt="Apples">
-    <div class="card-body">
-      <h5 class="card-title">Red Apples (1kg)</h5>
-      <p class="card-text">Price: R35</p>
-      <label for="quantity7">Quantity:</label>
-      <select id="quantity7" class="form-select w-50 mb-2">
-        <script>for(let i=1;i<=12;i++){document.write(`<option value="${i}">${i}</option>`);}</script>
-      </select>
-      <button class="btn btn-success" onclick="buyItem('Red Apples (1kg)',35,'quantity7','https://via.placeholder.com/300x200.png?text=Apples')">Buy</button>
-    </div>
-  </div>
-</div>
-
-<!-- Drinks -->
-<div class="col-md-6 mb-4 item-card" data-category="Drinks" data-store="Cool Beverages">
-  <div class="card">
-    <img src="https://via.placeholder.com/300x200.png?text=Coffee" class="card-img-top" alt="Coffee">
-    <div class="card-body">
-      <h5 class="card-title">Ground Coffee</h5>
-      <p class="card-text">Price: R55</p>
-      <label for="quantity8">Quantity:</label>
-      <select id="quantity8" class="form-select w-50 mb-2">
-        <script>for(let i=1;i<=12;i++){document.write(`<option value="${i}">${i}</option>`);}</script>
-      </select>
-      <button class="btn btn-success" onclick="buyItem('Ground Coffee',55,'quantity8','https://via.placeholder.com/300x200.png?text=Coffee')">Buy</button>
-    </div>
-  </div>
-</div>
     </div>
   </div>
 
@@ -182,9 +122,31 @@
     function buyItem(name, price, quantityId, imageUrl) {
       const qty = document.getElementById(quantityId).value;
       const total = price * qty;
-      const message = `Hello, I would like to buy:\nItem: ${name}\nQuantity: ${qty}\nTotal Price: R${total}\nImage: ${imageUrl}`;
-      const whatsappUrl = `https://wa.me/27824598656?text=${encodeURIComponent(message)}`;
-      window.open(whatsappUrl, '_blank');
+
+      // Base message
+      let message = `Hello, I would like to buy:\nItem: ${name}\nQuantity: ${qty}\nTotal Price: R${total}\nImage: ${imageUrl}`;
+
+      // Try to get location
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+            message += `\nMy Location: https://www.google.com/maps?q=${lat},${lon}`;
+            const whatsappUrl = `https://wa.me/27824598656?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+          },
+          (error) => {
+            // If location not available, just send the base message
+            const whatsappUrl = `https://wa.me/27824598656?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+          }
+        );
+      } else {
+        // Geolocation not supported
+        const whatsappUrl = `https://wa.me/27824598656?text=${encodeURIComponent(message)}`;
+        window.open(whatsappUrl, '_blank');
+      }
     }
 
     function searchItems() {
