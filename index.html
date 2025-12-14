@@ -1,175 +1,1042 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
   <title>Petal Chain - The Market</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
   <!-- Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+
+  <!-- Google Font (optional, modern look) -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap"
+    rel="stylesheet"
+  />
+
   <style>
+    :root {
+      --pc-bg: #050505;
+      --pc-card: #111111;
+      --pc-accent: #ffffff;
+      --pc-muted: #b3b3b3;
+      --pc-border: #2b2b2b;
+      --pc-highlight: #f5f5f5;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
     body {
-      background-color: #f8f9fa;
+      font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #202020 0, #000000 48%, #000 100%);
+      color: var(--pc-accent);
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
-    .catchphrase {
-      font-size: 1.5rem;
-      font-weight: bold;
-      text-align: center;
-      margin: 20px 0;
-      color: #2c3e50;
+
+    .pc-navbar {
+      border-bottom: 1px solid var(--pc-border);
+      backdrop-filter: blur(12px);
+      background: rgba(0, 0, 0, 0.9);
     }
-    .card img {
-      height: 200px;
+
+    .pc-brand-mark {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 2px solid var(--pc-accent);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      margin-right: 8px;
+    }
+
+    .pc-title {
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 500;
+      font-size: 0.9rem;
+    }
+
+    .pc-hero {
+      padding: 2.5rem 1rem 1rem;
+    }
+
+    .pc-hero-title {
+      font-size: 1.9rem;
+      font-weight: 500;
+    }
+
+    .pc-hero-tagline {
+      font-size: 0.98rem;
+      color: var(--pc-muted);
+      margin-top: 0.25rem;
+    }
+
+    .pc-catchphrase {
+      margin-top: 0.8rem;
+      font-size: 1rem;
+      font-weight: 400;
+      color: var(--pc-highlight);
+      border-left: 2px solid #ffffff;
+      padding-left: 0.75rem;
+      border-radius: 0;
+    }
+
+    .pc-filters {
+      margin-top: 1.5rem;
+      margin-bottom: 1.3rem;
+      background: rgba(5, 5, 5, 0.8);
+      border-radius: 14px;
+      border: 1px solid var(--pc-border);
+      padding: 0.9rem;
+    }
+
+    .pc-search-input {
+      background: #050505;
+      border-radius: 999px !important;
+      border: 1px solid var(--pc-border) !important;
+      color: var(--pc-accent);
+      font-size: 0.9rem;
+    }
+
+    .pc-search-input::placeholder {
+      color: #6e6e6e;
+      font-size: 0.85rem;
+    }
+
+    .pc-dropdown {
+      background: #050505 !important;
+      border-radius: 999px !important;
+      border: 1px solid var(--pc-border) !important;
+      color: var(--pc-accent) !important;
+      font-size: 0.85rem;
+      padding-inline: 0.85rem;
+    }
+
+    .pc-dropdown .dropdown-toggle::after {
+      margin-left: 0.3rem;
+    }
+
+    .dropdown-menu {
+      background: #050505;
+      border-radius: 10px;
+      border: 1px solid var(--pc-border);
+      padding: 0.25rem 0;
+      font-size: 0.85rem;
+    }
+
+    .dropdown-item {
+      color: var(--pc-accent);
+      padding: 0.4rem 0.9rem;
+    }
+
+    .dropdown-item:hover,
+    .dropdown-item.active {
+      background: #ffffff;
+      color: #000000;
+    }
+
+    .pc-main {
+      flex: 1;
+      padding-bottom: 2rem;
+    }
+
+    .pc-items {
+      margin-top: 0.5rem;
+    }
+
+    .pc-item-card {
+      background: var(--pc-card);
+      border-radius: 18px;
+      border: 1px solid var(--pc-border);
+      padding: 0.8rem;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      transition: transform 0.18s ease, box-shadow 0.18s ease,
+        border-color 0.18s ease;
+    }
+
+    .pc-item-card:hover {
+      transform: translateY(-2px);
+      border-color: #ffffff;
+      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.8);
+    }
+
+    .pc-item-img-wrapper {
+      position: relative;
+      width: 100%;
+      padding-top: 100%;
+      border-radius: 14px;
+      overflow: hidden;
+      background: #000000;
+      border: 1px solid var(--pc-border);
+    }
+
+    .pc-item-img-wrapper img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
       object-fit: cover;
     }
-    footer {
-      background-color: #343a40;
-      color: white;
-      text-align: center;
-      padding: 20px 0;
-      margin-top: 40px;
+
+    .pc-item-body {
+      padding-top: 0.7rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      flex: 1;
     }
-    footer img {
-      height: 40px;
-      margin-top: 10px;
+
+    .pc-item-title {
+      font-size: 0.9rem;
+      font-weight: 500;
+      line-height: 1.3;
+    }
+
+    .pc-item-meta {
+      font-size: 0.76rem;
+      color: var(--pc-muted);
+      display: flex;
+      justify-content: space-between;
+      gap: 0.25rem;
+      flex-wrap: wrap;
+    }
+
+    .pc-item-price {
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+
+    .pc-qty-select {
+      background: #050505;
+      border-radius: 999px;
+      border: 1px solid var(--pc-border);
+      color: var(--pc-accent);
+      padding-inline: 0.5rem;
+      padding-block: 0.25rem;
+      font-size: 0.8rem;
+    }
+
+    .pc-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.4rem;
+      margin-top: 0.45rem;
+    }
+
+    .pc-btn-buy {
+      flex: 1;
+      border-radius: 999px;
+      border: 1px solid #ffffff;
+      background: #ffffff;
+      color: #000000;
+      font-size: 0.8rem;
+      padding-block: 0.35rem;
+    }
+
+    .pc-btn-cart {
+      flex: 1;
+      border-radius: 999px;
+      border: 1px solid var(--pc-border);
+      background: #050505;
+      color: #ffffff;
+      font-size: 0.8rem;
+      padding-block: 0.35rem;
+    }
+
+    .pc-btn-cart:hover {
+      border-color: #ffffff;
+    }
+
+    /* Cart drawer */
+    .pc-cart-drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 320px;
+      max-width: 80vw;
+      height: 100%;
+      background: #050505;
+      border-left: 1px solid var(--pc-border);
+      box-shadow: -12px 0 30px rgba(0, 0, 0, 0.85);
+      transform: translateX(100%);
+      transition: transform 0.25s ease;
+      z-index: 1050;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .pc-cart-drawer.open {
+      transform: translateX(0);
+    }
+
+    .pc-cart-header {
+      padding: 0.95rem 1rem;
+      border-bottom: 1px solid var(--pc-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.9rem;
+    }
+
+    .pc-cart-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0.75rem 1rem 1rem;
+      font-size: 0.85rem;
+    }
+
+    .pc-cart-item {
+      padding: 0.4rem 0;
+      border-bottom: 1px dashed var(--pc-border);
+      display: flex;
+      flex-direction: column;
+      gap: 0.1rem;
+    }
+
+    .pc-cart-item:last-child {
+      border-bottom: none;
+    }
+
+    .pc-cart-footer {
+      padding: 0.8rem 1rem 1rem;
+      border-top: 1px solid var(--pc-border);
+    }
+
+    .pc-cart-total {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.9rem;
+      margin-bottom: 0.55rem;
+    }
+
+    .pc-btn-order {
+      width: 100%;
+      border-radius: 999px;
+      border: 1px solid #ffffff;
+      background: #ffffff;
+      color: #000000;
+      font-size: 0.85rem;
+      padding-block: 0.45rem;
+    }
+
+    .pc-cart-toggle-btn {
+      position: fixed;
+      bottom: 1.2rem;
+      right: 1.2rem;
+      background: #ffffff;
+      color: #000000;
+      border-radius: 999px;
+      border: none;
+      padding: 0.4rem 0.95rem;
+      font-size: 0.85rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.8);
+      z-index: 1040;
+    }
+
+    .pc-cart-badge {
+      min-width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      background: #000000;
+      color: #ffffff;
+      font-size: 0.7rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    footer {
+      border-top: 1px solid var(--pc-border);
+      padding: 1.2rem 1rem 1.4rem;
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--pc-muted);
+      background: #050505;
+    }
+
+    .pc-footer-logo {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      border: 1px solid var(--pc-muted);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      margin-top: 0.35rem;
+    }
+
+    @media (min-width: 768px) {
+      .pc-hero {
+        padding-inline: 2.5rem;
+      }
+
+      .pc-main {
+        padding-inline: 2.5rem;
+      }
+    }
+
+    @media (min-width: 992px) {
+      .pc-hero-title {
+        font-size: 2.1rem;
+      }
     }
   </style>
 </head>
 <body>
-
-  <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="#">
-        <img src="logowhite.png"height="35%" width="35%"> The Market
-      </a>
+  <!-- NAVBAR -->
+  <nav class="navbar navbar-dark pc-navbar">
+    <div class="container-fluid px-3 px-md-4">
+      <div class="d-flex align-items-center">
+        <span class="pc-brand-mark">PC</span>
+        <div class="d-flex flex-column">
+          <span class="pc-title">Petal Chain</span>
+          <span style="font-size: 0.75rem; color: #aaaaaa;">The Market</span>
+        </div>
+      </div>
+      <button
+        class="btn btn-sm btn-outline-light rounded-pill d-flex align-items-center gap-2"
+        type="button"
+        id="shareLocationBtn"
+      >
+        <span style="font-size: 0.8rem;">Use my location</span>
+        <span style="font-size: 1rem;">📍</span>
+      </button>
     </div>
   </nav>
 
-  <!-- Catchphrase -->
-<div class="catchphrase">
-Stop scrolling. Start shopping.
-</div>
-
-<!-- Search + Categories -->
-<div class="container mb-4">
-  <div class="row justify-content-center">
-    <div class="col-md-6 mb-2">
-      <input class="form-control" type="search" placeholder="Search items..." id="searchInput">
-    </div>
-    <div class="col-md-2 mb-2">
-      <button class="btn btn-success w-100" type="button" onclick="searchItems()">Search</button>
-    </div>
-    <div class="col-md-3 mb-2">
-      <div class="dropdown w-100">
-        <button class="btn btn-outline-dark dropdown-toggle w-100" type="button" data-bs-toggle="dropdown">
-          Categories
-        </button>
-        <ul class="dropdown-menu w-100">
-          <li><a class="dropdown-item" href="#" onclick="filterCategory('Dairy')">Dairy</a></li>
-          <li><a class="dropdown-item" href="#" onclick="filterCategory('Drinks')">Drinks</a></li>
-          <li><a class="dropdown-item" href="#" onclick="filterCategory('Snacks')">Snacks</a></li>
-          <li><a class="dropdown-item" href="#" onclick="filterCategory('Bakery')">Bakery</a></li>
-          <li><a class="dropdown-item" href="#" onclick="filterCategory('Produce')">Produce</a></li>
-        </ul>
+  <!-- HERO / HEADER -->
+  <section class="pc-hero container-fluid px-3 px-md-4">
+    <div class="row">
+      <div class="col-12 col-lg-8">
+        <h1 class="pc-hero-title">Petal Chain – The Market</h1>
+        <p class="pc-hero-tagline">
+          A minimal shelf of everyday essentials, curated and ready to move.
+        </p>
+        <p class="pc-catchphrase">
+          “Pick your perfect pieces, and we’ll bring the market to your doorstep.”
+        </p>
       </div>
     </div>
-  </div>
-</div>
-  
-  <!-- Items Grid -->
-  <div class="container">
-    <div class="row" id="itemsContainer">
 
-      <!-- Example Items -->
-      <div class="col-md-6 mb-4 item-card" data-category="Dairy" data-store="Fresh Farm">
-        <div class="card">
-          <img src="items/parmalatmilk.png" class="card-img-top" alt="Milk">
-          <div class="card-body">
-            <h5 class="card-title">Parmalat 1litre Full Cream Milk</h5>
-            <p class="card-text">Price: R25</p>
-            <label for="quantity1">Quantity:</label>
-            <select id="quantity1" class="form-select w-50 mb-2">
-              <script>for(let i=1;i<=12;i++){document.write(`<option value="${i}">${i}</option>`);}</script>
-            </select>
-            <button class="btn btn-success" onclick="buyItem('Fresh Milk',25,'quantity1','https://via.placeholder.com/300x200.png?text=Milk')">Buy</button>
+    <!-- FILTERS -->
+    <div class="pc-filters">
+      <div class="row g-2 align-items-center">
+        <div class="col-12 col-md-6">
+          <input
+            type="text"
+            id="searchInput"
+            class="form-control pc-search-input"
+            placeholder="Search by item or store name..."
+          />
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="dropdown w-100">
+            <button
+              class="btn dropdown-toggle w-100 pc-dropdown"
+              type="button"
+              id="categoryDropdown"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              Category: All
+            </button>
+            <ul class="dropdown-menu w-100" aria-labelledby="categoryDropdown">
+              <li><a class="dropdown-item active" href="#" data-category="all">All</a></li>
+              <li><a class="dropdown-item" href="#" data-category="Dairy">Dairy</a></li>
+              <li><a class="dropdown-item" href="#" data-category="Drinks">Drinks</a></li>
+              <li><a class="dropdown-item" href="#" data-category="Snacks">Snacks</a></li>
+              <li><a class="dropdown-item" href="#" data-category="Bakery">Bakery</a></li>
+              <li><a class="dropdown-item" href="#" data-category="Fresh Produce">Fresh Produce</a></li>
+              <li><a class="dropdown-item" href="#" data-category="Household">Household</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="dropdown w-100">
+            <button
+              class="btn dropdown-toggle w-100 pc-dropdown"
+              type="button"
+              id="storeDropdown"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              Store: All
+            </button>
+            <ul class="dropdown-menu w-100" aria-labelledby="storeDropdown">
+              <li><a class="dropdown-item active" href="#" data-store="all">All</a></li>
+              <li><a class="dropdown-item" href="#" data-store="Sunrise Grocers">Sunrise Grocers</a></li>
+              <li><a class="dropdown-item" href="#" data-store="Urban Sip Café">Urban Sip Café</a></li>
+              <li><a class="dropdown-item" href="#" data-store="Meadow Dairy Co.">Meadow Dairy Co.</a></li>
+              <li><a class="dropdown-item" href="#" data-store="Corner Cravings">Corner Cravings</a></li>
+            </ul>
           </div>
         </div>
       </div>
+    </div>
+  </section>
 
-      <div class="col-md-6 mb-4 item-card" data-category="Snacks" data-store="Snack World">
-        <div class="card">
-          <img src="https://via.placeholder.com/300x200.png?text=Chips" class="card-img-top" alt="Chips">
-          <div class="card-body">
-            <h5 class="card-title">Potato Chips</h5>
-            <p class="card-text">Price: R15</p>
-            <label for="quantity2">Quantity:</label>
-            <select id="quantity2" class="form-select w-50 mb-2">
-              <script>for(let i=1;i<=12;i++){document.write(`<option value="${i}">${i}</option>`);}</script>
-            </select>
-            <button class="btn btn-success" onclick="buyItem('Potato Chips',15,'quantity2','https://via.placeholder.com/300x200.png?text=Chips')">Buy</button>
-          </div>
-        </div>
+  <!-- MAIN CONTENT -->
+  <main class="pc-main container-fluid px-3 px-md-4">
+    <div class="pc-items">
+      <div class="row g-3" id="itemsContainer">
+        <!-- Items will be injected by JavaScript -->
       </div>
+    </div>
+  </main>
 
-      <!-- Add more items here following the same pattern -->
+  <!-- CART TOGGLE BUTTON -->
+  <button class="pc-cart-toggle-btn" id="cartToggleBtn">
+    <span>Cart</span>
+    <span class="pc-cart-badge" id="cartCount">0</span>
+  </button>
 
+  <!-- CART DRAWER -->
+  <div class="pc-cart-drawer" id="cartDrawer">
+    <div class="pc-cart-header">
+      <span>Cart</span>
+      <button class="btn btn-sm btn-outline-light rounded-pill" id="closeCartBtn">
+        Close
+      </button>
+    </div>
+    <div class="pc-cart-body">
+      <div id="cartItems"></div>
+      <div
+        id="emptyCartMessage"
+        style="font-size: 0.8rem; color: #777; margin-top: 0.5rem;"
+      >
+        Your cart is looking minimal. Add something you love.
+      </div>
+    </div>
+    <div class="pc-cart-footer">
+      <div class="pc-cart-total">
+        <span>Total</span>
+        <span id="cartTotal">R0.00</span>
+      </div>
+      <button class="pc-btn-order" id="orderNowBtn">Order Now via WhatsApp</button>
     </div>
   </div>
 
-  <!-- Footer -->
+  <!-- FOOTER -->
   <footer>
-    <p>Petal Chain - The Market</p>
-    <img src="https://via.placeholder.com/40.png?text=🌸" alt="Logo">
+    <div>Petal Chain – The Market</div>
+    <div class="pc-footer-logo">PC</div>
   </footer>
 
   <!-- Bootstrap JS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+  ></script>
+
   <script>
-    function buyItem(name, price, quantityId, imageUrl) {
-      const qty = document.getElementById(quantityId).value;
-      const total = price * qty;
+    // ===========================
+    // DATA
+    // ===========================
+    const items = [
+      {
+        id: 1,
+        name: "Fresh Full Cream Milk 2L",
+        price: 36.99,
+        category: "Dairy",
+        store: "Meadow Dairy Co.",
+        image:
+          "https://images.pexels.com/photos/5947032/pexels-photo-5947032.jpeg?auto=compress&cs=tinysrgb&w=800",
+      },
+      {
+        id: 2,
+        name: "Classic Cheddar Cheese Block 500g",
+        price: 74.5,
+        category: "Dairy",
+        store: "Meadow Dairy Co.",
+        image:
+          "https://images.pexels.com/photos/102128/pexels-photo-102128.jpeg?auto=compress&cs=tinysrgb&w=800",
+      },
+      {
+        id: 3,
+        name: "Sparkling Lemon Soda 330ml",
+        price: 15.0,
+        category: "Drinks",
+        store: "Urban Sip Café",
+        image:
+          "https://images.pexels.com/photos/5531523/pexels-photo-5531523.jpeg?auto=compress&cs=tinysrgb&w=800",
+      },
+      {
+        id: 4,
+        name: "Cold Brew Coffee Bottle 250ml",
+        price: 32.0,
+        category: "Drinks",
+        store: "Urban Sip Café",
+        image:
+          "https://images.pexels.com/photos/1749303/pexels-photo-1749303.jpeg?auto=compress&cs=tinysrgb&w=800",
+      },
+      {
+        id: 5,
+        name: "Sea Salt Kettle Chips 150g",
+        price: 29.99,
+        category: "Snacks",
+        store: "Corner Cravings",
+        image:
+          "https://images.pexels.com/photos/6940994/pexels-photo-6940994.jpeg?auto=compress&cs=tinysrgb&w=800",
+      },
+      {
+        id: 6,
+        name: "Dark Chocolate Chunk Cookies",
+        price: 39.0,
+        category: "Bakery",
+        store: "Corner Cravings",
+        image:
+          "https://images.pexels.com/photos/4109990/pexels-photo-4109990.jpeg?auto=compress&cs=tinysrgb&w=800",
+      },
+      {
+        id: 7,
+        name: "Country Sourdough Loaf",
+        price: 42.5,
+        category: "Bakery",
+        store: "Corner Cravings",
+        image:
+          "https://images.pexels.com/photos/2092067/pexels-photo-2092067.jpeg?auto=compress&cs=tinysrgb&w=800",
+      },
+      {
+        id: 8,
+        name: "Crisp Green Apples (Pack of 6)",
+        price: 34.99,
+        category: "Fresh Produce",
+        store: "Sunrise Grocers",
+        image:
+          "https://images.pexels.com/photos/672446/pexels-photo-672446.jpeg?auto=compress&cs=tinysrgb&w=800",
+      },
+      {
+        id: 9,
+        name: "Garden Fresh Tomatoes 1kg",
+        price: 24.5,
+        category: "Fresh Produce",
+        store: "Sunrise Grocers",
+        image:
+          "https://images.pexels.com/photos/8390/food-wood-tomatoes.jpg?auto=compress&cs=tinysrgb&w=800",
+      },
+      {
+        id: 10,
+        name: "Household Paper Towels (2 Pack)",
+        price: 38.0,
+        category: "Household",
+        store: "Sunrise Grocers",
+        image:
+          "https://images.pexels.com/photos/3965557/pexels-photo-3965557.jpeg?auto=compress&cs=tinysrgb&w=800",
+      },
+    ];
 
-      // Base message
-      let message = `Hello, I would like to buy:\nItem: ${name}\nQuantity: ${qty}\nTotal Price: R${total}\nImage: ${imageUrl}`;
+    // WhatsApp number (international format recommended)
+    const WHATSAPP_NUMBER = "27824598656"; // 0824598656 -> 27 82 459 8656
 
-      // Try to get location
-      if (navigator.geolocation) {
+    // ===========================
+    // STATE
+    // ===========================
+    let activeCategory = "all";
+    let activeStore = "all";
+    let searchTerm = "";
+    let cart = [];
+
+    // store user location if available
+    let userLocation = null;
+
+    // ===========================
+    // UTILITIES
+    // ===========================
+    function formatPrice(num) {
+      return "R" + num.toFixed(2);
+    }
+
+    function buildLocationText() {
+      if (!userLocation) return "Location: not shared";
+      const { lat, lng } = userLocation;
+      const mapsUrl = `https://www.google.com/maps?q=${lat},${lng}`;
+      return `Location: ${lat.toFixed(5)}, ${lng.toFixed(5)} (${mapsUrl})`;
+    }
+
+    function openWhatsAppWithMessage(message) {
+      const encoded = encodeURIComponent(message);
+      const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encoded}`;
+      window.open(url, "_blank");
+    }
+
+    // ===========================
+    // RENDER ITEMS
+    // ===========================
+    const itemsContainer = document.getElementById("itemsContainer");
+
+    function renderItems() {
+      itemsContainer.innerHTML = "";
+      const filtered = items.filter((item) => {
+        const matchesCategory =
+          activeCategory === "all" || item.category === activeCategory;
+        const matchesStore = activeStore === "all" || item.store === activeStore;
+        const term = searchTerm.trim().toLowerCase();
+        const matchesSearch =
+          term.length === 0 ||
+          item.name.toLowerCase().includes(term) ||
+          item.store.toLowerCase().includes(term);
+        return matchesCategory && matchesStore && matchesSearch;
+      });
+
+      if (filtered.length === 0) {
+        itemsContainer.innerHTML =
+          '<div class="col-12"><p style="color:#aaa;font-size:0.9rem;">Nothing matches your filters yet. Try a different search or category.</p></div>';
+        return;
+      }
+
+      filtered.forEach((item) => {
+        const col = document.createElement("div");
+        col.className = "col-12 col-md-6";
+
+        const card = document.createElement("div");
+        card.className = "pc-item-card";
+
+        const imgWrapper = document.createElement("div");
+        imgWrapper.className = "pc-item-img-wrapper";
+
+        const img = document.createElement("img");
+        img.src = item.image;
+        img.alt = item.name;
+
+        imgWrapper.appendChild(img);
+        card.appendChild(imgWrapper);
+
+        const body = document.createElement("div");
+        body.className = "pc-item-body";
+
+        const title = document.createElement("div");
+        title.className = "pc-item-title";
+        title.textContent = item.name;
+
+        const meta = document.createElement("div");
+        meta.className = "pc-item-meta";
+        meta.innerHTML = `
+          <span>${item.store}</span>
+          <span>${item.category}</span>
+        `;
+
+        const priceRow = document.createElement("div");
+        priceRow.className =
+          "d-flex align-items-center justify-content-between gap-2";
+
+        const price = document.createElement("div");
+        price.className = "pc-item-price";
+        price.textContent = formatPrice(item.price);
+
+        const qtySelect = document.createElement("select");
+        qtySelect.className = "pc-qty-select";
+        for (let i = 1; i <= 12; i++) {
+          const opt = document.createElement("option");
+          opt.value = i;
+          opt.textContent = i;
+          qtySelect.appendChild(opt);
+        }
+
+        priceRow.appendChild(price);
+        priceRow.appendChild(qtySelect);
+
+        const actions = document.createElement("div");
+        actions.className = "pc-actions";
+
+        const buyBtn = document.createElement("button");
+        buyBtn.className = "pc-btn-buy btn btn-sm";
+        buyBtn.textContent = "Buy Now";
+
+        const cartBtn = document.createElement("button");
+        cartBtn.className = "pc-btn-cart btn btn-sm";
+        cartBtn.textContent = "Add to Cart";
+
+        // Buy Now handler
+        buyBtn.addEventListener("click", () => {
+          const qty = parseInt(qtySelect.value, 10);
+          const total = item.price * qty;
+          const message = [
+            "Hi, I’d like to buy this item from Petal Chain – The Market:",
+            "",
+            `Item: ${item.name}`,
+            `Store: ${item.store}`,
+            `Category: ${item.category}`,
+            `Quantity: ${qty}`,
+            `Price each: ${formatPrice(item.price)}`,
+            `Total: ${formatPrice(total)}`,
+            "",
+            `Item image: ${item.image}`,
+            "",
+            buildLocationText(),
+          ].join("\n");
+          openWhatsAppWithMessage(message);
+        });
+
+        // Add to Cart handler
+        cartBtn.addEventListener("click", () => {
+          const qty = parseInt(qtySelect.value, 10);
+          addToCart(item, qty);
+        });
+
+        actions.appendChild(buyBtn);
+        actions.appendChild(cartBtn);
+
+        body.appendChild(title);
+        body.appendChild(meta);
+        body.appendChild(priceRow);
+        body.appendChild(actions);
+
+        card.appendChild(body);
+        col.appendChild(card);
+        itemsContainer.appendChild(col);
+      });
+    }
+
+    // ===========================
+    // CART LOGIC
+    // ===========================
+    const cartDrawer = document.getElementById("cartDrawer");
+    const cartCountEl = document.getElementById("cartCount");
+    const cartItemsEl = document.getElementById("cartItems");
+    const cartTotalEl = document.getElementById("cartTotal");
+    const emptyCartMsg = document.getElementById("emptyCartMessage");
+
+    function addToCart(item, qty) {
+      const existing = cart.find((c) => c.id === item.id);
+      if (existing) {
+        existing.quantity += qty;
+      } else {
+        cart.push({ ...item, quantity: qty });
+      }
+      updateCartUI();
+    }
+
+    function updateCartUI() {
+      cartItemsEl.innerHTML = "";
+      let total = 0;
+      let totalItems = 0;
+
+      if (cart.length === 0) {
+        emptyCartMsg.style.display = "block";
+      } else {
+        emptyCartMsg.style.display = "none";
+      }
+
+      cart.forEach((item) => {
+        const lineTotal = item.price * item.quantity;
+        total += lineTotal;
+        totalItems += item.quantity;
+
+        const div = document.createElement("div");
+        div.className = "pc-cart-item";
+
+        const topRow = document.createElement("div");
+        topRow.style.display = "flex";
+        topRow.style.justifyContent = "space-between";
+        topRow.style.gap = "0.25rem";
+
+        const nameEl = document.createElement("div");
+        nameEl.textContent = item.name;
+        nameEl.style.fontSize = "0.8rem";
+
+        const qtyEl = document.createElement("div");
+        qtyEl.textContent = `x${item.quantity}`;
+
+        topRow.appendChild(nameEl);
+        topRow.appendChild(qtyEl);
+
+        const midRow = document.createElement("div");
+        midRow.style.display = "flex";
+        midRow.style.justifyContent = "space-between";
+        midRow.style.fontSize = "0.78rem";
+        midRow.style.color = "#aaa";
+        midRow.innerHTML = `
+          <span>${item.store}</span>
+          <span>${formatPrice(item.price)} each</span>
+        `;
+
+        const bottomRow = document.createElement("div");
+        bottomRow.style.display = "flex";
+        bottomRow.style.justifyContent = "space-between";
+        bottomRow.style.alignItems = "center";
+        bottomRow.style.fontSize = "0.8rem";
+
+        const lineTotalEl = document.createElement("div");
+        lineTotalEl.textContent = formatPrice(lineTotal);
+
+        const removeBtn = document.createElement("button");
+        removeBtn.className =
+          "btn btn-sm btn-outline-light rounded-pill";
+        removeBtn.textContent = "Remove";
+        removeBtn.style.fontSize = "0.7rem";
+        removeBtn.addEventListener("click", () => {
+          removeFromCart(item.id);
+        });
+
+        bottomRow.appendChild(lineTotalEl);
+        bottomRow.appendChild(removeBtn);
+
+        div.appendChild(topRow);
+        div.appendChild(midRow);
+        div.appendChild(bottomRow);
+
+        cartItemsEl.appendChild(div);
+      });
+
+      cartTotalEl.textContent = formatPrice(total);
+      cartCountEl.textContent = totalItems;
+    }
+
+    function removeFromCart(id) {
+      cart = cart.filter((item) => item.id !== id);
+      updateCartUI();
+    }
+
+    function buildCartMessage() {
+      if (cart.length === 0) {
+        return "Hi, I tried to order from Petal Chain – The Market but my cart is empty.";
+      }
+
+      let total = 0;
+      const lines = [];
+      lines.push("Hi, I’d like to place this order from Petal Chain – The Market:");
+      lines.push("");
+
+      cart.forEach((item, index) => {
+        const lineTotal = item.price * item.quantity;
+        total += lineTotal;
+        lines.push(`Item ${index + 1}:`);
+        lines.push(`• Name: ${item.name}`);
+        lines.push(`• Store: ${item.store}`);
+        lines.push(`• Category: ${item.category}`);
+        lines.push(`• Quantity: ${item.quantity}`);
+        lines.push(`• Price each: ${formatPrice(item.price)}`);
+        lines.push(`• Line total: ${formatPrice(lineTotal)}`);
+        lines.push(`• Image: ${item.image}`);
+        lines.push("");
+      });
+
+      lines.push(`Order total: ${formatPrice(total)}`);
+      lines.push("");
+      lines.push(buildLocationText());
+
+      return lines.join("\n");
+    }
+
+    // ===========================
+    // FILTER HANDLERS
+    // ===========================
+    document.getElementById("searchInput").addEventListener("input", (e) => {
+      searchTerm = e.target.value;
+      renderItems();
+    });
+
+    document
+      .querySelectorAll("#categoryDropdown + .dropdown-menu .dropdown-item")
+      .forEach((el) => {
+        el.addEventListener("click", (e) => {
+          e.preventDefault();
+          const cat = el.getAttribute("data-category");
+          activeCategory = cat;
+          document
+            .querySelectorAll(
+              "#categoryDropdown + .dropdown-menu .dropdown-item"
+            )
+            .forEach((item) => item.classList.remove("active"));
+          el.classList.add("active");
+          const label = cat === "all" ? "All" : cat;
+          document.getElementById(
+            "categoryDropdown"
+          ).textContent = `Category: ${label}`;
+          renderItems();
+        });
+      });
+
+    document
+      .querySelectorAll("#storeDropdown + .dropdown-menu .dropdown-item")
+      .forEach((el) => {
+        el.addEventListener("click", (e) => {
+          e.preventDefault();
+          const store = el.getAttribute("data-store");
+          activeStore = store;
+          document
+            .querySelectorAll(
+              "#storeDropdown + .dropdown-menu .dropdown-item"
+            )
+            .forEach((item) => item.classList.remove("active"));
+          el.classList.add("active");
+          const label = store === "all" ? "All" : store;
+          document.getElementById(
+            "storeDropdown"
+          ).textContent = `Store: ${label}`;
+          renderItems();
+        });
+      });
+
+    // ===========================
+    // CART DRAWER TOGGLE
+    // ===========================
+    document
+      .getElementById("cartToggleBtn")
+      .addEventListener("click", () => {
+        cartDrawer.classList.add("open");
+      });
+
+    document.getElementById("closeCartBtn").addEventListener("click", () => {
+      cartDrawer.classList.remove("open");
+    });
+
+    document.getElementById("orderNowBtn").addEventListener("click", () => {
+      const msg = buildCartMessage();
+      openWhatsAppWithMessage(msg);
+    });
+
+    // ===========================
+    // GEOLOCATION
+    // ===========================
+    document
+      .getElementById("shareLocationBtn")
+      .addEventListener("click", () => {
+        if (!navigator.geolocation) {
+          alert("Geolocation is not supported on this device.");
+          return;
+        }
         navigator.geolocation.getCurrentPosition(
-          (position) => {
-            const lat = position.coords.latitude;
-            const lon = position.coords.longitude;
-            message += `\nMy Location: https://www.google.com/maps?q=${lat},${lon}`;
-            const whatsappUrl = `https://wa.me/27824598656?text=${encodeURIComponent(message)}`;
-            window.open(whatsappUrl, '_blank');
+          (pos) => {
+            userLocation = {
+              lat: pos.coords.latitude,
+              lng: pos.coords.longitude,
+            };
+            alert("Location added to your orders successfully.");
           },
-          (error) => {
-            // If location not available, just send the base message
-            const whatsappUrl = `https://wa.me/27824598656?text=${encodeURIComponent(message)}`;
-            window.open(whatsappUrl, '_blank');
+          (err) => {
+            console.error(err);
+            alert(
+              "Could not get your location. It will not be included in your WhatsApp message."
+            );
           }
         );
-      } else {
-        // Geolocation not supported
-        const whatsappUrl = `https://wa.me/27824598656?text=${encodeURIComponent(message)}`;
-        window.open(whatsappUrl, '_blank');
-      }
-    }
-
-    function searchItems() {
-      const input = document.getElementById('searchInput').value.toLowerCase();
-      const items = document.querySelectorAll('.item-card');
-      items.forEach(item => {
-        const title = item.querySelector('.card-title').innerText.toLowerCase();
-        item.style.display = title.includes(input) ? 'block' : 'none';
       });
-    }
 
-    function filterCategory(category) {
-      const items = document.querySelectorAll('.item-card');
-      items.forEach(item => {
-        item.style.display = item.getAttribute('data-category') === category ? 'block' : 'none';
-      });
-    }
+    // ===========================
+    // INIT
+    // ===========================
+    renderItems();
+    updateCartUI();
   </script>
 </body>
 </html>
