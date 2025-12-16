@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Petal Chain - The Market</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-black: #111111;
+            --secondary-black: #222222;
+            --light-gray: #f8f9fa;
+            --medium-gray: #e9ecef;
+            --dark-gray: #6c757d;
+            --accent-color: #28a745; /* Subtle green for buttons */
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--primary-black);
+            background-color: white;
+            padding-top: 20px;
+        }
+        
+        .catch-phrase {
+            background-color: var(--primary-black);
+            color: white;
+            padding: 20px 0;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            text-align: center;
+            font-weight: 300;
+            letter-spacing: 1px;
+            border-left: 5px solid white;
+            border-right: 5px solid white;
+        }
+        
+        .catch-phrase h2 {
+            font-weight: 300;
+            font-size: 1.8rem;
+            margin-bottom: 0;
+        }
+        
+        .logo {
+            font-weight: 700;
+            font-size: 2.2rem;
+            color: var(--primary-black);
+            text-decoration: none;
+            margin-bottom: 10px;
+            display: inline-block;
+        }
+        
+        .logo-subtitle {
+            color: var(--dark-gray);
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+        }
+        
+        .search-bar {
+            margin-bottom: 30px;
+        }
+        
+        .category-dropdown, .store-dropdown {
+            margin-bottom: 20px;
+        }
+        
+        .item-card {
+            border: 1px solid var(--medium-gray);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 30px;
+            height: 100%;
+            transition: transform 0.3s, box-shadow 0.3s;
+            background-color: white;
+        }
+        
+        .item-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+        }
+        
+        .item-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 5px;
+            background-color: var(--light-gray);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--dark-gray);
+            margin-bottom: 15px;
+        }
+        
+        .item-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--primary-black);
+        }
+        
+        .item-store {
+            color: var(--dark-gray);
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+        
+        .item-price {
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: var(--primary-black);
+            margin-bottom: 15px;
+        }
+        
+        .quantity-select {
+            width: 80px;
+            margin-bottom: 10px;
+        }
+        
+        .btn-buy-now {
+            background-color: var(--primary-black);
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            margin-right: 10px;
+            transition: all 0.3s;
+        }
+        
+        .btn-buy-now:hover {
+            background-color: #333;
+            color: white;
+        }
+        
+        .btn-add-to-cart {
+            background-color: white;
+            color: var(--primary-black);
+            border: 1px solid var(--primary-black);
+            padding: 8px 20px;
+            transition: all 0.3s;
+        }
+        
+        .btn-add-to-cart:hover {
+            background-color: var(--primary-black);
+            color: white;
+        }
+        
+        .cart-sidebar {
+            background-color: var(--light-gray);
+            border-radius: 8px;
+            padding: 20px;
+            position: sticky;
+            top: 20px;
+            border: 1px solid var(--medium-gray);
+        }
+        
+        .cart-item {
+            border-bottom: 1px solid var(--medium-gray);
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+        
+        .btn-order-now {
+            background-color: var(--primary-black);
+            color: white;
+            width: 100%;
+            padding: 12px;
+            font-weight: 600;
+            margin-top: 20px;
+        }
+        
+        .btn-order-now:hover {
+            background-color: #333;
+            color: white;
+        }
+        
+        .footer {
+            background-color: var(--primary-black);
+            color: white;
+            padding: 40px 0;
+            margin-top: 50px;
+        }
+        
+        .footer-logo {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .cart-icon {
+            position: relative;
+        }
+        
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: var(--accent-color);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .item-category {
+            display: inline-block;
+            background-color: var(--light-gray);
+            color: var(--dark-gray);
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-bottom: 10px;
+        }
+        
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .catch-phrase h2 {
+                font-size: 1.4rem;
+            }
+            
+            .item-card {
+                margin-bottom: 20px;
+            }
+            
+            .btn-buy-now, .btn-add-to-cart {
+                padding: 8px 15px;
+                font-size: 0.9rem;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .catch-phrase h2 {
+                font-size: 1.2rem;
+            }
+            
+            .item-image {
+                height: 180px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header with Logo -->
+        <header class="text-center mb-4">
+            <a href="#" class="logo">Petal Chain</a>
+            <div class="logo-subtitle">THE MARKET</div>
+        </header>
+        
+        <!-- Catch Phrase -->
+        <div class="catch-phrase">
+            <h2><i class="fas fa-seedling me-2"></i> Cultivate your cart - Harvest your happiness!</h2>
+        </div>
+        
+        <!-- Search and Filters -->
+        <div class="row mb-4">
+            <div class="col-md-8">
+                <div class="input-group search-bar">
+                    <span class="input-group-text bg-black text-white"><i class="fas fa-search"></i></span>
+                    <input type="text" class="form-control" id="searchInput" placeholder="Search for items...">
+                </div>
+            </div>
+            <div class="col-md-4 text-end">
+                <!-- Cart Icon with Count -->
+                <button class="btn btn-outline-dark cart-icon position-relative" data-bs-toggle="offcanvas" data-bs-target="#cartOffcanvas">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count" id="cartCount">0</span>
+                </button>
+            </div>
+        </div>
+        
+        <div class="row">
+            <!-- Categories and Store Filters -->
+            <div class="col-lg-3">
+                <div class="category-dropdown">
+                    <h5><i class="fas fa-filter me-2"></i>Categories</h5>
+                    <div class="dropdown">
+                        <button class="btn btn-outline-dark dropdown-toggle w-100" type="button" id="categoryDropdown" data-bs-toggle="dropdown">
+                            All Categories
+                        </button>
+                        <ul class="dropdown-menu w-100" id="categoryList">
+                            <li><a class="dropdown-item category-filter active" data-category="all">All Categories</a></li>
+                            <li><a class="dropdown-item category-filter" data-category="dairy">Dairy</a></li>
+                            <li><a class="dropdown-item category-filter" data-category="drinks">Drinks</a></li>
+                            <li><a class="dropdown-item category-filter" data-category="snacks">Snacks</a></li>
+                            <li><a class="dropdown-item category-filter" data-category="bakery">Bakery</a></li>
+                            <li><a class="dropdown-item category-filter" data-category="produce">Produce</a></li>
+                            <li><a class="dropdown-item category-filter" data-category="meat">Meat & Poultry</a></li>
+                            <li><a class="dropdown-item category-filter" data-category="household">Household</a></li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="store-dropdown">
+                    <h5><i class="fas fa-store me-2"></i>Store</h5>
+                    <div class="dropdown">
+                        <button class="btn btn-outline-dark dropdown-toggle w-100" type="button" id="storeDropdown" data-bs-toggle="dropdown">
+                            All Stores
+                        </button>
+                        <ul class="dropdown-menu w-100" id="storeList">
+                            <li><a class="dropdown-item store-filter active" data-store="all">All Stores</a></li>
+                            <li><a class="dropdown-item store-filter" data-store="freshmart">FreshMart</a></li>
+                            <li><a class="dropdown-item store-filter" data-store="greengrocer">GreenGrocer</a></li>
+                            <li><a class="dropdown-item store-filter" data-store="dairy-delight">Dairy Delight</a></li>
+                            <li><a class="dropdown-item store-filter" data-store="bakery-corner">Bakery Corner</a></li>
+                            <li><a class="dropdown-item store-filter" data-store="snack-hub">Snack Hub</a></li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Cart Sidebar (visible on desktop) -->
+                <div class="cart-sidebar d-none d-lg-block">
+                    <h4><i class="fas fa-shopping-cart me-2"></i>Your Cart</h4>
+                    <div id="cartItemsDesktop"></div>
+                    <div class="d-grid">
+                        <button class="btn btn-order-now" id="orderNowDesktop">
+                            <i class="fab fa-whatsapp me-2"></i>Order Now
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Products Grid -->
+            <div class="col-lg-9">
+                <div class="row" id="productsGrid">
+                    <!-- Products will be loaded here by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container text-center">
+            <div class="footer-logo">Petal Chain</div>
+            <div class="logo-subtitle mb-3">THE MARKET</div>
+            <p>Fresh products delivered to your doorstep</p>
+            <p class="mb-0">&copy; 2023 Petal Chain - The Market. All rights reserved.</p>
+        </div>
+    </footer>
+    
+    <!-- Cart Offcanvas (for mobile) -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="cartOffcanvas">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title"><i class="fas fa-shopping-cart me-2"></i>Your Cart</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div id="cartItemsMobile"></div>
+            <div class="d-grid mt-3">
+                <button class="btn btn-order-now" id="orderNowMobile">
+                    <i class="fab fa-whatsapp me-2"></i>Order Now
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Sample product data
+        const products = [
+            { id: 1, name: "Fresh Milk", price: 35.99, category: "dairy", store: "dairy-delight", image: "milk.jpg" },
+            { id: 2, name: "Whole Wheat Bread", price: 22.50, category: "bakery", store: "bakery-corner", image: "bread.jpg" },
+            { id: 3, name: "Orange Juice", price: 28.75, category: "drinks", store: "freshmart", image: "juice.jpg" },
+            { id: 4, name: "Potato Chips", price: 18.99, category: "snacks", store: "snack-hub", image: "chips.jpg" },
+            { id: 5, name: "Organic Apples", price: 45.50, category: "produce", store: "greengrocer", image: "apples.jpg" },
+            { id: 6, name: "Greek Yogurt", price: 32.25, category: "dairy", store: "dairy-delight", image: "yogurt.jpg" },
+            { id: 7, name: "Chocolate Cookies", price: 26.80, category: "snacks", store: "snack-hub", image: "cookies.jpg" },
+            { id: 8, name: "Mineral Water", price: 15.50, category: "drinks", store: "freshmart", image: "water.jpg" },
+            { id: 9, name: "Chicken Breast", price: 89.99, category: "meat", store: "freshmart", image: "chicken.jpg" },
+            { id: 10, name: "Hand Soap", price: 42.30, category: "household", store: "freshmart", image: "soap.jpg" },
+            { id: 11, name: "Croissants", price: 34.50, category: "bakery", store: "bakery-corner", image: "croissant.jpg" },
+            { id: 12, name: "Bananas", price: 28.75, category: "produce", store: "greengrocer", image: "bananas.jpg" }
+        ];
+
+        // Cart state
+        let cart = [];
+        let userLocation = null;
+
+        // DOM Elements
+        const productsGrid = document.getElementById('productsGrid');
+        const cartCount = document.getElementById('cartCount');
+        const cartItemsDesktop = document.getElementById('cartItemsDesktop');
+        const cartItemsMobile = document.getElementById('cartItemsMobile');
+        const searchInput = document.getElementById('searchInput');
+        const categoryFilters = document.querySelectorAll('.category-filter');
+        const storeFilters = document.querySelectorAll('.store-filter');
+        const orderNowDesktop = document.getElementById('orderNowDesktop');
+        const orderNowMobile = document.getElementById('orderNowMobile');
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            renderProducts(products);
+            updateCartDisplay();
+            
+            // Setup event listeners
+            setupEventListeners();
+        });
+
+        // Render products to the grid
+        function renderProducts(productsToRender) {
+            productsGrid.innerHTML = '';
+            
+            if (productsToRender.length === 0) {
+                productsGrid.innerHTML = '<div class="col-12 text-center py-5"><h4>No products found</h4><p>Try adjusting your filters or search term</p></div>';
+                return;
+            }
+            
+            // Create two items per row
+            for (let i = 0; i < productsToRender.length; i += 2) {
+                const row = document.createElement('div');
+                row.className = 'row mb-4';
+                
+                // First product in the row
+                if (productsToRender[i]) {
+                    const col1 = document.createElement('div');
+                    col1.className = 'col-md-6';
+                    col1.innerHTML = createProductCard(productsToRender[i]);
+                    row.appendChild(col1);
+                }
+                
+                // Second product in the row
+                if (productsToRender[i + 1]) {
+                    const col2 = document.createElement('div');
+                    col2.className = 'col-md-6';
+                    col2.innerHTML = createProductCard(productsToRender[i + 1]);
+                    row.appendChild(col2);
+                }
+                
+                productsGrid.appendChild(row);
+            }
+            
+            // Reattach event listeners to the new product buttons
+            attachProductButtonListeners();
+        }
+
+        // Create HTML for a product card
+        function createProductCard(product) {
+            const categoryMap = {
+                'dairy': 'Dairy',
+                'drinks': 'Drinks',
+                'snacks': 'Snacks',
+                'bakery': 'Bakery',
+                'produce': 'Produce',
+                'meat': 'Meat & Poultry',
+                'household': 'Household'
+            };
+            
+            const storeMap = {
+                'freshmart': 'FreshMart',
+                'greengrocer': 'GreenGrocer',
+                'dairy-delight': 'Dairy Delight',
+                'bakery-corner': 'Bakery Corner',
+                'snack-hub': 'Snack Hub'
+            };
+            
+            return `
+                <div class="item-card" data-category="${product.category}" data-store="${product.store}">
+                    <div class="item-category">${categoryMap[product.category] || product.category}</div>
+                    <div class="item-image">
+                        <i class="fas fa-shopping-bag fa-3x"></i>
+                    </div>
+                    <h5 class="item-title">${product.name}</h5>
+                    <div class="item-store">${storeMap[product.store] || product.store}</div>
+                    <div class="item-price">R${product.price.toFixed(2)}</div>
+                    
+                    <select class="form-select quantity-select" id="quantity-${product.id}">
+                        ${Array.from({length: 12}, (_, i) => `<option value="${i+1}">${i+1}</option>`).join('')}
+                    </select>
+                    
+                    <div class="d-flex">
+                        <button class="btn btn-buy-now buy-now-btn" data-id="${product.id}">
+                            <i class="fas fa-bolt me-1"></i> Buy Now
+                        </button>
+                        <button class="btn btn-add-to-cart add-to-cart-btn" data-id="${product.id}">
+                            <i class="fas fa-cart-plus me-1"></i> Add to Cart
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Search functionality
+            searchInput.addEventListener('input', function() {
+                filterProducts();
+            });
+            
+            // Category filter
+            categoryFilters.forEach(filter => {
+                filter.addEventListener('click', function() {
+                    // Update active state
+                    categoryFilters.forEach(f => f.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Update dropdown button text
+                    document.getElementById('categoryDropdown').textContent = this.textContent;
+                    
+                    filterProducts();
+                });
+            });
+            
+            // Store filter
+            storeFilters.forEach(filter => {
+                filter.addEventListener('click', function() {
+                    // Update active state
+                    storeFilters.forEach(f => f.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Update dropdown button text
+                    document.getElementById('storeDropdown').textContent = this.textContent;
+                    
+                    filterProducts();
+                });
+            });
+            
+            // Order now buttons
+            orderNowDesktop.addEventListener('click', function() {
+                sendOrderToWhatsApp('desktop');
+            });
+            
+            orderNowMobile.addEventListener('click', function() {
+                sendOrderToWhatsApp('mobile');
+            });
+        }
+
+        // Attach event listeners to product buttons
+        function attachProductButtonListeners() {
+            // Buy Now buttons
+            document.querySelectorAll('.buy-now-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const productId = parseInt(this.getAttribute('data-id'));
+                    buyNow(productId);
+                });
+            });
+            
+            // Add to Cart buttons
+            document.querySelectorAll('.add-to-cart-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const productId = parseInt(this.getAttribute('data-id'));
+                    addToCart(productId);
+                });
+            });
+        }
+
+        // Filter products based on search and filters
+        function filterProducts() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const activeCategory = document.querySelector('.category-filter.active').getAttribute('data-category');
+            const activeStore = document.querySelector('.store-filter.active').getAttribute('data-store');
+            
+            const filteredProducts = products.filter(product => {
+                // Search filter
+                const matchesSearch = product.name.toLowerCase().includes(searchTerm);
+                
+                // Category filter
+                const matchesCategory = activeCategory === 'all' || product.category === activeCategory;
+                
+                // Store filter
+                const matchesStore = activeStore === 'all' || product.store === activeStore;
+                
+                return matchesSearch && matchesCategory && matchesStore;
+            });
+            
+            renderProducts(filteredProducts);
+        }
+
+        // Add item to cart
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+            
+            const quantitySelect = document.getElementById(`quantity-${productId}`);
+            const quantity = parseInt(quantitySelect.value);
+            
+            // Check if product is already in cart
+            const existingItem = cart.find(item => item.id === productId);
+            
+            if (existingItem) {
+                existingItem.quantity += quantity;
+            } else {
+                cart.push({
+                    id: product.id,
+                    name: product.name,
+                    price: product.price,
+                    quantity: quantity,
+                    image: product.image
+                });
+            }
+            
+            updateCartDisplay();
+            
+            // Show confirmation
+            showNotification(`${product.name} added to cart!`);
+        }
+
+        // Buy Now functionality
+        async function buyNow(productId) {
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+            
+            const quantitySelect = document.getElementById(`quantity-${productId}`);
+            const quantity = parseInt(quantitySelect.value);
+            
+            // Get user location
+            await getUserLocation();
+            
+            // Create WhatsApp message
+            const total = product.price * quantity;
+            const message = `Hello, I would like to buy:\n\n*${product.name}*\nQuantity: ${quantity}\nPrice per item: R${product.price.toFixed(2)}\nTotal: R${total.toFixed(2)}\n\nLocation: ${userLocation || 'Not specified'}\n\nLink to item: ${window.location.origin}/item/${product.id}`;
+            
+            // Encode the message for URL
+            const encodedMessage = encodeURIComponent(message);
+            const phoneNumber = "0824598656";
+            const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+            
+            // Open WhatsApp in a new tab
+            window.open(whatsappUrl, '_blank');
+        }
+
+        // Get user location
+        function getUserLocation() {
+            return new Promise((resolve) => {
+                if (userLocation) {
+                    resolve(userLocation);
+                    return;
+                }
+                
+                // Try HTML5 geolocation
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(
+                        function(position) {
+                            const lat = position.coords.latitude;
+                            const lon = position.coords.longitude;
+                            userLocation = `Lat: ${lat.toFixed(4)}, Lon: ${lon.toFixed(4)}`;
+                            resolve(userLocation);
+                        },
+                        function() {
+                            // If user denies location or it fails, prompt for manual entry
+                            userLocation = prompt("Please enter your location for delivery:");
+                            if (!userLocation) userLocation = "Not specified";
+                            resolve(userLocation);
+                        }
+                    );
+                } else {
+                    // Geolocation not supported
+                    userLocation = prompt("Please enter your location for delivery:");
+                    if (!userLocation) userLocation = "Not specified";
+                    resolve(userLocation);
+                }
+            });
+        }
+
+        // Update cart display
+        function updateCartDisplay() {
+            // Update cart count
+            const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+            cartCount.textContent = totalItems;
+            
+            // Update cart items for desktop
+            renderCartItems(cartItemsDesktop);
+            
+            // Update cart items for mobile
+            renderCartItems(cartItemsMobile);
+        }
+
+        // Render cart items
+        function renderCartItems(container) {
+            if (cart.length === 0) {
+                container.innerHTML = '<p class="text-muted">Your cart is empty</p>';
+                return;
+            }
+            
+            let html = '';
+            let total = 0;
+            
+            cart.forEach(item => {
+                const itemTotal = item.price * item.quantity;
+                total += itemTotal;
+                
+                html += `
+                    <div class="cart-item">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <strong>${item.name}</strong>
+                                <div class="text-muted">Quantity: ${item.quantity}</div>
+                            </div>
+                            <div class="text-end">
+                                <div>R${itemTotal.toFixed(2)}</div>
+                                <button class="btn btn-sm btn-outline-danger remove-item-btn" data-id="${item.id}">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += `
+                <div class="d-flex justify-content-between mt-3">
+                    <strong>Total:</strong>
+                    <strong>R${total.toFixed(2)}</strong>
+                </div>
+            `;
+            
+            container.innerHTML = html;
+            
+            // Attach event listeners to remove buttons
+            container.querySelectorAll('.remove-item-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const productId = parseInt(this.getAttribute('data-id'));
+                    removeFromCart(productId);
+                });
+            });
+        }
+
+        // Remove item from cart
+        function removeFromCart(productId) {
+            cart = cart.filter(item => item.id !== productId);
+            updateCartDisplay();
+            showNotification("Item removed from cart");
+        }
+
+        // Send order to WhatsApp
+        async function sendOrderToWhatsApp(source) {
+            if (cart.length === 0) {
+                alert("Your cart is empty. Add some items first!");
+                return;
+            }
+            
+            // Get user location
+            await getUserLocation();
+            
+            // Create order summary
+            let message = `Hello, I would like to order:\n\n`;
+            let total = 0;
+            
+            cart.forEach(item => {
+                const itemTotal = item.price * item.quantity;
+                total += itemTotal;
+                
+                message += `*${item.name}*\nQuantity: ${item.quantity}\nPrice: R${itemTotal.toFixed(2)}\n\n`;
+            });
+            
+            message += `*Total: R${total.toFixed(2)}*\n\n`;
+            message += `Location: ${userLocation || 'Not specified'}\n\n`;
+            message += `Order placed via Petal Chain - The Market website`;
+            
+            // Encode the message for URL
+            const encodedMessage = encodeURIComponent(message);
+            const phoneNumber = "0824598656";
+            const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+            
+            // Open WhatsApp in a new tab
+            window.open(whatsappUrl, '_blank');
+            
+            // Close mobile offcanvas if from mobile
+            if (source === 'mobile') {
+                const offcanvas = bootstrap.Offcanvas.getInstance(document.getElementById('cartOffcanvas'));
+                offcanvas.hide();
+            }
+        }
+
+        // Show notification
+        function showNotification(message) {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = 'position-fixed bottom-0 end-0 p-3';
+            notification.style.zIndex = '1050';
+            
+            notification.innerHTML = `
+                <div class="toast show" role="alert">
+                    <div class="toast-header bg-black text-white">
+                        <strong class="me-auto">Petal Chain</strong>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
+                    </div>
+                    <div class="toast-body">
+                        ${message}
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Auto remove after 3 seconds
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+            
+            // Add click to dismiss
+            notification.querySelector('.btn-close').addEventListener('click', () => {
+                notification.remove();
+            });
+        }
+    </script>
+</body>
+</html>
