@@ -450,4 +450,61 @@ Items in Cart:
 
                 if (buyNowBtn || addToCartBtn) {
                     const productId = parseInt(buyNowBtn ? buyNowBtn.dataset.productId : addToCartBtn.dataset.productId);
-                   
+                    const productCard = e.target.closest('.product-card');
+                    const quantitySelect = productCard.querySelector('.quantity-select');
+                    const quantity = parseInt(quantitySelect.value);
+
+                    if (buyNowBtn) {
+                        handleBuyNow(productId, quantity);
+                    } else if (addToCartBtn) {
+                        handleAddToCart(productId, quantity);
+                    }
+                }
+            });
+
+            // --- Filter Listeners ---
+            document.getElementById('searchInput').addEventListener('keyup', filterProducts);
+            
+            document.querySelectorAll('.dropdown-menu').forEach(menu => {
+                menu.addEventListener('click', (e) => {
+                    const filterLink = e.target.closest('.filter-link');
+                    if (filterLink) {
+                        e.preventDefault();
+                        const type = filterLink.dataset.filterType;
+                        const value = filterLink.dataset.filterValue;
+                        const button = document.getElementById(`${type}Dropdown`);
+                        
+                        // Update button text and data attribute
+                        button.textContent = value === 'all' ? (type === 'category' ? 'Category' : 'Store Name') : value;
+                        button.dataset.currentFilter = value;
+                        
+                        filterProducts();
+                    }
+                });
+            });
+
+            // --- Cart Listeners ---
+            document.getElementById('checkoutCartBtn').addEventListener('click', handleCheckoutCart);
+
+            document.getElementById('cart-items-list').addEventListener('click', (e) => {
+                const removeBtn = e.target.closest('.remove-item-btn');
+                if (removeBtn) {
+                    const index = parseInt(removeBtn.dataset.index);
+                    cart.splice(index, 1);
+                    renderCart();
+                }
+            });
+        }
+
+
+        // --- INITIALIZATION ---
+        document.addEventListener('DOMContentLoaded', () => {
+            populateFilters();
+            renderProducts(products); // Initial load of all products
+            renderCart();
+            attachEventListeners();
+        });
+
+    </script>
+</body>
+</html>
