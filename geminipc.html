@@ -68,19 +68,24 @@
 
         #cart-count {
             position: absolute;
-            top: -10px;
-            right: -10px;
+            top: -5px; /* Adjusted position */
+            right: 0px; /* Adjusted position */
             background: red;
             color: white;
             border-radius: 50%;
             padding: 2px 6px;
             font-size: 0.75rem;
+            z-index: 10;
         }
 
         /* Responsive adjustments for 2 items per row */
-        /* For all screen sizes, we want 2 items per row. Bootstrap handles this with col-6 on a row. */
         .pc-item-row .col-6 {
-            padding: 5px; /* Adjust padding for visual separation */
+            padding: 5px; 
+        }
+
+        .pc-logo {
+            font-size: 1.5rem;
+            margin-right: 10px;
         }
     </style>
 </head>
@@ -88,20 +93,26 @@
 
     <header class="pc-header py-3 sticky-top">
         <div class="container d-flex justify-content-between align-items-center">
-            <h1 class="h3 mb-0">Petal Chain - The Market</h1>
             <div class="d-flex align-items-center">
-                <div id="cart-icon" class="me-3" data-bs-toggle="modal" data-bs-target="#cartModal">
-                    <i class="fas fa-shopping-cart fa-2x"></i>
-                    <span id="cart-count">0</span>
-                </div>
-                <input type="text" id="searchInput" class="form-control form-control-sm me-3" placeholder="Search items...">
+                <span class="pc-logo" title="Petal Chain Logo"></span>
+                <img src="logowhite.png" height="35%" width="35%">
+                <h1 class="h3 mb-0"> The Market</h1>
             </div>
+
+            <button id="cart-icon" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#cartModal">
+                <i class="fas fa-shopping-cart me-1"></i>Cart
+                <span id="cart-count">0</span>
+            </button>
         </div>
-        <p class="text-center text-white-50 mt-2 mb-0">**Blossom Your Basket: Pick Your Perfect Petals Now!**</p>
+        <p class="text-center text-white-50 mt-2 mb-0">“Pick your perfect pieces, and we’ll bring the market to your doorstep.”</p>
     </header>
 
     <main class="container my-4">
         
+        <div class="mb-4">
+            <input type="text" id="searchInput" class="form-control form-control-lg" placeholder="Search items">
+        </div>
+
         <div class="d-flex justify-content-start gap-3 mb-4">
             
             <div class="dropdown">
@@ -163,7 +174,7 @@
             <span style="font-size: 1.5rem;">🌸</span>
         </p>
     </footer>
-
+    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
     <script>
@@ -228,7 +239,6 @@
             listElement.innerHTML = ''; // Clear previous products
 
             currentProducts.forEach(product => {
-                const total = (product.price * 1).toFixed(2); // Initial total for single item
                 const productHtml = `
                     <div class="col-6 col-md-6 col-lg-6">
                         <div class="product-card" data-id="${product.id}" data-category="${product.category}" data-store="${product.store}" data-price="${product.price}" data-name="${product.name}">
@@ -242,7 +252,7 @@
                             </div>
                             <div class="product-actions d-flex flex-column gap-2 mt-auto">
                                 <select class="form-select form-select-sm quantity-select" data-product-id="${product.id}">
-                                    ${Array.from({ length: 12 }, (_, i) => `<option value="${i + 1}">${i + 1}</option>`).join('')}
+                                    <option value="1" selected>Quantity: 1</option> ${Array.from({ length: 11 }, (_, i) => `<option value="${i + 2}">Quantity: ${i + 2}</option>`).join('')}
                                 </select>
                                 <div class="d-flex justify-content-between gap-2">
                                     <button class="btn btn-dark btn-sm flex-grow-1 add-to-cart-btn" data-product-id="${product.id}">
@@ -273,7 +283,7 @@
             if (cart.length === 0) {
                 listElement.innerHTML = '<li class="list-group-item">Your cart is empty.</li>';
                 countElement.textContent = 0;
-                totalElement.textContent = '$0.00';
+                totalElement.textContent = 'R0.00';
                 return;
             }
 
@@ -387,7 +397,7 @@
                     name: product.name,
                     price: product.price,
                     quantity: quantity,
-                    imageUrl: product.imageUrl // Include image URL for potential future use
+                    imageUrl: product.imageUrl 
                 });
             }
             
@@ -416,7 +426,7 @@ Items in Cart:
             const itemDetails = cart.map(item => {
                 const itemTotal = item.price * item.quantity;
                 totalOrderPrice += itemTotal;
-                const productLink = window.location.href; // Use current page as item link (needs more work for individual product pages)
+                const productLink = window.location.href; 
                 return `${item.name} (x${item.quantity}) - R${itemTotal.toFixed(2)}\n🔗 Link: ${productLink}`;
             }).join('\n---\n');
 
@@ -435,7 +445,14 @@ Items in Cart:
             // Clear the cart after placing the order
             cart = [];
             renderCart();
-            bootstrap.Modal.getInstance(document.getElementById('cartModal')).hide();
+            // Hide the modal using Bootstrap's JS
+            const cartModalElement = document.getElementById('cartModal');
+            if (bootstrap.Modal.getInstance(cartModalElement)) {
+                bootstrap.Modal.getInstance(cartModalElement).hide();
+            } else {
+                 const modalInstance = new bootstrap.Modal(cartModalElement);
+                 modalInstance.hide();
+            }
         }
 
         /**
