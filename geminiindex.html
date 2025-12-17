@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Petal Chain - The Market</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLMDJdZ2WbB+Z2wTfWkP/c5Xf5U3A3E2e8eW3l8u8lF7e4n7d5B0g3l8j9g5x7Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        /* Modern Black and White Theme */
+        :root {
+            --pc-primary: #000;
+            --pc-secondary: #fff;
+            --pc-text-dark: #333;
+            --pc-text-light: #f8f9fa;
+        }
+
+        body {
+            background-color: var(--pc-secondary);
+            color: var(--pc-text-dark);
+            font-family: Arial, sans-serif;
+        }
+
+        /* Header & Footer */
+        .pc-header, .pc-footer {
+            background-color: var(--pc-primary);
+            color: var(--pc-text-light);
+        }
+
+        /* Product Cards */
+        .product-card {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            height: 100%; /* Ensures cards in a row have the same height */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            background-color: var(--pc-secondary);
+        }
+
+        .product-card img {
+            width: 100%;
+            /* Ensure the image container is square-like */
+            aspect-ratio: 1 / 1; 
+            object-fit: cover;
+            margin-bottom: 10px;
+        }
+
+        .product-info h5 {
+            font-weight: bold;
+            color: var(--pc-primary);
+        }
+        
+        /* Utility for WhatsApp button */
+        .btn-whatsapp {
+            background-color: #25D366; /* WhatsApp Green */
+            color: white;
+            border: none;
+        }
+
+        /* Cart Icon */
+        #cart-icon {
+            cursor: pointer;
+            position: relative;
+        }
+
+        #cart-count {
+            position: absolute;
+            top: -5px; /* Adjusted position */
+            right: 0px; /* Adjusted position */
+            background: red;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 0.75rem;
+            z-index: 10;
+        }
+
+        /* Responsive adjustments for 2 items per row */
+        .pc-item-row .col-6 {
+            padding: 5px; 
+        }
+
+        .pc-logo {
+            font-size: 1.5rem;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="pc-header py-3 sticky-top">
+        <div class="container d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center">
+                <span class="pc-logo" title="Petal Chain Logo"></span>
+                <img src="logowhite.png" height="35%" width="35%">
+                <h1 class="h3 mb-0"> The Market</h1>
+            </div>
+
+            <button id="cart-icon" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#cartModal">
+                Cart <span id="cart-count">0</span>
+            </button>
+        </div>
+        <p class="text-center text-white-50 mt-2 mb-0">“Pick your perfect pieces, and we’ll bring the market to your doorstep.”</p>
+    </header>
+
+    <main class="container my-4">
+        
+        <div class="mb-4">
+            <input type="text" id="searchInput" class="form-control form-control-lg" placeholder="Search items">
+        </div>
+
+        <div class="d-flex justify-content-start gap-3 mb-4">
+            
+            <div class="dropdown">
+                <button class="btn btn-outline-dark dropdown-toggle" type="button" id="categoryDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    Category
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="categoryDropdown" id="categoryFilter">
+                    <li><a class="dropdown-item filter-link" href="#" data-filter-type="category" data-filter-value="all">All Categories</a></li>
+                    </ul>
+            </div>
+
+            <div class="dropdown">
+                <button class="btn btn-outline-dark dropdown-toggle" type="button" id="storeDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    Store Name
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="storeDropdown" id="storeFilter">
+                    <li><a class="dropdown-item filter-link" href="#" data-filter-type="store" data-filter-value="all">All Stores</a></li>
+                    </ul>
+            </div>
+        </div>
+
+        <div id="product-list" class="row pc-item-row">
+            </div>
+
+    </main>
+
+    <div class="modal fade" id="cartModal" tabindex="-1" aria-labelledby="cartModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="cartModalLabel"><i class="fas fa-shopping-cart me-2"></i>Your Shopping Cart</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ul id="cart-items-list" class="list-group">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Your cart is empty.
+                        </li>
+                    </ul>
+                    <hr>
+                    <div class="d-flex justify-content-between fw-bold">
+                        <span>Total:</span>
+                        <span id="cart-total">$0.00</span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Continue Shopping</button>
+                    <button type="button" class="btn btn-whatsapp" id="checkoutCartBtn">
+                        <i class="fab fa-whatsapp me-1"></i> Order Now
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="pc-footer text-center py-3 mt-5">
+        <p class="mb-1">Petal Chain - The Market</p>
+        <p class="mb-0">
+            <img src="logowhite.png" height="25%" width="25%">
+        </p>
+    </footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+    <script>
+        // --- DATA SETUP ---
+        const WHATSAPP_NUMBER = '0824598656';
+        const products = [
+            { id: 1, name: "Parmalat Fresh Milk (1L)", price: 18.50, category: "Dairy", store: "Bra Ty", imageUrl: "items/parmalatmilk.png" },
+            { id: 2, name: "Still Water", price: 12.00, category: "Drinks", store: "Bra Ty", imageUrl: "https://via.placeholder.com/200x200/000000/FFFFFF?text=Water" },
+            { id: 3, name: "Chocolate Chip Cookies", price: 25.99, category: "Snacks", store: "Sweet Spot", imageUrl: "https://via.placeholder.com/200x200/000000/FFFFFF?text=Cookies" },
+            { id: 4, name: "Pop Shots", price: 5.00, category: "Snacks", store: "Bra Ty", imageUrl: "items/popshots.png" },
+            { id: 5, name: "Dragon Energy Drink", price: 19.50, category: "Drinks", store: "Quench Co.", imageUrl: "items/dragon.png" },
+            { id: 6, name: "Salted Peanuts (Bag)", price: 15.00, category: "Snacks", store: "Sweet Spot", imageUrl: "https://via.placeholder.com/200x200/000000/FFFFFF?text=Peanuts" },
+            { id: 7, name: "Butter (250g)", price: 32.50, category: "Dairy", store: "Dairy Delight", imageUrl: "https://via.placeholder.com/200x200/000000/FFFFFF?text=Butter" },
+            { id: 8, name: "Fruit Juice (1.5L)", price: 28.00, category: "Drinks", store: "Farm Fresh", imageUrl: "https://via.placeholder.com/200x200/000000/FFFFFF?text=Juice" },
+            // Add more items here
+        ];
+
+        let cart = []; // Array to hold cart items: { id, name, price, quantity, imageUrl }
+
+        // --- UTILITY FUNCTIONS ---
+
+        /**
+         * Prompts the user for location permission and returns the coordinates.
+         * @returns {Promise<string>} A string with latitude and longitude, or an error message.
+         */
+        function getUserLocation() {
+            return new Promise((resolve) => {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(
+                        (position) => {
+                            resolve(`Lat: ${position.coords.latitude}, Lon: ${position.coords.longitude}`);
+                        },
+                        (error) => {
+                            console.error("Location error:", error);
+                            resolve("Location not available.");
+                        },
+                        { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
+                    );
+                } else {
+                    resolve("Geolocation not supported by this browser.");
+                }
+            });
+        }
+
+        /**
+         * Creates a WhatsApp deep link URL.
+         * @param {string} message The pre-set message.
+         * @returns {string} The WhatsApp URL.
+         */
+        function createWhatsAppLink(message) {
+            const encodedMessage = encodeURIComponent(message);
+            return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMessage}`;
+        }
+
+        // --- RENDERING FUNCTIONS ---
+
+        /**
+         * Renders all product cards based on current filters and search term.
+         */
+        function renderProducts(currentProducts) {
+            const listElement = document.getElementById('product-list');
+            listElement.innerHTML = ''; // Clear previous products
+
+            currentProducts.forEach(product => {
+                const productHtml = `
+                    <div class="col-6 col-md-6 col-lg-6">
+                        <div class="product-card" data-id="${product.id}" data-category="${product.category}" data-store="${product.store}" data-price="${product.price}" data-name="${product.name}">
+                            <div class="product-image">
+                                <img src="${product.imageUrl}" alt="${product.name}">
+                            </div>
+                            <div class="product-info mb-3">
+                                <h5 class="mb-1">${product.name}</h5>
+                                <p class="mb-1">R ${product.price.toFixed(2)}</p>
+                                <p class="mb-2 text-muted small">${product.store} (${product.category})</p>
+                            </div>
+                            <div class="product-actions d-flex flex-column gap-2 mt-auto">
+                                <select class="form-select form-select-sm quantity-select" data-product-id="${product.id}">
+                                    <option value="1" selected>Quantity: 1</option> ${Array.from({ length: 11 }, (_, i) => `<option value="${i + 2}">Quantity: ${i + 2}</option>`).join('')}
+                                </select>
+                                <div class="d-flex justify-content-between gap-2">
+                                    <button class="btn btn-dark btn-sm flex-grow-1 add-to-cart-btn" data-product-id="${product.id}">
+                                        <i class="fas fa-cart-plus me-1"></i> Add to Cart
+                                    </button>
+                                    <button class="btn btn-whatsapp btn-sm flex-grow-1 buy-now-btn" data-product-id="${product.id}">
+                                        <i class="fab fa-whatsapp me-1"></i> Buy Now
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                listElement.insertAdjacentHTML('beforeend', productHtml);
+            });
+        }
+
+        /**
+         * Renders the cart contents in the modal.
+         */
+        function renderCart() {
+            const listElement = document.getElementById('cart-items-list');
+            const totalElement = document.getElementById('cart-total');
+            const countElement = document.getElementById('cart-count');
+            listElement.innerHTML = '';
+            let total = 0;
+
+            if (cart.length === 0) {
+                listElement.innerHTML = '<li class="list-group-item">Your cart is empty.</li>';
+                countElement.textContent = 0;
+                totalElement.textContent = 'R0.00';
+                return;
+            }
+
+            cart.forEach((item, index) => {
+                const itemTotal = item.price * item.quantity;
+                total += itemTotal;
+                listElement.insertAdjacentHTML('beforeend', `
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>${item.name}</strong>
+                            <br>
+                            <span class="text-muted small">Qty: ${item.quantity} @ R${item.price.toFixed(2)}</span>
+                        </div>
+                        <span class="badge bg-dark rounded-pill">R${itemTotal.toFixed(2)}</span>
+                        <button class="btn btn-sm btn-danger remove-item-btn" data-index="${index}">&times;</button>
+                    </li>
+                `);
+            });
+
+            countElement.textContent = cart.length;
+            totalElement.textContent = `R${total.toFixed(2)}`;
+        }
+
+        // --- HANDLER FUNCTIONS ---
+
+        /**
+         * Generates and filters the unique categories and stores for the dropdowns.
+         */
+        function populateFilters() {
+            const categories = [...new Set(products.map(p => p.category))];
+            const stores = [...new Set(products.map(p => p.store))];
+            
+            const categoryFilter = document.getElementById('categoryFilter');
+            const storeFilter = document.getElementById('storeFilter');
+
+            // Append categories
+            categories.forEach(cat => {
+                categoryFilter.insertAdjacentHTML('beforeend', 
+                    `<li><a class="dropdown-item filter-link" href="#" data-filter-type="category" data-filter-value="${cat}">${cat}</a></li>`
+                );
+            });
+            
+            // Append stores
+            stores.forEach(store => {
+                storeFilter.insertAdjacentHTML('beforeend', 
+                    `<li><a class="dropdown-item filter-link" href="#" data-filter-type="store" data-filter-value="${store}">${store}</a></li>`
+                );
+            });
+        }
+        
+        /**
+         * Filters the products based on search term and dropdown selections.
+         */
+        function filterProducts() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const categoryFilterValue = document.getElementById('categoryDropdown').dataset.currentFilter || 'all';
+            const storeFilterValue = document.getElementById('storeDropdown').dataset.currentFilter || 'all';
+
+            const filtered = products.filter(product => {
+                const matchesSearch = product.name.toLowerCase().includes(searchTerm);
+                const matchesCategory = categoryFilterValue === 'all' || product.category === categoryFilterValue;
+                const matchesStore = storeFilterValue === 'all' || product.store === storeFilterValue;
+                
+                return matchesSearch && matchesCategory && matchesStore;
+            });
+            
+            renderProducts(filtered);
+        }
+
+        /**
+         * Handles the "Buy Now" button click.
+         */
+        async function handleBuyNow(productId, quantity) {
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+
+            const total = (product.price * quantity).toFixed(2);
+            const location = await getUserLocation();
+            const productLink = window.location.href; // Use the current page URL as the item link
+
+            const message = `
+*Petal Chain - Buy Now Order*
+
+🛒 *Item:* ${product.name}
+🔢 *Quantity:* ${quantity}
+💰 *Unit Price:* R${product.price.toFixed(2)}
+💵 *Total Price:* R${total}
+
+📍 *User Location:* ${location}
+
+🔗 *Item Link:* ${productLink}
+            `.trim();
+            
+            window.open(createWhatsAppLink(message), '_blank');
+        }
+        
+        /**
+         * Adds an item to the cart or updates quantity if it already exists.
+         */
+        function handleAddToCart(productId, quantity) {
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+            
+            const existingItem = cart.find(item => item.id === productId);
+
+            if (existingItem) {
+                existingItem.quantity += quantity;
+            } else {
+                cart.push({
+                    id: product.id,
+                    name: product.name,
+                    price: product.price,
+                    quantity: quantity,
+                    imageUrl: product.imageUrl 
+                });
+            }
+            
+            renderCart();
+            alert(`${product.name} (x${quantity}) added to cart!`);
+        }
+        
+        /**
+         * Handles the "Order Now" (checkout) button from the cart.
+         */
+        async function handleCheckoutCart() {
+            if (cart.length === 0) {
+                alert("Your cart is empty. Please add items before checking out.");
+                return;
+            }
+
+            const location = await getUserLocation();
+            let message = `
+*Petal Chain - Full Cart Order*
+
+Items in Cart:
+---
+            `.trim();
+
+            let totalOrderPrice = 0;
+            const itemDetails = cart.map(item => {
+                const itemTotal = item.price * item.quantity;
+                totalOrderPrice += itemTotal;
+                const productLink = window.location.href; 
+                return `${item.name} (x${item.quantity}) - R${itemTotal.toFixed(2)}\n🔗 Link: ${productLink}`;
+            }).join('\n---\n');
+
+            message += '\n' + itemDetails;
+            
+            message += `
+
+*Order Summary*
+💵 *Grand Total:* R${totalOrderPrice.toFixed(2)}
+
+📍 *User Location:* ${location}
+            `.trim();
+
+            window.open(createWhatsAppLink(message), '_blank');
+
+            // Clear the cart after placing the order
+            cart = [];
+            renderCart();
+            // Hide the modal using Bootstrap's JS
+            const cartModalElement = document.getElementById('cartModal');
+            if (bootstrap.Modal.getInstance(cartModalElement)) {
+                bootstrap.Modal.getInstance(cartModalElement).hide();
+            } else {
+                 const modalInstance = new bootstrap.Modal(cartModalElement);
+                 modalInstance.hide();
+            }
+        }
+
+        /**
+         * Attaches all global event listeners.
+         */
+        function attachEventListeners() {
+            
+            // --- Product List Listeners ---
+            document.getElementById('product-list').addEventListener('click', (e) => {
+                const buyNowBtn = e.target.closest('.buy-now-btn');
+                const addToCartBtn = e.target.closest('.add-to-cart-btn');
+
+                if (buyNowBtn || addToCartBtn) {
+                    const productId = parseInt(buyNowBtn ? buyNowBtn.dataset.productId : addToCartBtn.dataset.productId);
+                    const productCard = e.target.closest('.product-card');
+                    const quantitySelect = productCard.querySelector('.quantity-select');
+                    const quantity = parseInt(quantitySelect.value);
+
+                    if (buyNowBtn) {
+                        handleBuyNow(productId, quantity);
+                    } else if (addToCartBtn) {
+                        handleAddToCart(productId, quantity);
+                    }
+                }
+            });
+
+            // --- Filter Listeners ---
+            document.getElementById('searchInput').addEventListener('keyup', filterProducts);
+            
+            document.querySelectorAll('.dropdown-menu').forEach(menu => {
+                menu.addEventListener('click', (e) => {
+                    const filterLink = e.target.closest('.filter-link');
+                    if (filterLink) {
+                        e.preventDefault();
+                        const type = filterLink.dataset.filterType;
+                        const value = filterLink.dataset.filterValue;
+                        const button = document.getElementById(`${type}Dropdown`);
+                        
+                        // Update button text and data attribute
+                        button.textContent = value === 'all' ? (type === 'category' ? 'Category' : 'Store Name') : value;
+                        button.dataset.currentFilter = value;
+                        
+                        filterProducts();
+                    }
+                });
+            });
+
+            // --- Cart Listeners ---
+            document.getElementById('checkoutCartBtn').addEventListener('click', handleCheckoutCart);
+
+            document.getElementById('cart-items-list').addEventListener('click', (e) => {
+                const removeBtn = e.target.closest('.remove-item-btn');
+                if (removeBtn) {
+                    const index = parseInt(removeBtn.dataset.index);
+                    cart.splice(index, 1);
+                    renderCart();
+                }
+            });
+        }
+
+
+        // --- INITIALIZATION ---
+        document.addEventListener('DOMContentLoaded', () => {
+            populateFilters();
+            renderProducts(products); // Initial load of all products
+            renderCart();
+            attachEventListeners();
+        });
+
+    </script>
+</body>
+</html>
